@@ -24,6 +24,7 @@ import android.graphics.Paint;
 import android.view.Display;
 
 import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.Landmark;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
 import com.rebecasarai.mysoulmate.R;
 
@@ -113,7 +114,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
         //canvas.drawText("Alegria: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
         //canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
-        //canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
+        canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
         canvas.drawText("Es tu alma gemelaa" , x - ID_X_OFFSET*3, y - ID_Y_OFFSET*3, mIdPaint);
 
 
@@ -140,6 +141,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         }
 
 
+
+
         //canvas.drawBitmap(scaledBitmap, 400, 300, p);
 
         float xOffset = scaleX(face.getWidth() / 2.0f);
@@ -148,7 +151,15 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         float top = y - yOffset;
         float right = x + xOffset;
         float bottom = y + yOffset;
-        //canvas.drawRect(left, top, right, bottom, mBoxPaint);
+
+
+        for (Landmark landmark : face.getLandmarks()) {
+            int cx = (int) (landmark.getPosition().x - ID_X_OFFSET*2);
+            int cy = (int) (landmark.getPosition().y - ID_Y_OFFSET*2);
+            canvas.drawCircle(cx, cy, 10, p);
+        }
+
+        canvas.drawRect(left, top, right, bottom, mBoxPaint);
 
 
     }
