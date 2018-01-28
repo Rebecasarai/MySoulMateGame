@@ -132,10 +132,10 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
         for (int i= 0; i < 10; i++){
 
-            h = random.nextInt(1000);
-            w = random.nextInt(1000 / 2);
+            w = random.nextInt(1000);
+            h = random.nextInt(1000 );
 
-            canvas.drawBitmap(scaledBitmap, h, w, p);
+            canvas.drawBitmap(scaledBitmap, w, h, p);
 
         }
 

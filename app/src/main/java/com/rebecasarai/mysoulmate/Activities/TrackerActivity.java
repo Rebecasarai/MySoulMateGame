@@ -39,7 +39,7 @@ import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
-import com.rebecasarai.mysoulmate.Camera.CameraSourcePreview;
+import com.rebecasarai.mysoulmate.Camera.CameraPreview;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
 import com.rebecasarai.mysoulmate.R;
 
@@ -54,7 +54,7 @@ public final class TrackerActivity extends AppCompatActivity {
 
     private CameraSource mCameraSource = null;
 
-    private CameraSourcePreview mPreview;
+    private CameraPreview mPreview;
     private GraphicOverlay mGraphicOverlay;
 
     private static final int RC_HANDLE_GMS = 9001;
@@ -89,7 +89,7 @@ public final class TrackerActivity extends AppCompatActivity {
         super.onCreate(icicle);
         setContentView(R.layout.main);
 
-        mPreview = (CameraSourcePreview) findViewById(R.id.preview);
+        mPreview = (CameraPreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
