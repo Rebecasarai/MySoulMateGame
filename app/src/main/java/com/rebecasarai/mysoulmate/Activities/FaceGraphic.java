@@ -114,9 +114,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
         //canvas.drawText("Alegria: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
         //canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
-        canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
+        //canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
         canvas.drawText("Es tu alma gemelaa" , x - ID_X_OFFSET*3, y - ID_Y_OFFSET*3, mIdPaint);
-
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -125,22 +124,15 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         options.inSampleSize = 5;
         options.inJustDecodeBounds = false;
         Bitmap scaledBitmap =  BitmapFactory.decodeResource(context.getResources(),R.drawable.heart, options);
-       //imageView.setImageBitmap(scaledBitmap);
-
 
         Paint p=new Paint();
         p.setColor(Color.RED);
 
         for (int i= 0; i < 10; i++){
-
             w = random.nextInt(1000);
             h = random.nextInt(1000 );
-
             canvas.drawBitmap(scaledBitmap, w, h, p);
-
         }
-
-
 
 
         //canvas.drawBitmap(scaledBitmap, 400, 300, p);
@@ -154,8 +146,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
 
         for (Landmark landmark : face.getLandmarks()) {
-            int cx = (int) (landmark.getPosition().x - ID_X_OFFSET*2);
-            int cy = (int) (landmark.getPosition().y - ID_Y_OFFSET*2);
+            int cx = (int) (landmark.getPosition().x* 2);
+            int cy = (int) (landmark.getPosition().y * 2);
             canvas.drawCircle(cx, cy, 10, p);
         }
 

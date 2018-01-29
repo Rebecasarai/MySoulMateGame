@@ -22,6 +22,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -31,6 +32,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -62,6 +64,9 @@ public final class TrackerActivity extends AppCompatActivity {
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
 
+    MediaPlayer mediaPlayer;
+
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -88,6 +93,7 @@ public final class TrackerActivity extends AppCompatActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.main);
+       //
 
         mPreview = (CameraPreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
@@ -95,14 +101,17 @@ public final class TrackerActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        // Check for the camera permission before accessing the camera.  If the
-        // permission is not granted yet, request permission.
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource();
         } else {
             requestCameraPermission();
         }
+
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.rebecatech);
+
+
+
     }
 
     /**
@@ -135,6 +144,7 @@ public final class TrackerActivity extends AppCompatActivity {
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.ok, listener)
                 .show();
+
     }
 
     /**
@@ -166,10 +176,12 @@ public final class TrackerActivity extends AppCompatActivity {
         }
 
         mCameraSource = new CameraSource.Builder(context, detector)
-                .setRequestedPreviewSize(640, 480)
+                //.setRequestedPreviewSize(640, 480)
+                .setRequestedPreviewSize(940, 480)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedFps(30.0f)
                 .build();
+
     }
 
     /**
@@ -189,6 +201,7 @@ public final class TrackerActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mPreview.stop();
+        mediaPlayer.stop();
     }
 
     /**
@@ -201,24 +214,12 @@ public final class TrackerActivity extends AppCompatActivity {
         if (mCameraSource != null) {
             mCameraSource.release();
         }
+
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 
-    /**
-     * Callback for the result from requesting permissions. This method
-     * is invoked for every call on {@link #requestPermissions(String[], int)}.
-     * <p>
-     * <strong>Note:</strong> It is possible that the permissions request interaction
-     * with the user is interrupted. In this case you will receive empty permissions
-     * and results arrays which should be treated as a cancellation.
-     * </p>
-     *
-     * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
-     * @param permissions  The requested permissions. Never null.
-     * @param grantResults The grant results for the corresponding permissions
-     *                     which is either {@link PackageManager#PERMISSION_GRANTED}
-     *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
-     * @see #requestPermissions(String[], int)
-     */
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode != RC_HANDLE_CAMERA_PERM) {
@@ -244,17 +245,13 @@ public final class TrackerActivity extends AppCompatActivity {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Face Tracker sample")
+        builder.setTitle("Face")
                 .setMessage(R.string.no_camera_permission)
                 .setPositiveButton(R.string.ok, listener)
                 .show();
     }
 
-    //==============================================================================================
-    // Camera Source Preview
-    //==============================================================================================
-
-    /**
+   /**
      * Starts or restarts the camera source, if it exists.  If the camera source doesn't exist yet
      * (e.g., because onResume was called before the camera source was created), this will be called
      * again when the camera source is created.
@@ -281,9 +278,6 @@ public final class TrackerActivity extends AppCompatActivity {
         }
     }
 
-    //==============================================================================================
-    // Graphic Face Tracker
-    //==============================================================================================
 
     /**
      * Factory for creating a face tracker to be associated with a new face.  The multiprocessor
@@ -307,7 +301,23 @@ public final class TrackerActivity extends AppCompatActivity {
         GraphicFaceTracker(GraphicOverlay overlay) {
             mOverlay = overlay;
             mFaceGraphic = new FaceGraphic(overlay, getApplicationContext());
+
+            try {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.rebecatech);
+                }
+
+                mediaPlayer.start();
+            } catch (Exception e) {
+            //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
+
+            }
+
         }
+
+
 
         /**
          * Start tracking the detected face instance within the face overlay.
@@ -315,6 +325,19 @@ public final class TrackerActivity extends AppCompatActivity {
         @Override
         public void onNewItem(int faceId, Face item) {
             mFaceGraphic.setId(faceId);
+            try {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.rebecatech);
+                }
+
+                mediaPlayer.start();
+            } catch (Exception e) {
+                //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
+
+            }
+
         }
 
         /**
@@ -334,6 +357,20 @@ public final class TrackerActivity extends AppCompatActivity {
         @Override
         public void onMissing(FaceDetector.Detections<Face> detectionResults) {
             mOverlay.remove(mFaceGraphic);
+            Log.v("missing","" );
+
+            try {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.rebecatech);
+                }
+
+            } catch (Exception e) {
+                //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
+
+            }
+
         }
 
         /**
@@ -343,6 +380,17 @@ public final class TrackerActivity extends AppCompatActivity {
         @Override
         public void onDone() {
             mOverlay.remove(mFaceGraphic);
+            Log.v("done","" );try {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.rebecatech);
+                }
+
+            } catch (Exception e) {
+                //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
+
+            }
         }
     }
 }
