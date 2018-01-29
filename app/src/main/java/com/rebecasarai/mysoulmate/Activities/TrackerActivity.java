@@ -130,6 +130,7 @@ public final class TrackerActivity extends AppCompatActivity {
             return;
         }
 
+
         final Activity thisActivity = this;
 
         View.OnClickListener listener = new View.OnClickListener() {
