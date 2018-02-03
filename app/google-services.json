@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "297586913460",
+    "firebase_url": "https://newagent-6d84a.firebaseio.com",
+    "project_id": "newagent-6d84a",
+    "storage_bucket": "newagent-6d84a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297586913460:android:56d75816067fcf8a",
+        "android_client_info": {
+          "package_name": "com.rebecasarai.mysoulmate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "297586913460-pfqfrru56tl5thsnqeqmscnsqbfpie92.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rebecasarai.mysoulmate",
+            "certificate_hash": "1aba182bbf9b155841160c2e89c01163afde1b92"
+          }
+        },
+        {
+          "client_id": "297586913460-pq080i76bslrns8bmkshcv951tkkh4ch.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgBSwpJgBjlfZpS6VQBBlimq8GSi1C5Dk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "297586913460-pq080i76bslrns8bmkshcv951tkkh4ch.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

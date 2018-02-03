@@ -21,6 +21,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.Display;
 
 import com.google.android.gms.vision.face.Face;
@@ -61,6 +62,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private volatile Face mFace;
     private int mFaceId;
     private float mFaceHappiness;
+
+
 
     FaceGraphic(GraphicOverlay overlay, Context context) {
         super(overlay);
@@ -107,6 +110,14 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             return;
         }
 
+
+        double viewWidth = canvas.getWidth();
+        double viewHeight = canvas.getHeight();
+        //double imageWidth = mBitmap.getWidth();
+        //double imageHeight = mBitmap.getHeight();
+        double scale = Math.min( viewWidth / face.getPosition().x + face.getWidth(), viewHeight / face.getPosition().y + face.getHeight() );
+        Log.v("scale", ""+scale);
+
         // Draws a circle at the position of the detected face, with the face's track id below.
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
@@ -144,15 +155,9 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         float right = x + xOffset;
         float bottom = y + yOffset;
 
-
-        for (Landmark landmark : face.getLandmarks()) {
-            int cx = (int) (landmark.getPosition().x* 2);
-            int cy = (int) (landmark.getPosition().y * 2);
-            canvas.drawCircle(cx, cy, 10, p);
-        }
+        drawFaceLandmarks(canvas, scale, face, p);
 
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
-
 
     }
 
@@ -168,4 +173,24 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
                 height, filter);
         return newBitmap;
     }
+
+    private void drawFaceLandmarks( Canvas canvas, double scale, Face face, Paint p) {
+        p.setColor( Color.GREEN );
+        p.setStyle( Paint.Style.STROKE );
+        p.setStrokeWidth( 5 );
+
+        for (Landmark landmark : face.getLandmarks()) {
+            int cx = (int) (landmark.getPosition().x * 1.9);
+            int cy = (int) (landmark.getPosition().y * 1.9);
+            canvas.drawCircle(cx, cy, 5, p);
+        }
+
+
+     }
+
+
+
+
 }
+
+
