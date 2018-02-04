@@ -15,8 +15,11 @@
  */
 package com.rebecasarai.mysoulmate.Camera;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.support.v4.app.ActivityCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -59,7 +62,6 @@ public class CameraPreview extends ViewGroup {
         return mSurfaceView;
     }
 
-
     public void start(CameraSource cameraSource) throws IOException {
         if (cameraSource == null) {
             stop();
@@ -93,6 +95,16 @@ public class CameraPreview extends ViewGroup {
 
     private void startIfReady() throws IOException {
         if (mStartRequested && mSurfaceAvailable) {
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
             mCameraSource.start(mSurfaceView.getHolder());
             if (mOverlay != null) {
                 Size size = mCameraSource.getPreviewSize();
@@ -167,6 +179,8 @@ public class CameraPreview extends ViewGroup {
         // tabien se puede sobredimensionar un poco el child y recortar porciones
         // Escalamos según la dimensión que requiere la mayor corrección, y
         // calcular un recorte para desplazar la otra dimensión.
+
+
         if (widthRatio > heightRatio) {
             childWidth = viewWidth;
             childHeight = (int) ((float) previewHeight * widthRatio);

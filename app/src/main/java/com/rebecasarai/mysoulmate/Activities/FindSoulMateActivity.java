@@ -24,9 +24,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
@@ -35,6 +37,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -56,22 +59,29 @@ import com.rebecasarai.mysoulmate.Screenshot.ScreenshotType;
 import com.rebecasarai.mysoulmate.Screenshot.ScreenshotUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public final class FindSoulMateActivity extends AppCompatActivity {
+    private static final String TAG = "FaceTracker";
 
-    private static final String TAG = FindSoulMateActivity.class.getSimpleName();
+    private CameraSource mCameraSource = null;
+
+    private CameraPreview mPreview;
+    private GraphicOverlay mGraphicOverlay;
 
     private static final int RC_HANDLE_GMS = 9001;
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
-    private CameraSource mCameraSource = null;
-    private CameraPreview mPreview;
-    private GraphicOverlay mGraphicOverlay;
-
     View rootView;
+
     MediaPlayer mediaPlayer;
+
+    ImageView mPhotoPeep;
+
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -129,7 +139,6 @@ public final class FindSoulMateActivity extends AppCompatActivity {
 
     /**
      * Permisos
-     *
      * @param requestCode
      * @param permissions
      * @param grantResults
@@ -221,7 +230,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
 
         mCameraSource = new CameraSource.Builder(context, detector)
                 //.setRequestedPreviewSize(640, 480)
-                .setRequestedPreviewSize(940, 480)
+                //.setRequestedPreviewSize(940, 480)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedFps(30.0f)
                 .build();
@@ -242,6 +251,54 @@ public final class FindSoulMateActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_dashboard:
 
+                    mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
+                        @Override
+                        public void onPictureTaken(byte[] bytes) {
+                            Log.v("foto", "tomada");
+                            capturar(bytes);
+
+                        }
+
+                        private void capturar(byte[] bytes) {
+
+                            try {
+
+                                File mainDir = new File(
+                                        getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "prueba");
+
+                                if (!mainDir.exists()) {
+                                    if (mainDir.mkdir())
+                                        Log.e("Create Directory", "Main Directory Created : " + mainDir);
+                                }
+                                File captureFile = new File(mainDir + "prueba" + getPhotoTime() + ".png");
+                                if (!captureFile.exists())
+                                    Log.d("CAPTURE_FILE_PATH", captureFile.createNewFile() ? "Success" : "Failed");
+                                FileOutputStream stream = new FileOutputStream(captureFile);
+
+                                stream.write(bytes);
+
+                                stream.flush();
+                                stream.close();
+
+                                Bitmap bitmap = BitmapFactory.decodeFile(captureFile.getAbsolutePath());
+
+                                mPhotoPeep.setImageBitmap(bitmap);
+                                mPhotoPeep.setRotation(90);
+
+                                //shareScreenshot(captureFile);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            takeScreenshot(ScreenshotType.FULL);
+                        }
+
+                        private String getPhotoTime(){
+                            SimpleDateFormat sdf=new SimpleDateFormat("ddMMyy_hhmmss");
+                            return sdf.format(new Date());
+                        }
+                    });
 
                     return true;
                 case R.id.navigation_notifications:
@@ -318,6 +375,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         }
 
 
+
         /**
          * Comienza a trackear dentro del overlay.
          */
@@ -342,7 +400,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         @Override
         public void onMissing(FaceDetector.Detections<Face> detectionResults) {
             mOverlay.remove(mFaceGraphic);
-            Log.v("missing", "");
+            Log.v("missing","" );
         }
 
         /**
