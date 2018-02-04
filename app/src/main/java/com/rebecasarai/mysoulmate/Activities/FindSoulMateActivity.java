@@ -53,10 +53,6 @@ import com.rebecasarai.mysoulmate.Screenshot.ScreenshotUtils;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
- * overlay graphics to indicate the position, size, and ID of each face.
- */
 public final class FindSoulMateActivity extends AppCompatActivity {
     private static final String TAG = "FaceTracker";
 
