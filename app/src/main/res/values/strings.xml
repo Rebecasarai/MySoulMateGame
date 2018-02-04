@@ -141,13 +141,12 @@
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
 
-    <string name="sharing_text">Your sharing text goes here…</string>
-    <string name="share_title">Share Screenshot</string>
-    <string name="screenshot_take_failed">Failed to take screenshot!!</string>
-    <string name="wait">Please wait…</string>
-    <string name="full_page_screenshot">Full Page Screenshot</string>
-    <string name="hidden_text">Hidden Text</string>
-    <string name="custom_page_screenshot">Custom Page Screenshot</string>
+    <string name="sharing_text">My Soul Mate the best app</string>
+    <string name="share_title">Compartir Soul Mate</string>
+    <string name="screenshot_take_failed">Faled capture</string>
+    <string name="wait">Please wait</string>
+    <string name="full_page_screenshot">Full Sharing</string>
+    <string name="custom_page_screenshot">Custom Sharing</string>
 
 
 </resources>

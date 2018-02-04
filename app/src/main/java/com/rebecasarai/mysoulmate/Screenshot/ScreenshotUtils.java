@@ -17,10 +17,14 @@ public class ScreenshotUtils {
 
     /*  Method which will return Bitmap after taking screenshot. We have to pass the view which we want to take screenshot.  */
     public static Bitmap getScreenShot(View view) {
-        View screenView = view.getRootView();
+        //View screenView = view.getRootView();
+
+        View screenView = view;
         screenView.setDrawingCacheEnabled(true);
+
         Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
         screenView.setDrawingCacheEnabled(false);
+
         return bitmap;
     }
 

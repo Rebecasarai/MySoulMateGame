@@ -301,7 +301,7 @@ public final class TrackerActivity extends AppCompatActivity {
     }
 
     /**
-     * Rastreador facial para cada individuo detectado. Esto mantiene un gráfico de cara dentro de la superposición de cara asociada a la aplicación.
+     * Tracker para cada individuo detectado. Esto mantiene un gráfico de cara dentro de la superposición de cara asociada a la aplicación.
      */
     private class GraphicFaceTracker extends Tracker<Face> {
         private GraphicOverlay mOverlay;
@@ -334,18 +334,6 @@ public final class TrackerActivity extends AppCompatActivity {
         @Override
         public void onNewItem(int faceId, Face item) {
             mFaceGraphic.setId(faceId);
-            try {
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.rebecatech);
-                }
-
-                mediaPlayer.start();
-            } catch (Exception e) {
-                //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
-
-            }
 
         }
 
@@ -368,6 +356,17 @@ public final class TrackerActivity extends AppCompatActivity {
             mOverlay.remove(mFaceGraphic);
             Log.v("missing","" );
 
+
+        }
+
+        /**
+         * Llamado cuando se supone que la cara se ha ido para siempre. Elimine la anotación gráfica de
+         * el overlay.
+         */
+        @Override
+        public void onDone() {
+            mOverlay.remove(mFaceGraphic);
+            Log.v("done","" );
             try {
                 if (mediaPlayer.isPlaying()) {
                     mediaPlayer.stop();
@@ -379,61 +378,47 @@ public final class TrackerActivity extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
 
             }
-
-        }
-
-        /**
-         * Called when the face is assumed to be gone for good. Remove the graphic annotation from
-         * the overlay.
-         */
-        @Override
-        public void onDone() {
-            mOverlay.remove(mFaceGraphic);
-            Log.v("done","" );try {
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.rebecatech);
-                }
-
-            } catch (Exception e) {
-                //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
-
-            }
         }
     }
 
-    /*  Method which will take screenshot on Basis of Screenshot Type ENUM  */
+    /**
+     * Método que tomará una captura de pantalla en base al tipo de captura de pantalla ENUM
+     */
     private void takeScreenshot(ScreenshotType screenshotType) {
         Bitmap b = null;
+
         switch (screenshotType) {
             case FULL:
-                b = ScreenshotUtils.getScreenShot(rootView);
+                b = ScreenshotUtils.getScreenShot(mPreview);
                 break;
             case CUSTOM:
+                //Puedo hacer invisible o visible lo que me parezca
 
                 break;
         }
 
-        //If bitmap is not null
+        //Si el bitmap no es nulo
         if (b != null) {
-            showScreenShotImage(b);//show bitmap over imageview
 
-            File saveFile = ScreenshotUtils.getMainDirectoryName(this);//get the path to save screenshot
+            File saveFile = ScreenshotUtils.getMainDirectoryName(this);//el directoria para guardar
             File file = ScreenshotUtils.store(b, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
             shareScreenshot(file);//finally share screenshot
         } else
-            //If bitmap is null show toast message
+            //Si es nulo
             Toast.makeText(this, R.string.screenshot_take_failed, Toast.LENGTH_SHORT).show();
 
     }
 
-    /*  Show screenshot Bitmap */
+    /**
+     *  Muestra screenshot Bitmap si quiero
+     *  */
     private void showScreenShotImage(Bitmap b) {
         //imageView.setImageBitmap(b);
     }
 
-    /*  Share Screenshot  */
+    /**
+     *  Comparte Screenshot
+     *  */
     private void shareScreenshot(File file) {
         Uri uri = Uri.fromFile(file);//Convert file path into Uri for sharing
         Intent intent = new Intent();
