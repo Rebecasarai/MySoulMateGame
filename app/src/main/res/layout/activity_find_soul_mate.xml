@@ -20,18 +20,18 @@
     tools:context=".Activities.FindSoulMateActivity">
 
 
+<com.rebecasarai.mysoulmate.Camera.CameraPreview
+      android:id="@+id/preview"
+      android:background="@color/colorPrimary"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/photoPerson"
 
         />
-
-<com.rebecasarai.mysoulmate.Camera.CameraPreview
-      android:id="@+id/preview"
-      android:background="@color/colorPrimary"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent">
 
 
     <com.rebecasarai.mysoulmate.Camera.GraphicOverlay

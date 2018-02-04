@@ -105,7 +105,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         }
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.rebecatech);
 
-
+        mPhotoPeep = (ImageView) findViewById(R.id.photoPerson);
     }
 
 
@@ -254,21 +254,20 @@ public final class FindSoulMateActivity extends AppCompatActivity {
                     mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
                         @Override
                         public void onPictureTaken(byte[] bytes) {
+
                             Log.v("foto", "tomada");
                             capturar(bytes);
-
                         }
 
                         private void capturar(byte[] bytes) {
 
                             try {
 
-                                File mainDir = new File(
-                                        getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "prueba");
+                                File mainDir = new File(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "prueba");
 
                                 if (!mainDir.exists()) {
                                     if (mainDir.mkdir())
-                                        Log.e("Create Directory", "Main Directory Created : " + mainDir);
+                                        Log.e("Create Directory", "Main Directory Created: " + mainDir);
                                 }
                                 File captureFile = new File(mainDir + "prueba" + getPhotoTime() + ".png");
                                 if (!captureFile.exists())
@@ -280,18 +279,21 @@ public final class FindSoulMateActivity extends AppCompatActivity {
                                 stream.flush();
                                 stream.close();
 
-                                Bitmap bitmap = BitmapFactory.decodeFile(captureFile.getAbsolutePath());
+                                //Crea bitmap a partir del File
 
-                                mPhotoPeep.setImageBitmap(bitmap);
+                                Bitmap mBitmap = BitmapFactory.decodeFile(captureFile.getAbsolutePath());
+                                //Coloca la imagen de la cameraSource a la vista
+                                mPhotoPeep.setImageBitmap(mBitmap);
                                 mPhotoPeep.setRotation(90);
 
-                                //shareScreenshot(captureFile);
+
+                                takeScreenshot(ScreenshotType.FULL);
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
 
 
-                            takeScreenshot(ScreenshotType.FULL);
                         }
 
                         private String getPhotoTime(){
@@ -432,7 +434,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
 
         switch (screenshotType) {
             case FULL:
-                bitmap = ScreenshotUtils.getScreenShot(rootView);
+                bitmap = ScreenshotUtils.getScreenShot(mPreview);
                 break;
             case CUSTOM:
                 //Puedo hacer invisible o visible lo que me parezca
@@ -457,13 +459,19 @@ public final class FindSoulMateActivity extends AppCompatActivity {
 
                 }
             });
-            /*File saveFile = ScreenshotUtils.getMainDirectoryName(this);//el directoria para guardar
-            File file = ScreenshotUtils.store(b, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-            shareScreenshot(file);//finally share screenshot*/
+
+
+            File saveFile = ScreenshotUtils.getMainDirectoryName(this);//el directoria para guardar
+            File file = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
+            shareScreenshot(file);
+
+
         } else {
             //Si es nulo
             Toast.makeText(this, R.string.screenshot_take_failed, Toast.LENGTH_SHORT).show();
         }
+
+
 
     }
 
