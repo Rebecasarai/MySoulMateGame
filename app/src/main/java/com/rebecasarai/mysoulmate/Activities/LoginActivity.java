@@ -3,6 +3,7 @@ package com.rebecasarai.mysoulmate.Activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -344,7 +345,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            /*for (String credential : DUMMY_CREDENTIALS) {
+            for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
@@ -352,12 +353,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             }
 
-            */
+
 
             // TODO: register the new account here.
 
             mAuth.signInWithEmailAndPassword(mEmail, mPassword)
-                    .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+                    .addOnCompleteListener((Activity) getApplicationContext(), new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
@@ -376,6 +377,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                         }
                     });
+
             return true;
         }
 
