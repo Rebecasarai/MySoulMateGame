@@ -29,13 +29,15 @@ import com.google.android.gms.vision.CameraSource;
 import java.io.IOException;
 
 public class CameraPreview extends ViewGroup {
+
     private static final String TAG = "Camera";
 
     private Context mContext;
+    private CameraSource mCameraSource;
     private SurfaceView mSurfaceView;
+
     private boolean mStartRequested;
     private boolean mSurfaceAvailable;
-    private CameraSource mCameraSource;
 
     private GraphicOverlay mOverlay;
 
@@ -53,7 +55,7 @@ public class CameraPreview extends ViewGroup {
         addView(mSurfaceView);
     }
 
-    public SurfaceView getmSurfaceView() {
+    public SurfaceView getSurfaceView() {
         return mSurfaceView;
     }
 
@@ -134,6 +136,7 @@ public class CameraPreview extends ViewGroup {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int previewWidth = 320;
         int previewHeight = 240;
+
         if (mCameraSource != null) {
             Size size = mCameraSource.getPreviewSize();
             if (size != null) {
@@ -149,6 +152,7 @@ public class CameraPreview extends ViewGroup {
             previewHeight = tmp;
         }
 
+        // Calcula el ancho y el alto de la camera preview
         final int viewWidth = right - left;
         final int viewHeight = bottom - top;
 
@@ -197,7 +201,7 @@ public class CameraPreview extends ViewGroup {
             return true;
         }
 
-        Log.d(TAG, "devuelve falso portrait");
+        Log.d(TAG, "Devuelve falso portrait");
         return false;
     }
 }
