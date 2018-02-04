@@ -27,15 +27,15 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="face" />
 
-        <activity android:name=".Activities.SplashScreen" />
         <activity
             android:name=".Activities.FindSoulMateActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
 
-        </activity>
+        <!--TODO: add the splashscreen theme-->
         <activity
             android:name=".Activities.LoginActivity"
-            android:label="@string/title_activity_login">
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

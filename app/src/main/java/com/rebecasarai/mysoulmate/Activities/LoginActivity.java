@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rebecasarai.mysoulmate.Models.User;
+import com.rebecasarai.mysoulmate.R;
 
 import java.util.Arrays;
 
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme);
         mFirebaseAuth = FirebaseAuth.getInstance();
         firebaseLogin();
     }
@@ -85,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Set all the firebase variables
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference userRef = firebaseDatabase.getReference("Users").child(firebaseUser.getUid());
+        final DatabaseReference userRef = firebaseDatabase.getReference("users").child(firebaseUser.getUid());
 
         // Add a listener which adds the user to the database if he does not exist.
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -93,6 +95,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() == null) {
                     User user = new User();
+                    user.setUid(firebaseUser.getUid());
                     user.setName(firebaseUser.getDisplayName());
                     user.setEmail(firebaseUser.getEmail());
                     userRef.setValue(user);

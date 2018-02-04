@@ -39,13 +39,17 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.google.firebase.auth.FirebaseAuth;
 import com.rebecasarai.mysoulmate.Camera.CameraPreview;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
+import com.rebecasarai.mysoulmate.FileManager;
 import com.rebecasarai.mysoulmate.Graphics.FaceGraphic;
 import com.rebecasarai.mysoulmate.R;
 import com.rebecasarai.mysoulmate.Screenshot.ScreenshotType;
@@ -55,26 +59,24 @@ import java.io.File;
 import java.io.IOException;
 
 public final class FindSoulMateActivity extends AppCompatActivity {
-    private static final String TAG = "FaceTracker";
 
-    private CameraSource mCameraSource = null;
-
-    private CameraPreview mPreview;
-    private GraphicOverlay mGraphicOverlay;
+    private static final String TAG = FindSoulMateActivity.class.getSimpleName();
 
     private static final int RC_HANDLE_GMS = 9001;
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
+    private CameraSource mCameraSource = null;
+    private CameraPreview mPreview;
+    private GraphicOverlay mGraphicOverlay;
+
     View rootView;
-
     MediaPlayer mediaPlayer;
-
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_find_soul_mate);
 
         rootView = getWindow().getDecorView().findViewById(R.id.topLayout);
 
@@ -127,6 +129,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
 
     /**
      * Permisos
+     *
      * @param requestCode
      * @param permissions
      * @param grantResults
@@ -250,11 +253,11 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         }
     };
 
-   /**
-    * Inicia o reinicia la fuente de la cámara, si existe. Si la fuente de la cámara aún no existe
-    * (Como Porque se invocó a OnResume antes de que se creara la fuente de la cámara), se volverá a
-    * llamar cuando se cree la fuente de la cámara.
-    */
+    /**
+     * Inicia o reinicia la fuente de la cámara, si existe. Si la fuente de la cámara aún no existe
+     * (Como Porque se invocó a OnResume antes de que se creara la fuente de la cámara), se volverá a
+     * llamar cuando se cree la fuente de la cámara.
+     */
     private void startCameraSource() {
 
         // check that the device has play services available.
@@ -308,12 +311,11 @@ public final class FindSoulMateActivity extends AppCompatActivity {
 
                 mediaPlayer.start();
             } catch (Exception e) {
-            //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
+                //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
 
             }
 
         }
-
 
 
         /**
@@ -340,7 +342,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         @Override
         public void onMissing(FaceDetector.Detections<Face> detectionResults) {
             mOverlay.remove(mFaceGraphic);
-            Log.v("missing","" );
+            Log.v("missing", "");
         }
 
         /**
@@ -349,7 +351,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         @Override
         public void onDone() {
             mOverlay.remove(mFaceGraphic);
-            Log.v("done","" );
+            Log.v("done", "");
             try {
                 if (mediaPlayer.isPlaying()) {
                     mediaPlayer.stop();
@@ -368,11 +370,11 @@ public final class FindSoulMateActivity extends AppCompatActivity {
      * Método que tomará una captura de pantalla en base al tipo de captura de pantalla ENUM
      */
     private void takeScreenshot(ScreenshotType screenshotType) {
-        Bitmap b = null;
+        Bitmap bitmap = null;
 
         switch (screenshotType) {
             case FULL:
-                b = ScreenshotUtils.getScreenShot(rootView);
+                bitmap = ScreenshotUtils.getScreenShot(rootView);
                 break;
             case CUSTOM:
                 //Puedo hacer invisible o visible lo que me parezca
@@ -381,27 +383,42 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         }
 
         //Si el bitmap no es nulo
-        if (b != null) {
+        if (bitmap != null) {
 
-            File saveFile = ScreenshotUtils.getMainDirectoryName(this);//el directoria para guardar
+            FileManager.uploadScreenshot(FirebaseAuth.getInstance(), bitmap, new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    //TODO: maybe say something else
+                    Toast.makeText(FindSoulMateActivity.this, "Image uploaded.", Toast.LENGTH_SHORT).show();
+                }
+            }, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    //TODO: treat
+                    Toast.makeText(FindSoulMateActivity.this, "Uploading failed.", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+            /*File saveFile = ScreenshotUtils.getMainDirectoryName(this);//el directoria para guardar
             File file = ScreenshotUtils.store(b, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-            shareScreenshot(file);//finally share screenshot
-        } else
+            shareScreenshot(file);//finally share screenshot*/
+        } else {
             //Si es nulo
             Toast.makeText(this, R.string.screenshot_take_failed, Toast.LENGTH_SHORT).show();
+        }
 
     }
 
     /**
-     *  Muestra screenshot Bitmap si quiero
-     *  */
+     * Muestra screenshot Bitmap si quiero
+     */
     private void showScreenShotImage(Bitmap b) {
         //imageView.setImageBitmap(b);
     }
 
     /**
-     *  Comparte Screenshot
-     *  */
+     * Comparte Screenshot
+     */
     private void shareScreenshot(File file) {
         Uri uri = Uri.fromFile(file);//Convert file path into Uri for sharing
         Intent intent = new Intent();
