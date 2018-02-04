@@ -19,7 +19,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,7 +27,6 @@ import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
@@ -49,9 +47,10 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.rebecasarai.mysoulmate.Camera.CameraPreview;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
 import com.rebecasarai.mysoulmate.R;
+import com.rebecasarai.mysoulmate.Screenshot.ScreenshotType;
+import com.rebecasarai.mysoulmate.Screenshot.ScreenshotUtils;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -81,21 +80,17 @@ public final class TrackerActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    Bitmap b = getScreenShot(rootView);
 
-                    store(b,"prueba");
-
-                    String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
-                    File dir = new File(dirPath);
-                    if(!dir.exists())
-                        dir.mkdirs();
-                    File file = new File(dirPath, "prueba");
-                    shareImage(file);
+                    takeScreenshot(ScreenshotType.FULL);
 
                     return true;
                 case R.id.navigation_dashboard:
+
+
                     return true;
                 case R.id.navigation_notifications:
+
+
                     return true;
             }
             return false;
@@ -111,7 +106,7 @@ public final class TrackerActivity extends AppCompatActivity {
         super.onCreate(icicle);
         setContentView(R.layout.main);
 
-        rootView = getWindow().getDecorView().findViewById(android.R.id.content);
+        rootView = getWindow().getDecorView().findViewById(R.id.topLayout);
 
         mPreview = (CameraPreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
@@ -130,11 +125,9 @@ public final class TrackerActivity extends AppCompatActivity {
 
 
     }
-
     /**
-     * Handles the requesting of the camera permission.  This includes
-     * showing a "Snackbar" message of why the permission is needed then
-     * sending the request.
+     * Maneja la solicitud del permiso de la cámara. Esto incluye mostrar un mensaje de
+     * "Snackbar" de por qué es necesario el permiso y luego enviar la solicitud.
      */
     private void requestCameraPermission() {
         Log.w(TAG, "Camera permission is not granted. Requesting permission");
@@ -270,10 +263,10 @@ public final class TrackerActivity extends AppCompatActivity {
     }
 
    /**
-     * Starts or restarts the camera source, if it exists.  If the camera source doesn't exist yet
-     * (e.g., because onResume was called before the camera source was created), this will be called
-     * again when the camera source is created.
-     */
+    * Inicia o reinicia la fuente de la cámara, si existe. Si la fuente de la cámara aún no existe
+    * (Como Porque se invocó a OnResume antes de que se creara la fuente de la cámara), se volverá a
+    * llamar cuando se cree la fuente de la cámara.
+    */
     private void startCameraSource() {
 
         // check that the device has play services available.
@@ -298,8 +291,7 @@ public final class TrackerActivity extends AppCompatActivity {
 
 
     /**
-     * Factory for creating a face tracker to be associated with a new face.  The multiprocessor
-     * uses this factory to create face trackers as needed -- one for each individual.
+     * Fábrica para crear el tracker de cara para asociarlo con una nueva cara. El multiprocesador usa esta fábrica para crear rastreadores de caras según sea necesario, uno para cada persona.
      */
     private class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
         @Override
@@ -309,8 +301,7 @@ public final class TrackerActivity extends AppCompatActivity {
     }
 
     /**
-     * Face tracker for each detected individual. This maintains a face graphic within the app's
-     * associated face overlay.
+     * Rastreador facial para cada individuo detectado. Esto mantiene un gráfico de cara dentro de la superposición de cara asociada a la aplicación.
      */
     private class GraphicFaceTracker extends Tracker<Face> {
         private GraphicOverlay mOverlay;
@@ -412,45 +403,49 @@ public final class TrackerActivity extends AppCompatActivity {
         }
     }
 
-    public static Bitmap getScreenShot(View view) {
-        View screenView = view.getRootView();
-        screenView.setDrawingCacheEnabled(true);
-        Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
-        screenView.setDrawingCacheEnabled(false);
-        return bitmap;
-    }
+    /*  Method which will take screenshot on Basis of Screenshot Type ENUM  */
+    private void takeScreenshot(ScreenshotType screenshotType) {
+        Bitmap b = null;
+        switch (screenshotType) {
+            case FULL:
+                b = ScreenshotUtils.getScreenShot(rootView);
+                break;
+            case CUSTOM:
 
-    public static void store(Bitmap bm, String fileName){
-        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
-        File dir = new File(dirPath);
-        if(!dir.exists())
-            dir.mkdirs();
-        File file = new File(dirPath, fileName);
-        try {
-            FileOutputStream fOut = new FileOutputStream(file);
-            bm.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-            fOut.flush();
-            fOut.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+                break;
         }
+
+        //If bitmap is not null
+        if (b != null) {
+            showScreenShotImage(b);//show bitmap over imageview
+
+            File saveFile = ScreenshotUtils.getMainDirectoryName(this);//get the path to save screenshot
+            File file = ScreenshotUtils.store(b, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
+            shareScreenshot(file);//finally share screenshot
+        } else
+            //If bitmap is null show toast message
+            Toast.makeText(this, R.string.screenshot_take_failed, Toast.LENGTH_SHORT).show();
+
     }
 
-    private void shareImage(File file){
-        Uri uri = Uri.fromFile(file);
+    /*  Show screenshot Bitmap */
+    private void showScreenShotImage(Bitmap b) {
+        //imageView.setImageBitmap(b);
+    }
+
+    /*  Share Screenshot  */
+    private void shareScreenshot(File file) {
+        Uri uri = Uri.fromFile(file);//Convert file path into Uri for sharing
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.setType("image/*");
-
         intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        try {
-            startActivity(Intent.createChooser(intent, "Share Screenshot"));
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(getApplicationContext(), "No App Available", Toast.LENGTH_SHORT).show();
-        }
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.sharing_text));
+        intent.putExtra(Intent.EXTRA_STREAM, uri);//pass uri here
+        startActivity(Intent.createChooser(intent, getString(R.string.share_title)));
     }
 
-
 }
+
+
+
