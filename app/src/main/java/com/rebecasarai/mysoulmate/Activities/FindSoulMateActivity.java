@@ -69,7 +69,6 @@ public final class FindSoulMateActivity extends AppCompatActivity {
     private static final String TAG = FindSoulMateActivity.class.getSimpleName();
 
     private CameraSource mCameraSource = null;
-
     private CameraPreview mPreview;
     private GraphicOverlay mGraphicOverlay;
 
