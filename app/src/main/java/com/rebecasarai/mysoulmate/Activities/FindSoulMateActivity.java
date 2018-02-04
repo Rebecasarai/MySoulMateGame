@@ -372,7 +372,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
 
         switch (screenshotType) {
             case FULL:
-                b = ScreenshotUtils.getScreenShot(mPreview);
+                b = ScreenshotUtils.getScreenShot(rootView);
                 break;
             case CUSTOM:
                 //Puedo hacer invisible o visible lo que me parezca
