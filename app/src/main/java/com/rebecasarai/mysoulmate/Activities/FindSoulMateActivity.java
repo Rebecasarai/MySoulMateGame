@@ -229,7 +229,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         }
 
         mCameraSource = new CameraSource.Builder(context, detector)
-                //.setRequestedPreviewSize(640, 480)
+                .setRequestedPreviewSize(640, 480)
                 //.setRequestedPreviewSize(940, 480)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedFps(30.0f)
@@ -254,51 +254,8 @@ public final class FindSoulMateActivity extends AppCompatActivity {
                     mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
                         @Override
                         public void onPictureTaken(byte[] bytes) {
-
                             Log.v("foto", "tomada");
                             capturar(bytes);
-                        }
-
-                        private void capturar(byte[] bytes) {
-
-                            try {
-
-                                File mainDir = new File(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "prueba");
-
-                                if (!mainDir.exists()) {
-                                    if (mainDir.mkdir())
-                                        Log.e("Create Directory", "Main Directory Created: " + mainDir);
-                                }
-                                File captureFile = new File(mainDir + "prueba" + getPhotoTime() + ".png");
-                                if (!captureFile.exists())
-                                    Log.d("CAPTURE_FILE_PATH", captureFile.createNewFile() ? "Success" : "Failed");
-                                FileOutputStream stream = new FileOutputStream(captureFile);
-
-                                stream.write(bytes);
-
-                                stream.flush();
-                                stream.close();
-
-                                //Crea bitmap a partir del File
-
-                                Bitmap mBitmap = BitmapFactory.decodeFile(captureFile.getAbsolutePath());
-                                //Coloca la imagen de la cameraSource a la vista
-                                mPhotoPeep.setImageBitmap(mBitmap);
-                                mPhotoPeep.setRotation(90);
-
-
-                                takeScreenshot(ScreenshotType.FULL);
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-
-                        private String getPhotoTime(){
-                            SimpleDateFormat sdf=new SimpleDateFormat("ddMMyy_hhmmss");
-                            return sdf.format(new Date());
                         }
                     });
 
@@ -311,6 +268,58 @@ public final class FindSoulMateActivity extends AppCompatActivity {
             return false;
         }
     };
+
+
+    private String getPhotoTime(){
+        SimpleDateFormat sdf=new SimpleDateFormat("ddMMyy_hhmmss");
+        return sdf.format(new Date());
+    }
+
+
+    /**
+     *
+     * @param bytes
+     */
+    private void capturar(byte[] bytes) {
+        try {
+
+            File mainDir = new File(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "prueba");
+
+            if (!mainDir.exists()) {
+                if (mainDir.mkdir())
+                    Log.e("Create Directory", "Main Directory Created: " + mainDir);
+            }
+            File captureFile = new File(mainDir + "prueba" + getPhotoTime() + ".png");
+            if (!captureFile.exists())
+                Log.d("CAPTURE_FILE_PATH", captureFile.createNewFile() ? "Success" : "Failed");
+
+            FileOutputStream stream = new FileOutputStream(captureFile);
+            stream.write(bytes);
+
+            stream.flush();
+            stream.close();
+
+            //Crea bitmap a partir del File
+            Bitmap mBitmap;
+
+            //TODO: Liberar espacio si el bitmap no es nulo
+            mBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+            //Coloca la imagen de la cameraSource a la vista
+            mPhotoPeep.setImageBitmap(mBitmap);
+            mPhotoPeep.setRotation(90);
+
+
+            //Captura de pantalla
+            takeScreenshot(ScreenshotType.FULL);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     /**
      * Inicia o reinicia la fuente de la cámara, si existe. Si la fuente de la cámara aún no existe
@@ -461,9 +470,9 @@ public final class FindSoulMateActivity extends AppCompatActivity {
             });
 
 
-            File saveFile = ScreenshotUtils.getMainDirectoryName(this);//el directoria para guardar
+            /*File saveFile = ScreenshotUtils.getMainDirectoryName(this);//el directoria para guardar
             File file = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-            shareScreenshot(file);
+            shareScreenshot(file);*/
 
 
         } else {
