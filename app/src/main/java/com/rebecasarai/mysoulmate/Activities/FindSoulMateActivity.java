@@ -315,7 +315,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
 
 
         /**
-         * Comience a rastrear la instancia de cara detectada dentro de la superposición de cara.
+         * Comience a rastrear la instancia de cara detectada dentro del overlay de cara.
          */
         @Override
         public void onNewItem(int faceId, Face item) {
