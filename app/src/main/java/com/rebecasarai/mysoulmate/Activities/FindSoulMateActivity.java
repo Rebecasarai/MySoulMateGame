@@ -315,7 +315,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
 
 
         /**
-         * Comience a rastrear la instancia de cara detectada dentro del overlay de cara.
+         * Comience a trackear la cara detectada dentro del overlay.
          */
         @Override
         public void onNewItem(int faceId, Face item) {
@@ -333,9 +333,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         }
 
         /**
-         * Hide the graphic when the corresponding face was not detected.  This can happen for
-         * intermediate frames temporarily (e.g., if the face was momentarily blocked from
-         * view).
+         * Oculta el gráfico cuando no se detectó la cara.
          */
         @Override
         public void onMissing(FaceDetector.Detections<Face> detectionResults) {
@@ -346,8 +344,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         }
 
         /**
-         * Llamado cuando se supone que la cara se ha ido para siempre. Elimine la anotación gráfica de
-         * el overlay.
+         * Llamado cuando se supone que la cara no se detecta definitvamente. Elimina el gráfica del overlay.
          */
         @Override
         public void onDone() {
