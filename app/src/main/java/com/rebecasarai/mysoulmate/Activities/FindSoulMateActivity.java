@@ -268,6 +268,10 @@ public final class FindSoulMateActivity extends AppCompatActivity {
     };
 
 
+    /**
+     * Metodo que captura la foto, llamado desde CameraSource
+     * @param bytes
+     */
     private void capturar(byte[] bytes) {
 
         try {
@@ -301,6 +305,10 @@ public final class FindSoulMateActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Fecha actual
+     * @return
+     */
     private String getPhotoTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy_hhmmss");
         return sdf.format(new Date());
@@ -454,9 +462,9 @@ public final class FindSoulMateActivity extends AppCompatActivity {
             });
 
 
-            File saveFile = ScreenshotUtils.getMainDirectoryName(this);//el directoria para guardar
+            /*File saveFile = ScreenshotUtils.getMainDirectoryName(this);//el directoria para guardar
             File file = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-            shareScreenshot(file);
+            shareScreenshot(file);*/
 
 
         } else {
