@@ -65,10 +65,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public final class FindSoulMateActivity extends AppCompatActivity {
-    private static final String TAG = "FaceTracker";
+
+    private static final String TAG = FindSoulMateActivity.class.getSimpleName();
 
     private CameraSource mCameraSource = null;
-
     private CameraPreview mPreview;
     private GraphicOverlay mGraphicOverlay;
 
@@ -77,9 +77,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
     View rootView;
-
     MediaPlayer mediaPlayer;
-
     ImageView mPhotoPeep;
 
 
@@ -96,6 +94,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        //TODO: esto no debería hacerse así.
         //Chequeo permisos e inicializo la cameraSource
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
@@ -104,7 +103,6 @@ public final class FindSoulMateActivity extends AppCompatActivity {
             requestCameraPermission();
         }
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.rebecatech);
-
         mPhotoPeep = (ImageView) findViewById(R.id.photoPerson);
     }
 
@@ -139,6 +137,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
 
     /**
      * Permisos
+     *
      * @param requestCode
      * @param permissions
      * @param grantResults
@@ -245,72 +244,64 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-
                     takeScreenshot(ScreenshotType.FULL);
-
                     return true;
-                case R.id.navigation_dashboard:
 
+                case R.id.navigation_dashboard:
                     mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
                         @Override
                         public void onPictureTaken(byte[] bytes) {
-
-                            Log.v("foto", "tomada");
+                            Log.v(TAG, "Foto tomada.");
                             capturar(bytes);
                         }
-
-                        private void capturar(byte[] bytes) {
-
-                            try {
-
-                                File mainDir = new File(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "prueba");
-
-                                if (!mainDir.exists()) {
-                                    if (mainDir.mkdir())
-                                        Log.e("Create Directory", "Main Directory Created: " + mainDir);
-                                }
-                                File captureFile = new File(mainDir + "prueba" + getPhotoTime() + ".png");
-                                if (!captureFile.exists())
-                                    Log.d("CAPTURE_FILE_PATH", captureFile.createNewFile() ? "Success" : "Failed");
-                                FileOutputStream stream = new FileOutputStream(captureFile);
-
-                                stream.write(bytes);
-
-                                stream.flush();
-                                stream.close();
-
-                                //Crea bitmap a partir del File
-
-                                Bitmap mBitmap = BitmapFactory.decodeFile(captureFile.getAbsolutePath());
-                                //Coloca la imagen de la cameraSource a la vista
-                                mPhotoPeep.setImageBitmap(mBitmap);
-                                mPhotoPeep.setRotation(90);
-
-
-                                takeScreenshot(ScreenshotType.FULL);
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-
-                        private String getPhotoTime(){
-                            SimpleDateFormat sdf=new SimpleDateFormat("ddMMyy_hhmmss");
-                            return sdf.format(new Date());
-                        }
                     });
-
                     return true;
+
                 case R.id.navigation_notifications:
-
-
                     return true;
             }
             return false;
         }
     };
+
+
+    private void capturar(byte[] bytes) {
+
+        try {
+            File mainDir = new File(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "prueba");
+
+            if (!mainDir.exists()) {
+                if (mainDir.mkdir())
+                    Log.e("Create Directory", "Main Directory Created: " + mainDir);
+            }
+            File captureFile = new File(mainDir + "prueba" + getPhotoTime() + ".png");
+            if (!captureFile.exists())
+                Log.d("CAPTURE_FILE_PATH", captureFile.createNewFile() ? "Success" : "Failed");
+
+            FileOutputStream stream = new FileOutputStream(captureFile);
+            stream.write(bytes);
+            stream.flush();
+            stream.close();
+
+            // Crea bitmap a partir del File
+            Bitmap mBitmap = BitmapFactory.decodeFile(captureFile.getAbsolutePath());
+
+            // Coloca la imagen de la cameraSource a la vista
+            mPhotoPeep.setImageBitmap(mBitmap);
+            mPhotoPeep.setRotation(90);
+
+            takeScreenshot(ScreenshotType.FULL);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private String getPhotoTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy_hhmmss");
+        return sdf.format(new Date());
+    }
 
     /**
      * Inicia o reinicia la fuente de la cámara, si existe. Si la fuente de la cámara aún no existe
@@ -377,7 +368,6 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         }
 
 
-
         /**
          * Comienza a trackear dentro del overlay.
          */
@@ -402,7 +392,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         @Override
         public void onMissing(FaceDetector.Detections<Face> detectionResults) {
             mOverlay.remove(mFaceGraphic);
-            Log.v("missing","" );
+            Log.v("missing", "");
         }
 
         /**
@@ -438,7 +428,6 @@ public final class FindSoulMateActivity extends AppCompatActivity {
                 break;
             case CUSTOM:
                 //Puedo hacer invisible o visible lo que me parezca
-
                 break;
         }
 
@@ -470,7 +459,6 @@ public final class FindSoulMateActivity extends AppCompatActivity {
             //Si es nulo
             Toast.makeText(this, R.string.screenshot_take_failed, Toast.LENGTH_SHORT).show();
         }
-
 
 
     }
