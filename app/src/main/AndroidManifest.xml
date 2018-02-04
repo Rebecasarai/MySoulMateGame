@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rebecasarai.mysoulmate">
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -12,7 +10,6 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -33,7 +30,7 @@
         <activity android:name=".Activities.SplashScreen" />
         <activity
             android:name=".Activities.FindSoulMateActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" >
+            android:theme="@style/Theme.AppCompat.NoActionBar">
 
         </activity>
         <activity
