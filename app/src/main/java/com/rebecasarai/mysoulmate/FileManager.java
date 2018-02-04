@@ -36,7 +36,7 @@ public class FileManager {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 String imageUrl = taskSnapshot.getDownloadUrl().toString();
-                updateUserScreenshots(auth, imageUrl);
+                //updateUserScreenshots(auth, imageUrl);
             }
         };
         uploadFile(path, data, onUploadListener, onFailureListener);
