@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.rebecasarai.mysoulmate.Activities;
+package com.rebecasarai.mysoulmate.Graphics;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -55,7 +55,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
 
 
-    FaceGraphic(GraphicOverlay overlay, Context context) {
+    public FaceGraphic(GraphicOverlay overlay, Context context) {
         super(overlay);
 
         final int selectedColor = COLOR_CHOICES;
@@ -75,7 +75,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         this.context = context;
     }
 
-    void setId(int id) {
+    public void setId(int id) {
         mFaceId = id;
     }
 
@@ -84,7 +84,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
       * Actualiza la instancia de cara desde la detección del marco más reciente. Invalida el
       * porciones relevantes de la superposición para activar un redibujado.
       */
-    void updateFace(Face face) {
+    public void updateFace(Face face) {
         mFace = face;
         postInvalidate();
     }
