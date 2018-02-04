@@ -384,7 +384,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 finish();
-                Intent i = new Intent(getApplicationContext(),TrackerActivity.class);
+                Intent i = new Intent(getApplicationContext(),FindSoulMateActivity.class);
                 startActivity(i);
 
             } else {

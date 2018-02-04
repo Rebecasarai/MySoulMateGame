@@ -25,24 +25,6 @@ import com.google.android.gms.vision.CameraSource;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * A view which renders a series of custom graphics to be overlayed on top of an associated preview
- * (i.e., the camera preview).  The creator can add graphics objects, update the objects, and remove
- * them, triggering the appropriate drawing and invalidation within the view.<p>
- *
- * Supports scaling and mirroring of the graphics relative the camera's preview properties.  The
- * idea is that detection items are expressed in terms of a preview size, but need to be scaled up
- * to the full view size, and also mirrored in the case of the front-facing camera.<p>
- *
- * Associated {@link Graphic} items should use the following methods to convert to view coordinates
- * for the graphics that are drawn:
- * <ol>
- * <li>{@link Graphic#scaleX(float)} and {@link Graphic#scaleY(float)} adjust the size of the
- * supplied value from the preview scale to the view scale.</li>
- * <li>{@link Graphic#translateX(float)} and {@link Graphic#translateY(float)} adjust the coordinate
- * from the preview's coordinate system to the view coordinate system.</li>
- * </ol>
- */
 public class GraphicOverlay extends View {
     private final Object mLock = new Object();
     private int mPreviewWidth;
@@ -53,10 +35,10 @@ public class GraphicOverlay extends View {
     private Set<Graphic> mGraphics = new HashSet<>();
 
     /**
-     * Base class for a custom graphics object to be rendered within the graphic overlay.  Subclass
-     * this and implement the {@link Graphic#draw(Canvas)} method to define the
-     * graphics element.  Add instances to the overlay using {@link GraphicOverlay#add(Graphic)}.
-     */
+    * Clase para que un objeto gráfico para colocar encima, overlay grafico.
+    * Se tiene que hacer subclase e implementar el método {@link Graphic # draw (Canvas)} para definir el
+    * grafico. Se debe de agregar instancias al overlay con {@link GraphicOverlay # add (Graphic)}.
+    */
     public static abstract class Graphic {
         private GraphicOverlay mOverlay;
 
@@ -65,37 +47,30 @@ public class GraphicOverlay extends View {
         }
 
         /**
-         * Draw the graphic on the supplied canvas.  Drawing should use the following methods to
-         * convert to view coordinates for the graphics that are drawn:
-         * <ol>
-         * <li>{@link Graphic#scaleX(float)} and {@link Graphic#scaleY(float)} adjust the size of
-         * the supplied value from the preview scale to the view scale.</li>
-         * <li>{@link Graphic#translateX(float)} and {@link Graphic#translateY(float)} adjust the
-         * coordinate from the preview's coordinate system to the view coordinate system.</li>
-         * </ol>
-         *
-         * @param canvas drawing canvas
+         * Dibuja el gráfico en el canvas. El dibujo debe usar los siguientes métodos para convertir
+         * y ver las coordenadas de los gráficos que se dibujan
+         * ScaleX y ScaleY para ajustar tamaño de escala
+         * Coordinar desde el sistema de coordenadas del preview a los de la vista.
+         * @param canvas
          */
         public abstract void draw(Canvas canvas);
 
         /**
-         * Adjusts a horizontal value of the supplied value from the preview scale to the view
-         * scale.
+         * Ajusta un valor horizontal del de la escala del preview a la escala de la vista
          */
         public float scaleX(float horizontal) {
             return horizontal * mOverlay.mWidthScaleFactor;
         }
 
         /**
-         * Adjusts a vertical value of the supplied value from the preview scale to the view scale.
+         * Lo mismo pero vertical
          */
         public float scaleY(float vertical) {
             return vertical * mOverlay.mHeightScaleFactor;
         }
 
         /**
-         * Adjusts the x coordinate from the preview's coordinate system to the view coordinate
-         * system.
+         * Ajusta la coordenada x del sistema de coordenadas del preview a la coordenada del sistema de vista
          */
         public float translateX(float x) {
             if (mOverlay.mFacing == CameraSource.CAMERA_FACING_FRONT) {
@@ -106,8 +81,7 @@ public class GraphicOverlay extends View {
         }
 
         /**
-         * Adjusts the y coordinate from the preview's coordinate system to the view coordinate
-         * system.
+         * Lo mismo pero Y
          */
         public float translateY(float y) {
             return scaleY(y);
@@ -123,7 +97,7 @@ public class GraphicOverlay extends View {
     }
 
     /**
-     * Removes all graphics from the overlay.
+     * Borra todos los overlays
      */
     public void clear() {
         synchronized (mLock) {
@@ -133,7 +107,7 @@ public class GraphicOverlay extends View {
     }
 
     /**
-     * Adds a graphic to the overlay.
+     * Adds el overlay
      */
     public void add(Graphic graphic) {
         synchronized (mLock) {
@@ -143,7 +117,7 @@ public class GraphicOverlay extends View {
     }
 
     /**
-     * Removes a graphic from the overlay.
+     * Removes a graphic del overlay.
      */
     public void remove(Graphic graphic) {
         synchronized (mLock) {

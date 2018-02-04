@@ -29,7 +29,7 @@ import com.google.android.gms.vision.CameraSource;
 import java.io.IOException;
 
 public class CameraPreview extends ViewGroup {
-    private static final String TAG = "CameraSourcePreview";
+    private static final String TAG = "Camera";
 
     private Context mContext;
     private SurfaceView mSurfaceView;
@@ -116,7 +116,7 @@ public class CameraPreview extends ViewGroup {
             try {
                 startIfReady();
             } catch (IOException e) {
-                Log.e(TAG, "Could not start camera source.", e);
+                Log.v(TAG, "No pudo comenzar la camara", e);
             }
         }
 
@@ -142,7 +142,7 @@ public class CameraPreview extends ViewGroup {
             }
         }
 
-        // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
+        // Cambia los tamaños de ancho y alto cuando está en el portrait
         if (isPortraitMode()) {
             int tmp = previewWidth;
             previewWidth = previewHeight;
@@ -159,10 +159,10 @@ public class CameraPreview extends ViewGroup {
         float widthRatio = (float) viewWidth / (float) previewWidth;
         float heightRatio = (float) viewHeight / (float) previewHeight;
 
-        // To fill the view with the camera preview, while also preserving the correct aspect ratio,
-        // it is usually necessary to slightly oversize the child and to crop off portions along one
-        // of the dimensions.  We scale up based on the dimension requiring the most correction, and
-        // compute a crop offset for the other dimension.
+        // Para llenar la vista con la vista previa de la cámara, al mismo tiempo que se conserva la relación de aspecto que debe ser,
+        // tabien se puede sobredimensionar un poco el child y recortar porciones
+        // Escalamos según la dimensión que requiere la mayor corrección, y
+        // calcular un recorte para desplazar la otra dimensión.
         if (widthRatio > heightRatio) {
             childWidth = viewWidth;
             childHeight = (int) ((float) previewHeight * widthRatio);
@@ -174,8 +174,8 @@ public class CameraPreview extends ViewGroup {
         }
 
         for (int i = 0; i < getChildCount(); ++i) {
-            // One dimension will be cropped.  We shift child over or up by this offset and adjust
-            // the size to maintain the proper aspect ratio.
+            // Dimensión recortada. Cambiamos el child por arriba desplazando y ajustamos
+            // el tamaño para mantener la relación de aspecto, que no se distorsione.
             getChildAt(i).layout(
                     -1 * childXOffset, -1 * childYOffset,
                     childWidth - childXOffset, childHeight - childYOffset);
@@ -184,7 +184,7 @@ public class CameraPreview extends ViewGroup {
         try {
             startIfReady();
         } catch (IOException e) {
-            Log.e(TAG, "Could not start camera source.", e);
+            Log.v(TAG, "No pudo acceder a la camara", e);
         }
     }
 
@@ -197,7 +197,7 @@ public class CameraPreview extends ViewGroup {
             return true;
         }
 
-        Log.d(TAG, "isPortraitMode returning false by default");
+        Log.d(TAG, "devuelve falso portrait");
         return false;
     }
 }

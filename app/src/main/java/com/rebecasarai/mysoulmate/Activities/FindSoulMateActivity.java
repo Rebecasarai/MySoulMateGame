@@ -57,7 +57,7 @@ import java.io.IOException;
  * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
  * overlay graphics to indicate the position, size, and ID of each face.
  */
-public final class TrackerActivity extends AppCompatActivity {
+public final class FindSoulMateActivity extends AppCompatActivity {
     private static final String TAG = "FaceTracker";
 
     private CameraSource mCameraSource = null;
@@ -98,9 +98,6 @@ public final class TrackerActivity extends AppCompatActivity {
     };
 
 
-    /**
-     * Initializes the UI and initiates the creation of a face detector.
-     */
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -114,23 +111,23 @@ public final class TrackerActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        //Chequeo permisos e inicializo la cameraSource
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource();
         } else {
             requestCameraPermission();
         }
-
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.rebecatech);
 
 
     }
     /**
-     * Maneja la solicitud del permiso de la cámara. Esto incluye mostrar un mensaje de
-     * "Snackbar" de por qué es necesario el permiso y luego enviar la solicitud.
+     * Maneja la solicitud del permiso de la cámara. Muestra un mensaje de
+     * Snackbar
      */
     private void requestCameraPermission() {
-        Log.w(TAG, "Camera permission is not granted. Requesting permission");
+        Log.w(TAG, "El permiso de la cámara no se concedió");
 
         final String[] permissions = new String[]{Manifest.permission.CAMERA};
 
@@ -175,15 +172,8 @@ public final class TrackerActivity extends AppCompatActivity {
                         .build());
 
         if (!detector.isOperational()) {
-            // Note: The first time that an app using face API is installed on a device, GMS will
-            // download a native library to the device in order to do detection.  Usually this
-            // completes before the app is run for the first time.  But if that download has not yet
-            // completed, then the above call will not detect any faces.
-            //
-            // isOperational() can be used to check if the required native library is currently
-            // available.  The detector will automatically become operational once the library
-            // download completes on device.
-            Log.w(TAG, "Face detector dependencies are not yet available.");
+
+            Log.w(TAG, "Detector de caras no funciona");
         }
 
         mCameraSource = new CameraSource.Builder(context, detector)
@@ -195,9 +185,7 @@ public final class TrackerActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * Restarts the camera.
-     */
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -205,9 +193,6 @@ public final class TrackerActivity extends AppCompatActivity {
         startCameraSource();
     }
 
-    /**
-     * Stops the camera.
-     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -216,8 +201,7 @@ public final class TrackerActivity extends AppCompatActivity {
     }
 
     /**
-     * Releases the resources associated with the camera source, the associated detector, and the
-     * rest of the processing pipeline.
+     * Libera recursos, la fuente de la cámara, el face detector
      */
     @Override
     protected void onDestroy() {
@@ -231,6 +215,12 @@ public final class TrackerActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Permisos
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode != RC_HANDLE_CAMERA_PERM) {
@@ -329,7 +319,7 @@ public final class TrackerActivity extends AppCompatActivity {
 
 
         /**
-         * Start tracking the detected face instance within the face overlay.
+         * Comience a rastrear la instancia de cara detectada dentro de la superposición de cara.
          */
         @Override
         public void onNewItem(int faceId, Face item) {

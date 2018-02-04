@@ -44,16 +44,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     Random random = new Random();
 
 
-    private static final int COLOR_CHOICES[] = {
-        Color.BLUE,
-        Color.CYAN,
-        Color.GREEN,
-        Color.MAGENTA,
-        Color.RED,
-        Color.WHITE,
-        Color.YELLOW
-    };
-    private static int mCurrentColorIndex = 0;
+    private static final int COLOR_CHOICES= Color.RED;
 
     private Paint mFacePositionPaint;
     private Paint mIdPaint;
@@ -61,15 +52,13 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     private volatile Face mFace;
     private int mFaceId;
-    private float mFaceHappiness;
 
 
 
     FaceGraphic(GraphicOverlay overlay, Context context) {
         super(overlay);
 
-        mCurrentColorIndex = (mCurrentColorIndex + 1) % COLOR_CHOICES.length;
-        final int selectedColor = COLOR_CHOICES[mCurrentColorIndex];
+        final int selectedColor = COLOR_CHOICES;
 
         mFacePositionPaint = new Paint();
         mFacePositionPaint.setColor(selectedColor);
@@ -92,17 +81,17 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
 
     /**
-     * Updates the face instance from the detection of the most recent frame.  Invalidates the
-     * relevant portions of the overlay to trigger a redraw.
-     */
+      * Actualiza la instancia de cara desde la detección del marco más reciente. Invalida el
+      * porciones relevantes de la superposición para activar un redibujado.
+      */
     void updateFace(Face face) {
         mFace = face;
         postInvalidate();
     }
 
     /**
-     * Draws the face annotations for position on the supplied canvas.
-     */
+    * Dibuja las anotaciones de la cara para la posición en el lienzo suministrado.
+    */
     @Override
     public void draw(Canvas canvas) {
         Face face = mFace;
@@ -123,9 +112,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
         canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
         canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
-        //canvas.drawText("Alegria: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
-        //canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
-        //canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
         canvas.drawText("Es tu alma gemelaa" , x - ID_X_OFFSET*3, y - ID_Y_OFFSET*3, mIdPaint);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -145,7 +131,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             canvas.drawBitmap(scaledBitmap, w, h, p);
         }
 
-
         //canvas.drawBitmap(scaledBitmap, 400, 300, p);
 
         float xOffset = scaleX(face.getWidth() / 2.0f);
@@ -161,6 +146,13 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     }
 
+    /**
+     * Optimiza tamaño del bitmap
+     * @param realImage
+     * @param maxImageSize
+     * @param filter
+     * @return
+     */
     public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
                                    boolean filter) {
         float ratio = Math.min(
@@ -174,6 +166,13 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         return newBitmap;
     }
 
+    /**
+     * Dibuja los landmarks
+     * @param canvas
+     * @param scale
+     * @param face
+     * @param p
+     */
     private void drawFaceLandmarks( Canvas canvas, double scale, Face face, Paint p) {
         p.setColor( Color.GREEN );
         p.setStyle( Paint.Style.STROKE );
