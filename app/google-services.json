@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "297586913460-teapc73mo97g1snonpa61gh8in5h5mce.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rebecasarai.mysoulmate",
+            "certificate_hash": "876b586a667608b90be92779774e6db4a75010c9"
+          }
+        },
+        {
           "client_id": "297586913460-pfqfrru56tl5thsnqeqmscnsqbfpie92.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
