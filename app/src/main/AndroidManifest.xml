@@ -35,7 +35,6 @@
         <!--TODO: add the splashscreen theme-->
         <activity
             android:name=".Activities.LoginActivity"
-            android:label="@string/title_activity_login"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -253,7 +253,7 @@ public final class FindSoulMateActivity extends AppCompatActivity {
                     mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
                         @Override
                         public void onPictureTaken(byte[] bytes) {
-                            Log.v(TAG, "Foto tomada.");
+                            Log.v(TAG, " Foto tomada.");
                             capturar(bytes);
                         }
                     });
@@ -461,7 +461,8 @@ public final class FindSoulMateActivity extends AppCompatActivity {
             });
 
 
-            /*File saveFile = ScreenshotUtils.getMainDirectoryName(this);//el directoria para guardar
+            /*
+            File saveFile = ScreenshotUtils.getMainDirectoryName(this);//el directoria para guardar
             File file = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
             shareScreenshot(file);*/
 
