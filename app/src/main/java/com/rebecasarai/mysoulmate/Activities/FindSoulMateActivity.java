@@ -461,10 +461,10 @@ public final class FindSoulMateActivity extends AppCompatActivity {
             });
 
 
-            /*
+
             File saveFile = ScreenshotUtils.getMainDirectoryName(this);//el directoria para guardar
             File file = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-            shareScreenshot(file);*/
+            shareScreenshot(file);
 
 
         } else {
