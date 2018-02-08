@@ -10,14 +10,14 @@
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/heart"
         app:showAsAction="always"
         android:title="@string/title_dashboard" />
 
     <item
         android:id="@+id/navigation_notifications"
         android:iconTint="@color/colorPrimaryDark"
-        android:icon="@drawable/common_full_open_on_phone"
+        android:icon="@drawable/user"
         app:showAsAction="always"
         android:title="@string/title_notifications" />
 

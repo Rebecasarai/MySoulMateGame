@@ -52,7 +52,7 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.google.firebase.auth.FirebaseAuth;
 import com.rebecasarai.mysoulmate.Camera.CameraPreview;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
-import com.rebecasarai.mysoulmate.FileManager;
+import com.rebecasarai.mysoulmate.Database.FileManager;
 import com.rebecasarai.mysoulmate.Graphics.FaceGraphic;
 import com.rebecasarai.mysoulmate.R;
 import com.rebecasarai.mysoulmate.Screenshot.ScreenshotType;

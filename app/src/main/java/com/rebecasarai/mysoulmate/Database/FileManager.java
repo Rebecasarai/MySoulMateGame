@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate;
+package com.rebecasarai.mysoulmate.Database;
 
 
 import android.graphics.Bitmap;
@@ -15,6 +15,10 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 
 public class FileManager {
+
+    // Root Database Name for Firebase Database.
+    public static final String Database_Path = "users";
+
 
     private static FirebaseStorage mFirebaseStorage;
 
@@ -52,5 +56,11 @@ public class FileManager {
         DatabaseReference screenshotRef = FirebaseDatabase.getInstance().getReference("users").child(auth.getUid()).child("screenshots").push();
         screenshotRef.setValue(imageUrl);
     }
+
+    public static DatabaseReference getFilesByUser(@NonNull final FirebaseAuth auth){
+//        final String uid = auth.getCurrentUser().getUid();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        return databaseReference;
+      }
 
 }

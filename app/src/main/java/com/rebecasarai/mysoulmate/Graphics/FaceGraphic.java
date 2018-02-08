@@ -141,9 +141,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         float bottom = y + yOffset;
 
         drawFaceLandmarks(canvas, scale, face, p);
-
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
-
     }
 
     /**
