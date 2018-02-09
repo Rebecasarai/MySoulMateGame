@@ -9,6 +9,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseError;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by rebecagonzalez on 8/2/18.
@@ -38,7 +39,7 @@ public class PhotoAdapter extends FirebaseRecyclerAdapter<Screenshot, PhotoHolde
 
     @Override
     protected void onBindViewHolder(PhotoHolder holder, int position, Screenshot model) {
-
+        Picasso.with(holder.itemView.getContext()).load(model.getImageURL()).into(holder.mSoulmateImage);
     }
 
     @Override

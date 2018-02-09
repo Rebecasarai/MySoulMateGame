@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 ext {
     supportLibraryVersion = '26.0.1'
     playServicesVersion = '11.8.0'
+    firebaseUI = '3.2.1'
 }
 
 android {
@@ -34,19 +35,21 @@ dependencies {
     implementation "com.google.firebase:firebase-database:${playServicesVersion}"
     implementation "com.google.firebase:firebase-storage:${playServicesVersion}"
     implementation 'com.android.support:support-v4:26.1.0'
-    compile "com.google.android.gms:play-services-vision:${playServicesVersion}"
+    implementation "com.google.android.gms:play-services-vision:${playServicesVersion}"
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
     // FirebaseUI for Firebase Realtime Database
-    implementation 'com.firebaseui:firebase-ui-database:3.2.1'
+    implementation "com.firebaseui:firebase-ui-database:${firebaseUI}"
 
     // FirebaseUI for Cloud Firestore
-    implementation 'com.firebaseui:firebase-ui-firestore:3.2.1'
+    implementation "com.firebaseui:firebase-ui-firestore:${firebaseUI}"
 
     // FirebaseUI for Firebase Auth
-    implementation 'com.firebaseui:firebase-ui-auth:3.2.1'
+    implementation "com.firebaseui:firebase-ui-auth:${firebaseUI}"
 
     // FirebaseUI for Cloud Storage
-    implementation 'com.firebaseui:firebase-ui-storage:3.2.1'
+    implementation "com.firebaseui:firebase-ui-storage:${firebaseUI}"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:0.5'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'

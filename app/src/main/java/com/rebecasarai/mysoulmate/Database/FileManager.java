@@ -11,14 +11,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
+import com.rebecasarai.mysoulmate.Models.Screenshot;
 
 import java.io.ByteArrayOutputStream;
 
 public class FileManager {
-
-    // Root Database Name for Firebase Database.
-    public static final String Database_Path = "users";
-
 
     private static FirebaseStorage mFirebaseStorage;
 
@@ -40,7 +37,7 @@ public class FileManager {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 String imageUrl = taskSnapshot.getDownloadUrl().toString();
-                //updateUserScreenshots(auth, imageUrl);
+                updateUserScreenshots(auth, imageUrl);
             }
         };
         uploadFile(path, data, onUploadListener, onFailureListener);
@@ -54,13 +51,13 @@ public class FileManager {
 
     private static void updateUserScreenshots(FirebaseAuth auth, String imageUrl) {
         DatabaseReference screenshotRef = FirebaseDatabase.getInstance().getReference("users").child(auth.getUid()).child("screenshots").push();
-        screenshotRef.setValue(imageUrl);
+        Screenshot screenshot = new Screenshot(imageUrl);
+        screenshotRef.setValue(screenshot);
     }
 
-    public static DatabaseReference getFilesByUser(@NonNull final FirebaseAuth auth){
-//        final String uid = auth.getCurrentUser().getUid();
+    public static DatabaseReference getFilesByUser(@NonNull final FirebaseAuth auth) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
         return databaseReference;
-      }
+    }
 
 }

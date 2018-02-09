@@ -6,33 +6,22 @@ package com.rebecasarai.mysoulmate.Models;
 
 public class Screenshot {
 
-    public String imageName;
-
     public String imageURL;
 
     public Screenshot() {
-
     }
 
-    public Screenshot(String name, String url) {
-
-        this.imageName = name;
-        this.imageURL= url;
-    }
-
-    public Screenshot(String name) {
-
-        this.imageName = name;
-    }
-
-    public String getImageName() {
-        return imageName;
+    public Screenshot(String url) {
+        this.imageURL = url;
     }
 
     public String getImageURL() {
         return imageURL;
     }
 
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
 }
 
 
