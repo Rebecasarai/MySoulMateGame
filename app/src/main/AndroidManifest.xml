@@ -17,9 +17,9 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:largeHeap="true"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.version"
@@ -30,26 +30,24 @@
 
         <activity
             android:name=".Activities.FindSoulMateActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
-        <!--TODO: add the splashscreen theme-->
+        <!-- TODO: add the splashscreen theme -->
         <activity
             android:name=".Activities.LoginActivity"
             android:theme="@style/AppTheme">
-
-
-        </activity>
-        <activity
-            android:name=".Activities.DashboardActivity"
-            android:label="@string/title_activity_dashboard"
-            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Activities.DashboardActivity"
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.SignUpActivity" />
+        <activity android:name=".Activities.MainActivity" />
     </application>
 
 </manifest>

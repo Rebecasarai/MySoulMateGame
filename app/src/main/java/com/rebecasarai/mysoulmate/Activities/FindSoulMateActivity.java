@@ -245,7 +245,9 @@ public final class FindSoulMateActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
 
-                    takeScreenshot(ScreenshotType.FULL);
+                    Intent mainactivity = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(mainactivity);
+                    //takeScreenshot(ScreenshotType.FULL);
 
                     return true;
                 case R.id.navigation_dashboard:
@@ -260,6 +262,9 @@ public final class FindSoulMateActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_notifications:
+
+                    Intent i = new Intent(getApplicationContext(), DashboardActivity.class);
+                    startActivity(i);
                     return true;
             }
             return false;
@@ -495,6 +500,9 @@ public final class FindSoulMateActivity extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_STREAM, uri);//pass uri here
         startActivity(Intent.createChooser(intent, getString(R.string.share_title)));
     }
+
+
+
 
 }
 

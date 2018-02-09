@@ -1,13 +1,26 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.rebecasarai.mysoulmate.CameraFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.rebecasarai.mysoulmate.Camera.CameraPreview
+        android:id="@+id/preview"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/photoPerson"
+            />
+
+
+        <com.rebecasarai.mysoulmate.Camera.GraphicOverlay
+            android:id="@+id/faceOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.rebecasarai.mysoulmate.Camera.CameraPreview>
+</LinearLayout>
