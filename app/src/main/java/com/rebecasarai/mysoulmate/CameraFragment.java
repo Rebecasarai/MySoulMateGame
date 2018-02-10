@@ -68,27 +68,35 @@ public class CameraFragment extends Fragment {
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
-    View rootView;
+    View rootView, view;
     MediaPlayer mediaPlayer;
     ImageView mPhotoPeep;
+    Context context;
+
 
 
     public CameraFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        LayoutInflater lf = getActivity().getLayoutInflater();
+
+        view =  lf.inflate(R.layout.fragment_camera, container, false);
+
         rootView = getActivity().getWindow().getDecorView().findViewById(R.id.topLayout);
 
-        mPreview = (CameraPreview) container.findViewById(R.id.preview);
-        mGraphicOverlay = (GraphicOverlay) container.findViewById(R.id.faceOverlay);
-
-        BottomNavigationView navigation = (BottomNavigationView) container.findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mPreview = (CameraPreview) view.findViewById(R.id.preview);
+        mGraphicOverlay = (GraphicOverlay) view.findViewById(R.id.faceOverlay);
 
         //TODO: esto no debería hacerse así.
         //Chequeo permisos e inicializo la cameraSource
@@ -99,7 +107,7 @@ public class CameraFragment extends Fragment {
             requestCameraPermission();
         }
         mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
-        mPhotoPeep = (ImageView) container.findViewById(R.id.photoPerson);
+        mPhotoPeep = (ImageView) view.findViewById(R.id.photoPerson);
 
         /*mPreview = (CameraPreview) getView().findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) getView().findViewById(R.id.faceOverlay);
@@ -118,7 +126,7 @@ public class CameraFragment extends Fragment {
         mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
         mPhotoPeep = (ImageView) getView().findViewById(R.id.photoPerson);
 */
-        return inflater.inflate(R.layout.fragment_camera, container, false);
+        return view;//inflater.inflate(R.layout.fragment_camera, container, false);
     }
 
 
@@ -367,7 +375,7 @@ public class CameraFragment extends Fragment {
 
         // check that the device has play services available.
         int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(
-                getContext());
+                context/*getContext()*/);
         if (code != ConnectionResult.SUCCESS) {
             Dialog dlg =
                     GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), code, RC_HANDLE_GMS);

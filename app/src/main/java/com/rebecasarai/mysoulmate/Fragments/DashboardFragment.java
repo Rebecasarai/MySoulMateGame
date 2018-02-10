@@ -114,29 +114,6 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
 
 
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-
-                    return true;
-                case R.id.navigation_dashboard:
-
-                    Intent intent = new Intent(getContext(), FindSoulMateActivity.class);
-                    startActivity(intent);
-                    return true;
-
-                case R.id.navigation_notifications:
-
-                    return true;
-            }
-            return false;
-        }
-    };
-
 
     @Override
     public void OnItemClick(int position, View view) {

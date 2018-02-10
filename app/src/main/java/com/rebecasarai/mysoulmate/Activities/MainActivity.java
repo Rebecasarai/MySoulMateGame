@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.rebecasarai.mysoulmate.CameraFragment;
 import com.rebecasarai.mysoulmate.Fragments.BlankFragment;
 import com.rebecasarai.mysoulmate.Fragments.DashboardFragment;
 import com.rebecasarai.mysoulmate.R;
@@ -52,9 +54,12 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
 
                     return true;
                 case R.id.navigation_dashboard:
+                    Fragment newFragment = new CameraFragment();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-
-
+                    transaction.replace(R.id.framelayout, newFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
                     return true;
 
                 case R.id.navigation_notifications:
