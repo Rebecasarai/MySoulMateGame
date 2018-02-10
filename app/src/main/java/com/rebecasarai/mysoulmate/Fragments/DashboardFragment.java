@@ -26,6 +26,7 @@ import com.google.firebase.database.Query;
 import com.rebecasarai.mysoulmate.Activities.FindSoulMateActivity;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
+import com.rebecasarai.mysoulmate.Repository.UserRepository;
 import com.rebecasarai.mysoulmate.Views.PhotoAdapter;
 import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
 
@@ -40,6 +41,7 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
     private View view;
     private Context context;
     private GridLayoutManager mLayoutManager;
+    private UserRepository mUSerRepository;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -95,6 +97,8 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
     private void setUpRecycler(View view) {
 
         mRecyclerView = view.findViewById(R.id.recycler);
+
+
         Query query = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("screenshots");
 
         final FirebaseRecyclerOptions<Screenshot> options = new FirebaseRecyclerOptions.Builder<Screenshot>()
@@ -102,7 +106,7 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
                 .build();
 
         mPhotoAdapter = new PhotoAdapter(options, this);
-        mLayoutManager = new GridLayoutManager(this.getActivity());
+        mLayoutManager = new GridLayoutManager(this.getActivity(), 2);
         //Log.v("debugMode", "stopped?");
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mPhotoAdapter);
