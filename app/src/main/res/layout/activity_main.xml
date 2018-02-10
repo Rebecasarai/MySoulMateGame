@@ -6,11 +6,18 @@
     android:layout_height="match_parent"
     tools:context="com.rebecasarai.mysoulmate.Activities.MainActivity">
 
-    <fragment android:name="com.rebecasarai.mysoulmate.Fragments.DashboardFragment"
+    <!--<fragment android:name="com.rebecasarai.mysoulmate.Fragments.DashboardFragment"
         android:id="@+id/master"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="40dp"/>
+        android:layout_marginBottom="40dp"/>-->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/framelayout">
+
+    </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"

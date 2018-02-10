@@ -1,17 +1,21 @@
 package com.rebecasarai.mysoulmate.Fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -33,6 +37,8 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
     private RecyclerView mRecyclerView;
     private PhotoAdapter mPhotoAdapter;
     private View view;
+    private Context context;
+    private LinearLayoutManager mLayoutManager;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -47,23 +53,28 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
 
         view =  lf.inflate(R.layout.fragment_dashboard, container, false);
 
-        //setUpRecycler();
+        setUpRecycler(view);
 
-        mRecyclerView = view.findViewById(R.id.recyclerViewImages);
-        Query query = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("screenshots");
-
-        final FirebaseRecyclerOptions<Screenshot> options = new FirebaseRecyclerOptions.Builder<Screenshot>()
-                .setQuery(query, Screenshot.class)
-                .build();
-
-        mPhotoAdapter = new PhotoAdapter(options, this);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(mPhotoAdapter);
         if(mPhotoAdapter!= null){
             mPhotoAdapter.startListening();
         }
 
         return view;
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+
     }
 
     @Override
@@ -85,9 +96,9 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
         }
     }
 
-    private void setUpRecycler() {
+    private void setUpRecycler(View view) {
 
-        mRecyclerView = view.findViewById(R.id.recyclerViewImages);
+        mRecyclerView = view.findViewById(R.id.recycler);
         Query query = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("screenshots");
 
         final FirebaseRecyclerOptions<Screenshot> options = new FirebaseRecyclerOptions.Builder<Screenshot>()
@@ -95,7 +106,9 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
                 .build();
 
         mPhotoAdapter = new PhotoAdapter(options, this);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager( getActivity().getApplicationContext()));
+        mLayoutManager = new LinearLayoutManager(this.getActivity());
+        //Log.v("debugMode", "stopped?");
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mPhotoAdapter);
     }
 

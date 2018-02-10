@@ -1,11 +1,11 @@
 package com.rebecasarai.mysoulmate.Activities;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -24,15 +24,14 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        fragmentManager = getFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         DashboardFragment fragment = new DashboardFragment();
-        //fragmentTransaction.add(R.id.layoutDetails, fragment);
-        //fragmentTransaction.commit();
+        fragmentTransaction.add(R.id.framelayout, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -54,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
                     return true;
                 case R.id.navigation_dashboard:
 
-                    Intent intent = new Intent(getApplicationContext(), FindSoulMateActivity.class);
-                    startActivity(intent);
+
+
                     return true;
 
                 case R.id.navigation_notifications:

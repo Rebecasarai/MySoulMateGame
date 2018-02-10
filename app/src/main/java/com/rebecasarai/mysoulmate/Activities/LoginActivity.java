@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Check if the user is logged in
                 if (mCurrentFirebaseUser != null) {
                     //TODO: add toast.
-                    startActivity(new Intent(getApplicationContext(), FindSoulMateActivity.class));
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 } else {
                     // User is signed out
