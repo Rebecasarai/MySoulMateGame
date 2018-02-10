@@ -4,19 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.rebecasarai.mysoulmate.CameraFragment">
+    android:id="@+id/fragmentTopLayout"
+    tools:context="com.rebecasarai.mysoulmate.Fragments.CameraFragment">
+
 
     <com.rebecasarai.mysoulmate.Camera.CameraPreview
         android:id="@+id/preview"
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/photoPerson"
+            android:layout_margin="-20dp"
+            android:padding="-20dp"
             />
 
         <com.rebecasarai.mysoulmate.Camera.GraphicOverlay

@@ -14,8 +14,6 @@
         android:id="@+id/soulmateImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="20dp"
         android:src="@mipmap/ic_launcher"
         android:tint="@null" />
 

@@ -1,8 +1,6 @@
-package com.rebecasarai.mysoulmate;
+package com.rebecasarai.mysoulmate.Fragments;
 
 
-import android.*;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -11,19 +9,21 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.hardware.SensorManager;
+import android.media.ExifInterface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -43,15 +43,52 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.rebecasarai.mysoulmate.Camera.CameraPreview;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
 import com.rebecasarai.mysoulmate.Database.FileManager;
+import com.rebecasarai.mysoulmate.Exif;
 import com.rebecasarai.mysoulmate.Graphics.FaceGraphic;
+import com.rebecasarai.mysoulmate.R;
+import com.rebecasarai.mysoulmate.Repository.UserRepository;
 import com.rebecasarai.mysoulmate.Screenshot.ScreenshotType;
 import com.rebecasarai.mysoulmate.Screenshot.ScreenshotUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+
+
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
+import android.hardware.Camera;
+import android.hardware.Camera.PictureCallback;
+import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+
+
+
 
 
 /**
@@ -69,11 +106,39 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
-    View rootView, view;
-    MediaPlayer mediaPlayer;
+    private View rootView, view;
+    private MediaPlayer mediaPlayer;
     ImageView mPhotoPeep;
     Context context;
     ImageButton mCatchSoulMateButton;
+    ConstraintLayout mToplayout;
+
+
+    Exif exif;
+    Bitmap bitmapPicture = null;
+
+
+
+    private SurfaceView SurView;
+    private SurfaceHolder camHolder;
+    private boolean previewRunning;
+    private Button button1;
+    public static Camera camera = null;
+    private ImageView camera_image;
+    private Bitmap bmp,bmp1;
+    private ByteArrayOutputStream bos;
+    private BitmapFactory.Options options,o,o2;
+    private FileInputStream fis;
+    ByteArrayInputStream fis2;
+    private FileOutputStream fos;
+    private File dir_image2,dir_image;
+    private RelativeLayout CamView;
+
+
+
+
+
+
 
 
 
@@ -93,12 +158,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
         LayoutInflater lf = getActivity().getLayoutInflater();
 
-        view =  lf.inflate(R.layout.fragment_camera, container, false);
+        view =  lf.inflate(com.rebecasarai.mysoulmate.R.layout.fragment_camera, container, false);
 
-        rootView = getActivity().getWindow().getDecorView().findViewById(R.id.topLayout);
+
+        rootView = getActivity().getWindow().getDecorView().findViewById(R.id.fragmentTopLayout);
 
         mPreview = (CameraPreview) view.findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) view.findViewById(R.id.faceOverlay);
+        mToplayout = (ConstraintLayout) view.findViewById(R.id.fragmentTopLayout);
 
 
         //TODO: esto no debería hacerse así.
@@ -119,10 +186,13 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
                     @Override
                     public void onPictureTaken(byte[] bytes) {
+
                         Log.v(TAG, " Foto tomada.");
                         capturar(bytes);
                     }
                 });
+
+                mCameraSource.getPreviewSize();
             }
         });
 
@@ -259,39 +329,17 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
         mCameraSource = new CameraSource.Builder(context, detector)
                 .setRequestedPreviewSize(640, 480)
-                //.setRequestedPreviewSize(940, 480)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedFps(30.0f)
                 .build();
 
     }
 
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-
-                    takeScreenshot(ScreenshotType.FULL);
-
-                    return true;
-                case R.id.navigation_dashboard:
-
-
-                    return true;
-
-                case R.id.navigation_notifications:
-
-                   // Intent i = new Intent(getContext(), CameraFragment.class);
-                    //startActivity(i);
-                    return true;
-            }
-            return false;
-        }
-    };
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(),   source.getHeight(), matrix,true);
+    }
 
 
     /**
@@ -300,36 +348,180 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
      */
     private void capturar(byte[] bytes) {
 
-        try {
-            File mainDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "prueba");
+        int orientation = exif.getOrientation(bytes);
 
+
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        switch(orientation) {
+            case 90:
+                bitmapPicture= rotateImage(bitmap, 90);
+
+                break;
+            case 180:
+                bitmapPicture= rotateImage(bitmap, 180);
+
+                break;
+            case 270:
+                bitmapPicture= rotateImage(bitmap, 270);
+
+                break;
+            case 0:
+
+            default:
+                break;
+        }
+
+
+        // Coloca la imagen de la cameraSource a la vista
+        mPhotoPeep.setImageBitmap(bitmapPicture);
+
+        try {
+            File mainDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)+"");
+            Log.v("dir",mainDir.getAbsolutePath());
+            //File mainDir = new  File(Environment.getExternalStorageDirectory()+ File.separator+"My Custom Folder");
             if (!mainDir.exists()) {
                 if (mainDir.mkdir())
                     Log.e("Create Directory", "Main Directory Created: " + mainDir);
             }
-            File captureFile = new File(mainDir + "prueba" + getPhotoTime() + ".png");
+            File captureFile = new File(mainDir, "prueba" + getPhotoTime() + ".png");
             if (!captureFile.exists())
                 Log.d("CAPTURE_FILE_PATH", captureFile.createNewFile() ? "Success" : "Failed");
 
+            //FileOutputStream stream = new FileOutputStream(captureFile);
             FileOutputStream stream = new FileOutputStream(captureFile);
+            bitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
+            Log.v("dir",captureFile.getAbsolutePath());
             stream.write(bytes);
             stream.flush();
             stream.close();
 
-            // Crea bitmap a partir del File
-            Bitmap mBitmap = BitmapFactory.decodeFile(captureFile.getAbsolutePath());
-
-            // Coloca la imagen de la cameraSource a la vista
-            mPhotoPeep.setImageBitmap(mBitmap);
-            mPhotoPeep.setRotation(90);
+            //savebitmap(getPhotoTime());
 
             takeScreenshot(ScreenshotType.FULL);
+
+
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
+
+
+
+
+    private void savebitmap(String filename) {
+        /*String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root);
+        myDir.mkdirs();
+        String fname = "Image-" + getPhotoTime()+ ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
+        Log.i("LOAD", root + fname);
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            bitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+
+    }
+
+
+    public void TakeScreenshot(){
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int nu = preferences.getInt("image_num",0);
+        nu++;
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("image_num",nu);
+        editor.commit();
+        mToplayout.setDrawingCacheEnabled(true);
+        mToplayout.buildDrawingCache(true);
+        bmp = Bitmap.createBitmap(mToplayout.getDrawingCache());
+        mToplayout.setDrawingCacheEnabled(false);
+        bos = new ByteArrayOutputStream();
+        bmp.compress(CompressFormat.JPEG, 100, bos);
+        byte[] bitmapdata = bos.toByteArray();
+        fis2 = new ByteArrayInputStream(bitmapdata);
+
+        String picId=String.valueOf(nu);
+        String myfile="MyImage"+picId+".jpeg";
+
+        dir_image = new  File(Environment.getExternalStorageDirectory()+
+                File.separator+"My Custom Folder");
+        dir_image.mkdirs();
+
+        try {
+            File tmpFile = new File(dir_image,myfile);
+            fos = new FileOutputStream(tmpFile);
+
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = fis2.read(buf)) > 0) {
+                fos.write(buf, 0, len);
+            }
+            fis2.close();
+            fos.close();
+
+            Toast.makeText(context,
+                    "The file is saved at :/My Custom Folder/"+"MyImage"+picId+".jpeg",Toast.LENGTH_LONG).show();
+
+            bmp1 = null;
+            mPhotoPeep.setImageBitmap(bmp1);
+            camera.startPreview();
+            button1.setClickable(true);
+            button1.setVisibility(View.VISIBLE);//<----UNHIDE HER
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    public Bitmap decodeFile(File f) {
+        Bitmap b = null;
+        try {
+            // Decode image size
+            o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+
+            fis = new FileInputStream(f);
+            BitmapFactory.decodeStream(fis, null, o);
+            fis.close();
+            int IMAGE_MAX_SIZE = 1000;
+            int scale = 1;
+            if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
+                scale = (int) Math.pow(
+                        2,
+                        (int) Math.round(Math.log(IMAGE_MAX_SIZE
+                                / (double) Math.max(o.outHeight, o.outWidth))
+                                / Math.log(0.5)));
+            }
+
+            // Decode with inSampleSize
+            o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            fis = new FileInputStream(f);
+            b = BitmapFactory.decodeStream(fis, null, o2);
+            fis.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return b;
+    }
+
+
+
+
 
     /**
      * Fecha actual
@@ -404,6 +596,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         GraphicFaceTracker(GraphicOverlay overlay) {
             mOverlay = overlay;
             mFaceGraphic = new FaceGraphic(overlay, getContext());
+
+
 
             try {
                 if (mediaPlayer.isPlaying()) {
@@ -481,12 +675,15 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 break;
             case CUSTOM:
                 //Puedo hacer invisible o visible lo que me parezca
-
                 break;
         }
 
         //Si el bitmap no es nulo
         if (bitmap != null) {
+
+
+            //TODO: pasarlo al repository
+
 
             FileManager.uploadScreenshot(FirebaseAuth.getInstance(), bitmap, new OnSuccessListener<Void>() {
                 @Override
@@ -502,7 +699,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                 }
             });
-
 
 
             File saveFile = ScreenshotUtils.getMainDirectoryName(getContext());//el directoria para guardar

@@ -126,12 +126,12 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         p.setColor(Color.RED);
 
         for (int i= 0; i < 10; i++){
-            w = random.nextInt(1000);
-            h = random.nextInt(1000 );
+            w = random.nextInt(800);
+            h = random.nextInt(800 );
             canvas.drawBitmap(scaledBitmap, w, h, p);
         }
 
-        //canvas.drawBitmap(scaledBitmap, 400, 300, p);
+        canvas.drawBitmap(scaledBitmap, 400, 300, p);
 
         /* float xOffset = scaleX(face.getWidth() / 2.0f);
         float yOffset = scaleY(face.getHeight() / 2.0f);
@@ -176,8 +176,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         p.setStrokeWidth( 5 );
 
         for (Landmark landmark : face.getLandmarks()) {
-            int cx = (int) (landmark.getPosition().x * scale/2);
-            int cy = (int) (landmark.getPosition().y * scale/2);
+            int cx = (int) (landmark.getPosition().x * scale);
+            int cy = (int) (landmark.getPosition().y * scale);
             canvas.drawCircle(cx, cy, 5, p);
         }
 

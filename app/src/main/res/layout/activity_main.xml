@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.rebecasarai.mysoulmate.Activities.MainActivity">
+    tools:context="com.rebecasarai.mysoulmate.Activities.MainActivity" >
 
     <!--<fragment android:name="com.rebecasarai.mysoulmate.Fragments.DashboardFragment"
         android:id="@+id/master"
@@ -12,12 +12,20 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="40dp"/>-->
 
-    <FrameLayout
+    <!--<FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/framelayout">
+         </FrameLayout>
+         -->
 
-    </FrameLayout>
+        <android.support.v4.view.ViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/framelayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"

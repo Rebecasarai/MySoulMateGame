@@ -32,20 +32,15 @@ import com.google.android.gms.vision.CameraSource;
 import java.io.IOException;
 
 public class CameraPreview extends ViewGroup {
-
-    private static final String TAG = "Camera";
+    private static final String TAG = "CameraSourcePreview";
 
     private Context mContext;
-    private CameraSource mCameraSource;
     private SurfaceView mSurfaceView;
-
     private boolean mStartRequested;
     private boolean mSurfaceAvailable;
+    private CameraSource mCameraSource;
 
     private GraphicOverlay mOverlay;
-
-    private double mWidth;
-    private double mHeight;
 
     public CameraPreview(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -56,10 +51,6 @@ public class CameraPreview extends ViewGroup {
         mSurfaceView = new SurfaceView(context);
         mSurfaceView.getHolder().addCallback(new SurfaceCallback());
         addView(mSurfaceView);
-    }
-
-    public SurfaceView getSurfaceView() {
-        return mSurfaceView;
     }
 
     public void start(CameraSource cameraSource) throws IOException {
@@ -95,7 +86,7 @@ public class CameraPreview extends ViewGroup {
 
     private void startIfReady() throws IOException {
         if (mStartRequested && mSurfaceAvailable) {
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
@@ -130,7 +121,7 @@ public class CameraPreview extends ViewGroup {
             try {
                 startIfReady();
             } catch (IOException e) {
-                Log.v(TAG, "No pudo comenzar la camara", e);
+                Log.e(TAG, "Could not start camera source.", e);
             }
         }
 
@@ -215,7 +206,7 @@ public class CameraPreview extends ViewGroup {
             return true;
         }
 
-        Log.d(TAG, "Devuelve falso portrait");
+        Log.d(TAG, "isPortraitMode returning false by default");
         return false;
     }
 }
