@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -114,12 +115,15 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onPictureTaken(final byte[] bytes) {
                         Log.v(TAG, " Foto Tomada.");
-                        new Handler().post(new Runnable() {
+                        takeSnapshot(bytes);
+                        setBitmap();
+                       // new FasterScreenshotAsyncTask().execute(bytes);
+                       /* new Handler().post(new Runnable() {
                             @Override
                             public void run() {
                                 takeSnapshot(bytes);
                             }
-                        });
+                        });*/
                     }
                 });
 
@@ -297,7 +301,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 break;
         }
 
-        mPhotoPeep.setImageBitmap(mBitmapPicture);
+
 
         try {
             File mainDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "");
@@ -311,20 +315,23 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 Log.d("CAPTURE_FILE_PATH", captureFile.createNewFile() ? "Success" : "Failed");
 
             FileOutputStream stream = new FileOutputStream(captureFile);
-            mBitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            //mBitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
             Log.v("dir", captureFile.getAbsolutePath());
             stream.write(bytes);
             stream.flush();
             stream.close();
 
-            takeScreenshot(ScreenshotType.FULL);
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+
+    public void setBitmap(){
+        mPhotoPeep.setImageBitmap(mBitmapPicture);
+        takeScreenshot(ScreenshotType.FULL);
     }
 
 
@@ -521,6 +528,27 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         intent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.sharing_text));
         intent.putExtra(Intent.EXTRA_STREAM, uri);//pass uri here
         startActivity(Intent.createChooser(intent, getString(R.string.share_title)));
+    }
+
+
+    public class FasterScreenshotAsyncTask extends AsyncTask<byte[], Void, Void>{
+
+
+
+        @Override
+        protected Void doInBackground(byte[]... bytes) {
+            takeSnapshot(bytes[0]);
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            setBitmap();
+        }
+
+
     }
 
 

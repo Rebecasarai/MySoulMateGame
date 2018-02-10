@@ -19,6 +19,6 @@
         android:iconTint="@color/colorPrimaryDark"
         android:icon="@drawable/user"
         app:showAsAction="always"
-        android:title="@string/title_notifications" />
+        android:title="Usuario" />
 
 </menu>
