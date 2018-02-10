@@ -12,7 +12,10 @@ import com.rebecasarai.mysoulmate.Fragments.CameraFragment;
 import com.rebecasarai.mysoulmate.Fragments.DashboardFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private int NUM_PAGES= 3;
+    private int NUM_PAGES = 3;
+
+    private static DashboardFragment sDashboardInstance;
+    private static CameraFragment sCameraInstance;
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -20,15 +23,16 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        switch(position) {
+        switch (position) {
             case 0:
-                return new DashboardFragment();
+                return sDashboardInstance == null ? sDashboardInstance = new DashboardFragment() : sDashboardInstance;
             case 1:
-                return new CameraFragment();
+                return sCameraInstance == null ? sCameraInstance = new CameraFragment() : sCameraInstance;
             case 2:
-                return new DashboardFragment();
+                return sDashboardInstance == null ? sDashboardInstance = new DashboardFragment() : sDashboardInstance;
             default:
-                return new DashboardFragment();
+                return sDashboardInstance == null ? sDashboardInstance = new DashboardFragment() : sDashboardInstance;
+
         }
     }
 
@@ -36,4 +40,5 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return NUM_PAGES;
     }
+
 }
