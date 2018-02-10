@@ -30,10 +30,6 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="face" />
 
-        <activity
-            android:name=".Activities.FindSoulMateActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-
         <!-- TODO: add the splashscreen theme -->
         <activity
             android:name=".Activities.LoginActivity"
@@ -44,10 +40,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activities.DashboardActivity"
-            android:label="@string/title_activity_dashboard"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.MainActivity" />
     </application>
 

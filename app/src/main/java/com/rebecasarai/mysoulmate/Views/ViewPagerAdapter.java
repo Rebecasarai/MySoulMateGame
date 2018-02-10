@@ -12,7 +12,7 @@ import com.rebecasarai.mysoulmate.Fragments.CameraFragment;
 import com.rebecasarai.mysoulmate.Fragments.DashboardFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private int NUM_PAGES= 5;
+    private int NUM_PAGES= 3;
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);

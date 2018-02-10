@@ -2,28 +2,19 @@ package com.rebecasarai.mysoulmate.Fragments;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.rebecasarai.mysoulmate.Activities.FindSoulMateActivity;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
 import com.rebecasarai.mysoulmate.Repository.UserRepository;
@@ -97,8 +88,6 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
     private void setUpRecycler(View view) {
 
         mRecyclerView = view.findViewById(R.id.recycler);
-
-
         Query query = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("screenshots");
 
         final FirebaseRecyclerOptions<Screenshot> options = new FirebaseRecyclerOptions.Builder<Screenshot>()

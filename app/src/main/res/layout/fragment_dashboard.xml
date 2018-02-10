@@ -1,18 +1,4 @@
-<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.rebecasarai.mysoulmate.Fragments.DashboardFragment">
-    -->
-<!--<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.rebecasarai.mysoulmate.Activities.DashboardActivity">-->
-
-<LinearLayout
+<FrameLayout
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
@@ -25,19 +11,5 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/controlPanel"
         tools:listitem="@layout/photo_item" />
-
-
-    <!--    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/controlPanel"
-        android:layout_alignParentTop="true"
-        android:requiresFadingEdge="vertical"
-        android:fadingEdgeLength="@dimen/default_fading_edge_length"
-        tools:listitem="@layout/photo_item" />-->
-
-</LinearLayout>
-
-<!--</android.support.v4.widget.NestedScrollView>-->
+</FrameLayout>
 

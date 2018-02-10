@@ -186,13 +186,11 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
                     @Override
                     public void onPictureTaken(byte[] bytes) {
-
                         Log.v(TAG, " Foto tomada.");
                         capturar(bytes);
                     }
                 });
 
-                mCameraSource.getPreviewSize();
             }
         });
 
@@ -347,23 +345,18 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
      * @param bytes
      */
     private void capturar(byte[] bytes) {
-
         int orientation = exif.getOrientation(bytes);
-
 
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         switch(orientation) {
             case 90:
                 bitmapPicture= rotateImage(bitmap, 90);
-
                 break;
             case 180:
                 bitmapPicture= rotateImage(bitmap, 180);
-
                 break;
             case 270:
                 bitmapPicture= rotateImage(bitmap, 270);
-
                 break;
             case 0:
 
@@ -371,14 +364,11 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 break;
         }
 
-
-        // Coloca la imagen de la cameraSource a la vista
         mPhotoPeep.setImageBitmap(bitmapPicture);
 
         try {
             File mainDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)+"");
             Log.v("dir",mainDir.getAbsolutePath());
-            //File mainDir = new  File(Environment.getExternalStorageDirectory()+ File.separator+"My Custom Folder");
             if (!mainDir.exists()) {
                 if (mainDir.mkdir())
                     Log.e("Create Directory", "Main Directory Created: " + mainDir);
@@ -387,7 +377,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             if (!captureFile.exists())
                 Log.d("CAPTURE_FILE_PATH", captureFile.createNewFile() ? "Success" : "Failed");
 
-            //FileOutputStream stream = new FileOutputStream(captureFile);
             FileOutputStream stream = new FileOutputStream(captureFile);
             bitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
@@ -395,8 +384,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             stream.write(bytes);
             stream.flush();
             stream.close();
-
-            //savebitmap(getPhotoTime());
 
             takeScreenshot(ScreenshotType.FULL);
 
@@ -409,80 +396,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     }
 
 
-
-
-    private void savebitmap(String filename) {
-        /*String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root);
-        myDir.mkdirs();
-        String fname = "Image-" + getPhotoTime()+ ".jpg";
-        File file = new File(myDir, fname);
-        if (file.exists()) file.delete();
-        Log.i("LOAD", root + fname);
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            bitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-
-    }
-
-
-    public void TakeScreenshot(){
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        int nu = preferences.getInt("image_num",0);
-        nu++;
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("image_num",nu);
-        editor.commit();
-        mToplayout.setDrawingCacheEnabled(true);
-        mToplayout.buildDrawingCache(true);
-        bmp = Bitmap.createBitmap(mToplayout.getDrawingCache());
-        mToplayout.setDrawingCacheEnabled(false);
-        bos = new ByteArrayOutputStream();
-        bmp.compress(CompressFormat.JPEG, 100, bos);
-        byte[] bitmapdata = bos.toByteArray();
-        fis2 = new ByteArrayInputStream(bitmapdata);
-
-        String picId=String.valueOf(nu);
-        String myfile="MyImage"+picId+".jpeg";
-
-        dir_image = new  File(Environment.getExternalStorageDirectory()+
-                File.separator+"My Custom Folder");
-        dir_image.mkdirs();
-
-        try {
-            File tmpFile = new File(dir_image,myfile);
-            fos = new FileOutputStream(tmpFile);
-
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = fis2.read(buf)) > 0) {
-                fos.write(buf, 0, len);
-            }
-            fis2.close();
-            fos.close();
-
-            Toast.makeText(context,
-                    "The file is saved at :/My Custom Folder/"+"MyImage"+picId+".jpeg",Toast.LENGTH_LONG).show();
-
-            bmp1 = null;
-            mPhotoPeep.setImageBitmap(bmp1);
-            camera.startPreview();
-            button1.setClickable(true);
-            button1.setVisibility(View.VISIBLE);//<----UNHIDE HER
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
 
 
     public Bitmap decodeFile(File f) {
@@ -518,9 +431,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
         return b;
     }
-
-
-
 
 
     /**
