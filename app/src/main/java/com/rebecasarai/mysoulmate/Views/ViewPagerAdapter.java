@@ -21,10 +21,14 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch(position) {
-            case 0: return new DashboardFragment();
-            case 1: return new CameraFragment();
-            case 2: return new DashboardFragment();
-            default: return new DashboardFragment();
+            case 0:
+                return new DashboardFragment();
+            case 1:
+                return new CameraFragment();
+            case 2:
+                return new DashboardFragment();
+            default:
+                return new DashboardFragment();
         }
     }
 

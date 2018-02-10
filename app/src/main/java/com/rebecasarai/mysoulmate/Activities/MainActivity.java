@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.addOnPageChangeListener(this);
+        mPager.setCurrentItem(1);
+
     }
 
     @Override
@@ -79,18 +81,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     mPager.setCurrentItem(0);
-
                     return true;
+
                 case R.id.navigation_dashboard:
-
                     mPager.setCurrentItem(1);
-
                     return true;
 
                 case R.id.navigation_notifications:
-
                     mPager.setCurrentItem(2);
                     return true;
+
             }
             return false;
         }
