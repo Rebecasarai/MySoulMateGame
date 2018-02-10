@@ -1,7 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.rebecasarai.mysoulmate.CameraFragment">
 
     <com.rebecasarai.mysoulmate.Camera.CameraPreview
@@ -10,12 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/photoPerson"
             />
-
 
         <com.rebecasarai.mysoulmate.Camera.GraphicOverlay
             android:id="@+id/faceOverlay"
@@ -23,4 +25,20 @@
             android:layout_height="match_parent" />
 
     </com.rebecasarai.mysoulmate.Camera.CameraPreview>
-</LinearLayout>
+
+    <ImageButton
+        android:id="@+id/catchSoulMateButton"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:cropToPadding="false"
+        android:scaleType="centerCrop"
+        android:src="@drawable/heart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</android.support.constraint.ConstraintLayout>

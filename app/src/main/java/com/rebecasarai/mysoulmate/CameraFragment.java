@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -56,7 +57,7 @@ import java.util.Date;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CameraFragment extends Fragment {
+public class CameraFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = CameraFragment.class.getSimpleName();
 
@@ -72,6 +73,7 @@ public class CameraFragment extends Fragment {
     MediaPlayer mediaPlayer;
     ImageView mPhotoPeep;
     Context context;
+    ImageButton mCatchSoulMateButton;
 
 
 
@@ -98,6 +100,7 @@ public class CameraFragment extends Fragment {
         mPreview = (CameraPreview) view.findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) view.findViewById(R.id.faceOverlay);
 
+
         //TODO: esto no debería hacerse así.
         //Chequeo permisos e inicializo la cameraSource
         int rc = ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA);
@@ -109,23 +112,20 @@ public class CameraFragment extends Fragment {
         mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
         mPhotoPeep = (ImageView) view.findViewById(R.id.photoPerson);
 
-        /*mPreview = (CameraPreview) getView().findViewById(R.id.preview);
-        mGraphicOverlay = (GraphicOverlay) getView().findViewById(R.id.faceOverlay);
+        mCatchSoulMateButton = (ImageButton) view.findViewById(R.id.catchSoulMateButton);
+        mCatchSoulMateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
+                    @Override
+                    public void onPictureTaken(byte[] bytes) {
+                        Log.v(TAG, " Foto tomada.");
+                        capturar(bytes);
+                    }
+                });
+            }
+        });
 
-        BottomNavigationView navigation = (BottomNavigationView) getView().findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        //TODO: esto no debería hacerse así.
-        //Chequeo permisos e inicializo la cameraSource
-        int rc = ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA);
-        if (rc == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource();
-        } else {
-            requestCameraPermission();
-        }
-        mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
-        mPhotoPeep = (ImageView) getView().findViewById(R.id.photoPerson);
-*/
         return view;//inflater.inflate(R.layout.fragment_camera, container, false);
     }
 
@@ -133,26 +133,6 @@ public class CameraFragment extends Fragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        //setContentView(R.layout.activity_find_soul_mate);
-
-        //rootView = getActivity().getWindow().getDecorView().findViewById(R.id.topLayout);
-
-        /*mPreview = (CameraPreview) getView().findViewById(R.id.preview);
-        mGraphicOverlay = (GraphicOverlay) getView().findViewById(R.id.faceOverlay);
-
-        BottomNavigationView navigation = (BottomNavigationView) getView().findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        //TODO: esto no debería hacerse así.
-        //Chequeo permisos e inicializo la cameraSource
-        int rc = ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA);
-        if (rc == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource();
-        } else {
-            requestCameraPermission();
-        }
-        mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
-        mPhotoPeep = (ImageView) getView().findViewById(R.id.photoPerson);*/
     }
 
 
@@ -300,13 +280,7 @@ public class CameraFragment extends Fragment {
                     return true;
                 case R.id.navigation_dashboard:
 
-                    mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
-                        @Override
-                        public void onPictureTaken(byte[] bytes) {
-                            Log.v(TAG, " Foto tomada.");
-                            capturar(bytes);
-                        }
-                    });
+
                     return true;
 
                 case R.id.navigation_notifications:
@@ -390,6 +364,22 @@ public class CameraFragment extends Fragment {
                 mCameraSource.release();
                 mCameraSource = null;
             }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.catchSoulMateButton:
+                mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
+                    @Override
+                    public void onPictureTaken(byte[] bytes) {
+                        Log.v(TAG, " Foto tomada.");
+                        capturar(bytes);
+                    }
+                });
+                break;
+
         }
     }
 

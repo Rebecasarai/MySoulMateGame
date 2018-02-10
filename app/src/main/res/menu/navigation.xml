@@ -12,7 +12,7 @@
         android:id="@+id/navigation_dashboard"
         android:icon="@drawable/heart"
         app:showAsAction="always"
-        android:title="@string/title_dashboard" />
+        android:title="@string/title_heart" />
 
     <item
         android:id="@+id/navigation_notifications"
