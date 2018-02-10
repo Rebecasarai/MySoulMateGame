@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -38,7 +39,7 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
     private PhotoAdapter mPhotoAdapter;
     private View view;
     private Context context;
-    private LinearLayoutManager mLayoutManager;
+    private GridLayoutManager mLayoutManager;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -47,8 +48,6 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
         LayoutInflater lf = getActivity().getLayoutInflater();
 
         view =  lf.inflate(R.layout.fragment_dashboard, container, false);
@@ -72,9 +71,6 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
     }
 
     @Override
@@ -106,7 +102,7 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
                 .build();
 
         mPhotoAdapter = new PhotoAdapter(options, this);
-        mLayoutManager = new LinearLayoutManager(this.getActivity());
+        mLayoutManager = new GridLayoutManager(this.getActivity());
         //Log.v("debugMode", "stopped?");
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mPhotoAdapter);
