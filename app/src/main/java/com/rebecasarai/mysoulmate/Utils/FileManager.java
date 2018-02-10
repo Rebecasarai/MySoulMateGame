@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate.Database;
+package com.rebecasarai.mysoulmate.Utils;
 
 
 import android.graphics.Bitmap;

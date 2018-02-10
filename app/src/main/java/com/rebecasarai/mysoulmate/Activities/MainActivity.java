@@ -1,38 +1,25 @@
 package com.rebecasarai.mysoulmate.Activities;
 
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.internal.TextScale;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.transition.AutoTransition;
-import android.transition.TransitionManager;
-import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.rebecasarai.mysoulmate.Fragments.CameraFragment;
-import com.rebecasarai.mysoulmate.Fragments.BlankFragment;
-import com.rebecasarai.mysoulmate.Fragments.DashboardFragment;
 import com.rebecasarai.mysoulmate.R;
 import com.rebecasarai.mysoulmate.Views.ViewPagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements BlankFragment.OnFragmentInteractionListener, ViewPager.OnPageChangeListener {
+public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
-
-    MenuItem prevMenuItem;
-    BottomNavigationView navigation;
+    private MenuItem mPrevMenuItem;
+    private BottomNavigationView mNavigationView;
 
 
     @Override
@@ -40,10 +27,10 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
+        mNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         mPager = (ViewPager) findViewById(R.id.framelayout);
+
+        mNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.addOnPageChangeListener(this);
@@ -61,16 +48,6 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
         }
     }
 
-
-
-
-    /*--------------  Page Listener  -------------*/
-
-    /**
-     *
-     *
-     */
-
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -78,16 +55,14 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
 
     @Override
     public void onPageSelected(int position) {
-        if (prevMenuItem != null) {
-            prevMenuItem.setChecked(false);
+        if (mPrevMenuItem != null) {
+            mPrevMenuItem.setChecked(false);
+        } else {
+            mNavigationView.getMenu().getItem(0).setChecked(false);
         }
-        else
-        {
-            navigation.getMenu().getItem(0).setChecked(false);
-        }
-        Log.d("page", "onPageSelected: "+position);
-        navigation.getMenu().getItem(position).setChecked(true);
-        prevMenuItem = navigation.getMenu().getItem(position);
+        Log.d(TAG, "onPageSelected: " + position);
+        mNavigationView.getMenu().getItem(position).setChecked(true);
+        mPrevMenuItem = mNavigationView.getMenu().getItem(position);
     }
 
     @Override
@@ -96,16 +71,6 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
     }
 
 
-     /*--------------  End Page Listener  -------------*/
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    /**
-     * Navegación
-     */
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 

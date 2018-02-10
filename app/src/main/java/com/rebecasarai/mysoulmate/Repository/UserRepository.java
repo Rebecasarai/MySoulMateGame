@@ -11,11 +11,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.rebecasarai.mysoulmate.Database.FileManager;
+import com.rebecasarai.mysoulmate.Utils.FileManager;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
-import com.rebecasarai.mysoulmate.Screenshot.ScreenshotUtils;
-
-import java.io.File;
 
 /**
  * Created by macbookpro on 28/1/18.

@@ -10,14 +10,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.hardware.SensorManager;
-import android.media.ExifInterface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -42,53 +40,18 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.google.firebase.auth.FirebaseAuth;
 import com.rebecasarai.mysoulmate.Camera.CameraPreview;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
-import com.rebecasarai.mysoulmate.Database.FileManager;
-import com.rebecasarai.mysoulmate.Exif;
 import com.rebecasarai.mysoulmate.Graphics.FaceGraphic;
 import com.rebecasarai.mysoulmate.R;
-import com.rebecasarai.mysoulmate.Repository.UserRepository;
 import com.rebecasarai.mysoulmate.Screenshot.ScreenshotType;
 import com.rebecasarai.mysoulmate.Screenshot.ScreenshotUtils;
+import com.rebecasarai.mysoulmate.Utils.ExifUtils;
+import com.rebecasarai.mysoulmate.Utils.FileManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-
-
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Bitmap.CompressFormat;
-import android.hardware.Camera;
-import android.hardware.Camera.PictureCallback;
-import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceManager;
-
-
-
 
 
 /**
@@ -106,40 +69,13 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
-    private View rootView, view;
+    private View mRootView;
     private MediaPlayer mediaPlayer;
     ImageView mPhotoPeep;
     Context context;
     ImageButton mCatchSoulMateButton;
-    ConstraintLayout mToplayout;
 
-
-    Exif exif;
-    Bitmap bitmapPicture = null;
-
-
-
-    private SurfaceView SurView;
-    private SurfaceHolder camHolder;
-    private boolean previewRunning;
-    private Button button1;
-    public static Camera camera = null;
-    private ImageView camera_image;
-    private Bitmap bmp,bmp1;
-    private ByteArrayOutputStream bos;
-    private BitmapFactory.Options options,o,o2;
-    private FileInputStream fis;
-    ByteArrayInputStream fis2;
-    private FileOutputStream fos;
-    private File dir_image2,dir_image;
-    private RelativeLayout CamView;
-
-
-
-
-
-
-
+    private Bitmap mBitmapPicture;
 
 
     public CameraFragment() {
@@ -149,26 +85,17 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        LayoutInflater lf = getActivity().getLayoutInflater();
+        mRootView = inflater.inflate(com.rebecasarai.mysoulmate.R.layout.fragment_camera, container, false);
+        mPreview = (CameraPreview) mRootView.findViewById(R.id.preview);
+        mGraphicOverlay = (GraphicOverlay) mRootView.findViewById(R.id.faceOverlay);
 
-        view =  lf.inflate(com.rebecasarai.mysoulmate.R.layout.fragment_camera, container, false);
-
-
-        rootView = getActivity().getWindow().getDecorView().findViewById(R.id.fragmentTopLayout);
-
-        mPreview = (CameraPreview) view.findViewById(R.id.preview);
-        mGraphicOverlay = (GraphicOverlay) view.findViewById(R.id.faceOverlay);
-        mToplayout = (ConstraintLayout) view.findViewById(R.id.fragmentTopLayout);
-
-
-        //TODO: esto no debería hacerse así.
+        //TODO: Cambiar request de permisos, tratar con on permissionRerquest etc. Usa mi clase permissionUtils
         //Chequeo permisos e inicializo la cameraSource
         int rc = ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
@@ -177,24 +104,29 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             requestCameraPermission();
         }
         mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
-        mPhotoPeep = (ImageView) view.findViewById(R.id.photoPerson);
+        mPhotoPeep = (ImageView) mRootView.findViewById(R.id.photoPerson);
 
-        mCatchSoulMateButton = (ImageButton) view.findViewById(R.id.catchSoulMateButton);
+        mCatchSoulMateButton = (ImageButton) mRootView.findViewById(R.id.catchSoulMateButton);
         mCatchSoulMateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
                     @Override
-                    public void onPictureTaken(byte[] bytes) {
-                        Log.v(TAG, " Foto tomada.");
-                        capturar(bytes);
+                    public void onPictureTaken(final byte[] bytes) {
+                        Log.v(TAG, " Foto Tomada.");
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                takeSnapshot(bytes);
+                            }
+                        });
                     }
                 });
 
             }
         });
 
-        return view;//inflater.inflate(R.layout.fragment_camera, container, false);
+        return mRootView;//inflater.inflate(R.layout.fragment_camera, container, false);
     }
 
 
@@ -336,39 +268,40 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     public static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(),   source.getHeight(), matrix,true);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
 
     /**
-     * Metodo que captura la foto, llamado desde CameraSource
-     * @param bytes
+     * Metodo que captura la foto, llamado desde CameraSource.
+     *
+     * @param bytes Bytes de la imagen tomada.
      */
-    private void capturar(byte[] bytes) {
-        int orientation = exif.getOrientation(bytes);
+    private void takeSnapshot(byte[] bytes) {
+        int orientation = ExifUtils.getOrientation(bytes);
 
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        switch(orientation) {
+        switch (orientation) {
             case 90:
-                bitmapPicture= rotateImage(bitmap, 90);
+                mBitmapPicture = rotateImage(bitmap, 90);
                 break;
             case 180:
-                bitmapPicture= rotateImage(bitmap, 180);
+                mBitmapPicture = rotateImage(bitmap, 180);
                 break;
             case 270:
-                bitmapPicture= rotateImage(bitmap, 270);
+                mBitmapPicture = rotateImage(bitmap, 270);
                 break;
-            case 0:
 
             default:
+                mBitmapPicture = bitmap;
                 break;
         }
 
-        mPhotoPeep.setImageBitmap(bitmapPicture);
+        mPhotoPeep.setImageBitmap(mBitmapPicture);
 
         try {
-            File mainDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)+"");
-            Log.v("dir",mainDir.getAbsolutePath());
+            File mainDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "");
+            Log.v("dir", mainDir.getAbsolutePath());
             if (!mainDir.exists()) {
                 if (mainDir.mkdir())
                     Log.e("Create Directory", "Main Directory Created: " + mainDir);
@@ -378,9 +311,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 Log.d("CAPTURE_FILE_PATH", captureFile.createNewFile() ? "Success" : "Failed");
 
             FileOutputStream stream = new FileOutputStream(captureFile);
-            bitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            mBitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
-            Log.v("dir",captureFile.getAbsolutePath());
+            Log.v("dir", captureFile.getAbsolutePath());
             stream.write(bytes);
             stream.flush();
             stream.close();
@@ -388,53 +321,16 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             takeScreenshot(ScreenshotType.FULL);
 
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-    }
-
-
-
-
-    public Bitmap decodeFile(File f) {
-        Bitmap b = null;
-        try {
-            // Decode image size
-            o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-
-            fis = new FileInputStream(f);
-            BitmapFactory.decodeStream(fis, null, o);
-            fis.close();
-            int IMAGE_MAX_SIZE = 1000;
-            int scale = 1;
-            if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
-                scale = (int) Math.pow(
-                        2,
-                        (int) Math.round(Math.log(IMAGE_MAX_SIZE
-                                / (double) Math.max(o.outHeight, o.outWidth))
-                                / Math.log(0.5)));
-            }
-
-            // Decode with inSampleSize
-            o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            fis = new FileInputStream(f);
-            b = BitmapFactory.decodeStream(fis, null, o2);
-            fis.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return b;
     }
 
 
     /**
      * Fecha actual
+     *
      * @return
      */
     private String getPhotoTime() {
@@ -450,8 +346,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     private void startCameraSource() {
 
         // check that the device has play services available.
-        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(
-                context/*getContext()*/);
+        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getView().getContext());
         if (code != ConnectionResult.SUCCESS) {
             Dialog dlg =
                     GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), code, RC_HANDLE_GMS);
@@ -471,13 +366,13 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.catchSoulMateButton:
                 mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
                     @Override
                     public void onPictureTaken(byte[] bytes) {
                         Log.v(TAG, " Foto tomada.");
-                        capturar(bytes);
+                        takeSnapshot(bytes);
                     }
                 });
                 break;
@@ -506,7 +401,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         GraphicFaceTracker(GraphicOverlay overlay) {
             mOverlay = overlay;
             mFaceGraphic = new FaceGraphic(overlay, getContext());
-
 
 
             try {
@@ -591,10 +485,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         //Si el bitmap no es nulo
         if (bitmap != null) {
 
-
             //TODO: pasarlo al repository
-
-
             FileManager.uploadScreenshot(FirebaseAuth.getInstance(), bitmap, new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -606,34 +497,21 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 public void onFailure(@NonNull Exception e) {
                     //TODO: treat
                     Toast.makeText(getActivity(), "Uploading failed.", Toast.LENGTH_SHORT).show();
-
                 }
             });
-
 
             File saveFile = ScreenshotUtils.getMainDirectoryName(getContext());//el directoria para guardar
             File file = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
             shareScreenshot(file);
-
 
         } else {
             //Si es nulo
             Toast.makeText(getContext(), R.string.screenshot_take_failed, Toast.LENGTH_SHORT).show();
         }
 
-
     }
 
-    /**
-     * Muestra screenshot Bitmap si quiero
-     */
-    private void showScreenShotImage(Bitmap b) {
-        //imageView.setImageBitmap(b);
-    }
 
-    /**
-     * Comparte Screenshot
-     */
     private void shareScreenshot(File file) {
         Uri uri = Uri.fromFile(file);//Convert file path into Uri for sharing
         Intent intent = new Intent();
@@ -644,8 +522,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         intent.putExtra(Intent.EXTRA_STREAM, uri);//pass uri here
         startActivity(Intent.createChooser(intent, getString(R.string.share_title)));
     }
-
-
 
 
 }

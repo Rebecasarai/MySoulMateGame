@@ -17,7 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
-import com.rebecasarai.mysoulmate.Repository.UserRepository;
 import com.rebecasarai.mysoulmate.Views.PhotoAdapter;
 import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
 
@@ -26,13 +25,9 @@ import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
  */
 public class DashboardFragment extends Fragment implements RecyclerItemClickListener {
 
-    // Creating RecyclerView.
     private RecyclerView mRecyclerView;
     private PhotoAdapter mPhotoAdapter;
-    private View view;
-    private Context context;
-    private GridLayoutManager mLayoutManager;
-    private UserRepository mUSerRepository;
+    private View mRootView;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -41,24 +36,14 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        LayoutInflater lf = getActivity().getLayoutInflater();
-
-        view =  lf.inflate(R.layout.fragment_dashboard, container, false);
-
-        setUpRecycler(view);
-
-        if(mPhotoAdapter!= null){
-            mPhotoAdapter.startListening();
-        }
-
-        return view;
+        mRootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        return mRootView;
     }
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
     }
 
     @Override
@@ -67,27 +52,26 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        setUpRecycler();
+        if (mPhotoAdapter != null) {
+            mPhotoAdapter.startListening();
+        }
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
-
-        if(mPhotoAdapter!=null){
+        if (mPhotoAdapter != null) {
             mPhotoAdapter.stopListening();
             mPhotoAdapter = null;
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        //setUpRecycler();
-        if(mPhotoAdapter!= null){
-            mPhotoAdapter.startListening();
-        }
-    }
+    private void setUpRecycler() {
 
-    private void setUpRecycler(View view) {
-
-        mRecyclerView = view.findViewById(R.id.recycler);
+        mRecyclerView = getView().findViewById(R.id.recycler);
         Query query = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("screenshots");
 
         final FirebaseRecyclerOptions<Screenshot> options = new FirebaseRecyclerOptions.Builder<Screenshot>()
@@ -95,13 +79,9 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
                 .build();
 
         mPhotoAdapter = new PhotoAdapter(options, this);
-        mLayoutManager = new GridLayoutManager(this.getActivity(), 2);
-        //Log.v("debugMode", "stopped?");
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(), 2));
         mRecyclerView.setAdapter(mPhotoAdapter);
     }
-
-
 
 
     @Override

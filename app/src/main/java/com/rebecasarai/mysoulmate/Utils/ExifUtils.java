@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate;
+package com.rebecasarai.mysoulmate.Utils;
 
 import android.util.Log;
 
@@ -6,7 +6,7 @@ import android.util.Log;
  * Created by rebecagonzalez on 10/2/18.
  */
 
-public class Exif {
+public class ExifUtils {
     private static final String TAG = "CameraExif";
 
     // Returns the degrees in clockwise. Values are 0, 90, 180, or 270.
@@ -58,7 +58,7 @@ public class Exif {
             length = 0;
         }
 
-        // JEITA CP-3451 Exif Version 2.2
+        // JEITA CP-3451 ExifUtils Version 2.2
         if (length > 8) {
             // Identify the byte order.
             int tag = pack(jpeg, offset, 4, false);
