@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="YourLast SoulMate!"
+        android:layout_marginTop="20dp"
         />
 
     <ImageView
@@ -18,8 +19,16 @@
         android:id="@+id/lastSoulMatePreview"
         android:src="@mipmap/ic_launcher"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/recyclerLast"
+        tools:layoutManager="android.support.v7.widget.GridLayoutManager"
+        tools:listitem="@layout/photo_item" />
 
     <!--TODO:Panel de perfil, estadisticas de soulmates, Probabilidad de que salga el soulmate Cuantos buu-->
+
 
 
 </LinearLayout>

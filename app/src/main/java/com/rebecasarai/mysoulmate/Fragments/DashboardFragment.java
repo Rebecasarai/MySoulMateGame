@@ -54,6 +54,7 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
     @Override
     public void onStart() {
         super.onStart();
+        getActivity().setTheme(R.style.AppTheme);
         setUpRecycler();
         if (mPhotoAdapter != null) {
             mPhotoAdapter.startListening();

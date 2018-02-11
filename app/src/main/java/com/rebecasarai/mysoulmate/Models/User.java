@@ -12,6 +12,7 @@ public class User {
     private String name;
     private String email;
     private List<String> screenshots;
+    
 
 
     public String getUid() {
