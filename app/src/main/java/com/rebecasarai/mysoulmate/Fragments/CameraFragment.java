@@ -106,24 +106,27 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         mGraphicOverlay = (GraphicOverlay) mRootView.findViewById(R.id.faceOverlay);
 
         //TODO: Cambiar request de permisos, tratar con on permissionRerquest etc. Usa mi clase permissionUtils
-        //Chequeo permisos e inicializo la cameraSource
         int rc = ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource();
         } else {
             requestCameraPermission();
         }
+
         mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
         mPhotoPeep = (ImageView) mRootView.findViewById(R.id.photoPerson);
 
         mCatchSoulMateButton = (ImageButton) mRootView.findViewById(R.id.catchSoulMateButton);
         mCatchSoulMateButton.setVisibility(View.INVISIBLE);
+
         mViewmodel = ViewModelProviders.of(this).get(MainViewModel.class);
-        mViewmodel.getmHeartButtonVisibility().observe(this, new Observer<Boolean>() {
+        mViewmodel.getHeartButtonVisibility().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
-                if(aBoolean){
+                if (aBoolean) {
                     mCatchSoulMateButton.setVisibility(View.VISIBLE);
+                } else {
+                    mCatchSoulMateButton.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -137,19 +140,12 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         Log.v(TAG, "Foto Tomada.");
                         takeSnapshot(bytes);
                         setBitmap();
-                        // new FasterScreenshotAsyncTask().execute(bytes);
-                       /* new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                takeSnapshot(bytes);
-                            }
-                        });*/
                     }
                 });
             }
         });
 
-        return mRootView;//inflater.inflate(R.layout.fragment_camera, container, false);
+        return mRootView;
     }
 
 
@@ -198,7 +194,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     }
 
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -243,13 +238,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
             if (Utils.isYourSoulMate(getContext())) {
 
-
-
-
-//                mViewmodel.setmHeartButtonVisibilityValue(true);
-                Log.v("visibitlity del corazon", mViewmodel.getmHeartButtonVisibilityValue()+"");
                 mFaceGraphic = new FaceGraphic(overlay, getContext());
-
+                mViewmodel.setHeartButtonVisibility(true);
 
                 try {
                     if (mediaPlayer.isPlaying()) {
@@ -257,10 +247,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         mediaPlayer.release();
                         mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
                     }
-
                     mediaPlayer.start();
                 } catch (Exception e) {
-                    //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
+                    //TODO: threat
                 }
             }
 
@@ -273,11 +262,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         @Override
         public void onNewItem(int faceId, Face item) {
 
-            if(mFaceGraphic != null){
+            if (mFaceGraphic != null) {
                 mFaceGraphic.setId(faceId);
             }
-
-            //updateSnapshotsTaken();
         }
 
         /**
@@ -285,7 +272,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
          */
         @Override
         public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
-            if(mFaceGraphic != null) {
+            if (mFaceGraphic != null) {
                 mOverlay.add(mFaceGraphic);
                 mFaceGraphic.updateFace(face);
             }
@@ -296,7 +283,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
          */
         @Override
         public void onMissing(FaceDetector.Detections<Face> detectionResults) {
-            if(mFaceGraphic != null) {
+            if (mFaceGraphic != null) {
                 mOverlay.remove(mFaceGraphic);
             }
             Log.v("missing", "");
@@ -308,23 +295,25 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         @Override
         public void onDone() {
 
-            if(mFaceGraphic != null) {
+            if (mFaceGraphic != null) {
                 mOverlay.remove(mFaceGraphic);
                 try {
                     if (mediaPlayer.isPlaying()) {
                         mediaPlayer.stop();
                         mediaPlayer.release();
                         mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
+                        mViewmodel.setHeartButtonVisibility(false);
                     }
 
                 } catch (Exception e) {
 
                 }
             }
-            Log.v("done", "");
+
+
+            Log.d(TAG, "onDone() called !");
         }
     }
-
 
 
     /**
@@ -371,7 +360,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
      * Snackbar
      */
     private void requestCameraPermission() {
-        Log.w(TAG, "El permiso de la cámara no se concedió");
 
         final String[] permissions = new String[]{android.Manifest.permission.CAMERA};
 
@@ -380,7 +368,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             ActivityCompat.requestPermissions(getActivity(), permissions, RC_HANDLE_CAMERA_PERM);
             return;
         }
-
 
         final FragmentActivity thisActivity = getActivity();
 
@@ -424,7 +411,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
         mCameraSource = new CameraSource.Builder(context, detector)
                 .setRequestedPreviewSize(640, 480)
-                .setAutoFocusEnabled (true)
+                .setAutoFocusEnabled(true)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedFps(30.0f)
                 //.setRequestedFps(15.0f)
@@ -532,7 +519,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
-
 
 
     /**
