@@ -20,7 +20,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.Rect;
 import android.util.Log;
 
 import com.google.android.gms.vision.face.Face;
@@ -126,7 +131,13 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         Bitmap scaledBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
 
         Paint p = new Paint();
+        Paint paintCameraEntera = new Paint();
         p.setColor(Color.RED);
+        p.setAntiAlias(true);
+        p.setFilterBitmap(true);
+        p.setDither(true);
+
+        paintCameraEntera.setColorFilter(new PorterDuffColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY));
 
         //for (int i = 0; i < 3; i++) {
             TopX = random.nextInt(800);
@@ -135,11 +146,20 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             LeftX = random.nextInt(100);
             LeftY = random.nextInt(800);
 
-            RightX = randomRango(800,900);
-            RightY = random.nextInt(800);
+            RightX = randomRango(900,1000);
+            RightY = random.nextInt(1200);
 
-            BottomX = random.nextInt(900);
-            BottomY = randomRango(800,900);
+            BottomX = random.nextInt(800);
+            BottomY = randomRango(1200,1300);
+
+
+        int less = canvas.getWidth();
+       Rect r = new Rect(canvas.getWidth()-(less-20), canvas.getHeight()-(canvas.getHeight()-20), canvas.getWidth(), canvas.getHeight());
+        // fill
+        paintCameraEntera.setStyle(Paint.Style.FILL);
+        paintCameraEntera.setAlpha(70);
+        //paintCameraEntera.setColor(Color.RED);
+        canvas.drawRect(r, paintCameraEntera);
 
         //}
 
