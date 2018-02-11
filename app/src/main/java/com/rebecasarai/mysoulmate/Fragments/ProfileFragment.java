@@ -29,7 +29,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
-import com.rebecasarai.mysoulmate.Views.PhotoAdapter;
+import com.rebecasarai.mysoulmate.Views.Adapters.PhotoAdapter;
 import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
 import com.squareup.picasso.Picasso;
 
