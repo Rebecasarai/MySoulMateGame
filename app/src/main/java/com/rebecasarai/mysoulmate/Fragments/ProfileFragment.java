@@ -1,35 +1,19 @@
 package com.rebecasarai.mysoulmate.Fragments;
 
 
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
-import com.rebecasarai.mysoulmate.Views.PhotoAdapter;
+import com.rebecasarai.mysoulmate.Views.Adapters.PhotoAdapter;
 import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
-import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.

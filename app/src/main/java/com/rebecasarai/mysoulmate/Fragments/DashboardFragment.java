@@ -17,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
-import com.rebecasarai.mysoulmate.Views.PhotoAdapter;
+import com.rebecasarai.mysoulmate.Views.Adapters.PhotoAdapter;
 import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
 
 /**

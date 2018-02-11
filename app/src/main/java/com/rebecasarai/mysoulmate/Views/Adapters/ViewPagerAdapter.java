@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate.Views;
+package com.rebecasarai.mysoulmate.Views.Adapters;
 
 /**
  * Created by rebecagonzalez on 10/2/18.

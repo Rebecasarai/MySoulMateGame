@@ -59,7 +59,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
 
 /**
@@ -242,7 +241,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         GraphicFaceTracker(GraphicOverlay overlay) {
             mOverlay = overlay;
 
-            if (Utils.isYoutSoulMate(getContext())) {
+            if (Utils.isYourSoulMate(getContext())) {
 
 
 
@@ -278,7 +277,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 mFaceGraphic.setId(faceId);
             }
 
-            //updateProbability();
+            //updateSnapshotsTaken();
         }
 
         /**

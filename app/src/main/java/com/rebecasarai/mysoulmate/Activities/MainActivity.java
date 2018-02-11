@@ -1,8 +1,6 @@
 package com.rebecasarai.mysoulmate.Activities;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.PagerAdapter;
@@ -14,7 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.rebecasarai.mysoulmate.R;
-import com.rebecasarai.mysoulmate.Views.ViewPagerAdapter;
+import com.rebecasarai.mysoulmate.Views.Adapters.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
