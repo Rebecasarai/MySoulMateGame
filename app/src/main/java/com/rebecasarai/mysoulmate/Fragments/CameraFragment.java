@@ -447,6 +447,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         @Override
         public void onNewItem(int faceId, Face item) {
             mFaceGraphic.setId(faceId);
+            mCatchSoulMateButton.setVisibility(View.VISIBLE);
             //TODO: Actualizar shared preferences
             editor = mSharedPref.edit();
             editor.putInt("key", 1);
