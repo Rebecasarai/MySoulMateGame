@@ -25,13 +25,13 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return sDashboardInstance == null ? sDashboardInstance = new DashboardFragment() : sDashboardInstance;
+                return new DashboardFragment();
             case 1:
-                return sCameraInstance == null ? sCameraInstance = new CameraFragment() : sCameraInstance;
+                return new CameraFragment();
             case 2:
-                return sDashboardInstance == null ? sDashboardInstance = new DashboardFragment() : sDashboardInstance;
+                return new DashboardFragment();
             default:
-                return sDashboardInstance == null ? sDashboardInstance = new DashboardFragment() : sDashboardInstance;
+                return new DashboardFragment();
 
         }
     }

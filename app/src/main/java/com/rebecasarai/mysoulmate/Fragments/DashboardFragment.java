@@ -79,7 +79,7 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
                 .build();
 
         mPhotoAdapter = new PhotoAdapter(options, this);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(), 2));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mRecyclerView.setAdapter(mPhotoAdapter);
     }
 

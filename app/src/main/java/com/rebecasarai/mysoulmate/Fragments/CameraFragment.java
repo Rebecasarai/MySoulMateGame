@@ -15,7 +15,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -73,7 +72,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     private View mRootView;
     private MediaPlayer mediaPlayer;
     ImageView mPhotoPeep;
-    Context context;
     ImageButton mCatchSoulMateButton;
 
     private Bitmap mBitmapPicture;
@@ -96,6 +94,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         mPreview = (CameraPreview) mRootView.findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) mRootView.findViewById(R.id.faceOverlay);
 
+
         //TODO: Cambiar request de permisos, tratar con on permissionRerquest etc. Usa mi clase permissionUtils
         //Chequeo permisos e inicializo la cameraSource
         int rc = ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA);
@@ -117,7 +116,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         Log.v(TAG, " Foto Tomada.");
                         takeSnapshot(bytes);
                         setBitmap();
-                       // new FasterScreenshotAsyncTask().execute(bytes);
+                        // new FasterScreenshotAsyncTask().execute(bytes);
                        /* new Handler().post(new Runnable() {
                             @Override
                             public void run() {
@@ -139,12 +138,18 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         super.onCreate(icicle);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().setTheme(R.style.AppTheme_NoActionBar);
+    }
 
     @Override
     public void onResume() {
         super.onResume();
         startCameraSource();
     }
+
 
     @Override
     public void onPause() {
@@ -302,7 +307,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
 
 
-
         try {
             File mainDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "");
             Log.v("dir", mainDir.getAbsolutePath());
@@ -329,7 +333,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public void setBitmap(){
+    public void setBitmap() {
         mPhotoPeep.setImageBitmap(mBitmapPicture);
         takeScreenshot(ScreenshotType.FULL);
     }
@@ -531,9 +535,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public class FasterScreenshotAsyncTask extends AsyncTask<byte[], Void, Void>{
-
-
+    public class FasterScreenshotAsyncTask extends AsyncTask<byte[], Void, Void> {
 
         @Override
         protected Void doInBackground(byte[]... bytes) {
