@@ -311,7 +311,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
 
 
-
         try {
             File mainDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "");
             Log.v("dir", mainDir.getAbsolutePath());
@@ -425,8 +424,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             //TODO: Probability, if(random((MAX)) - FotosTomadas del Shared == 0)
             //TODO: Tener dos variables de totalDeFotos y otra para la prob
             int mProbability = new Random().nextInt(50);
-            if(mProbability >= 35) {
-                mFaceGraphic = new FaceGraphic(overlay, getContext(), 1);
+            if (mProbability >= 35) {
+                mFaceGraphic = new FaceGraphic(overlay, getContext());
                 try {
                     if (mediaPlayer.isPlaying()) {
                         mediaPlayer.stop();
@@ -553,7 +552,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     public class FasterScreenshotAsyncTask extends AsyncTask<byte[], Void, Void> {
 
 
-
         @Override
         protected Void doInBackground(byte[]... bytes) {
             takeSnapshot(bytes[0]);
@@ -571,7 +569,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public void setProbability(){
+    public void setProbability() {
         mSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPref.edit();
         editor.putInt("prob", 60);
@@ -580,7 +578,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public int getProbability(){
+    public int getProbability() {
         mSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         //int prob = getResources().getInteger("s");
         int prob = 5;

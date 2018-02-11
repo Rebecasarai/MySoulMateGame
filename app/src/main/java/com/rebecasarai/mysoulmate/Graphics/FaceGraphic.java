@@ -43,7 +43,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     Random random = new Random();
 
 
-    private static final int COLOR_CHOICES= Color.RED;
+    private static final int COLOR_CHOICES = Color.RED;
 
     private Paint mFacePositionPaint;
     private Paint mIdPaint;
@@ -53,8 +53,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private int mFaceId;
 
 
-
-    public FaceGraphic(GraphicOverlay overlay, Context context, int probability) {
+    public FaceGraphic(GraphicOverlay overlay, Context context) {
         super(overlay);
 
         final int selectedColor = COLOR_CHOICES;
@@ -80,17 +79,19 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
 
     /**
-      * Actualiza la instancia de cara desde la detección del marco más reciente. Invalida el
-      * porciones relevantes de la superposición para activar un redibujado.
-      */
+     * Actualiza la instancia de cara desde la detección del marco más reciente. Invalida el
+     *       * porciones relevantes de la superposición para activar un redibujado.
+     *      
+     */
     public void updateFace(Face face) {
         mFace = face;
         postInvalidate();
     }
 
     /**
-    * Dibuja las anotaciones de la cara para la posición en el lienzo suministrado.
-    */
+     * Dibuja las anotaciones de la cara para la posición en el lienzo suministrado.
+     *     
+     */
     @Override
     public void draw(Canvas canvas) {
         Face face = mFace;
@@ -103,32 +104,31 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         double viewHeight = canvas.getHeight();
         //double imageWidth = mBitmap.getWidth();
         //double imageHeight = mBitmap.getHeight();
-        double scale = Math.min( viewWidth / face.getPosition().x + face.getWidth(), viewHeight / face.getPosition().y + face.getHeight() );
-        Log.v("scale", ""+scale);
+        double scale = Math.min(viewWidth / face.getPosition().x + face.getWidth(), viewHeight / face.getPosition().y + face.getHeight());
+        Log.v("scale", "" + scale);
 
         // Draws a circle at the position of the detected face, with the face's track id below.
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
         canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
         canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
-        canvas.drawText("Es tu alma gemelaa" , x - ID_X_OFFSET*3, y - ID_Y_OFFSET*3, mIdPaint);
-
+        canvas.drawText("Es tu alma gemelaa", x - ID_X_OFFSET * 3, y - ID_Y_OFFSET * 3, mIdPaint);
 
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(context.getResources(), R.drawable.heart,options);
+        BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
         //Lo reduzco por 5
         options.inSampleSize = 4;
         options.inJustDecodeBounds = false;
-        Bitmap scaledBitmap =  BitmapFactory.decodeResource(context.getResources(),R.drawable.heart, options);
+        Bitmap scaledBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
 
-        Paint p=new Paint();
+        Paint p = new Paint();
         p.setColor(Color.RED);
 
-        for (int i= 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             w = random.nextInt(800);
-            h = random.nextInt(800 );
+            h = random.nextInt(800);
             canvas.drawBitmap(scaledBitmap, w, h, p);
         }
 
@@ -146,6 +146,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     /**
      * Optimiza tamaño del bitmap
+     *
      * @param realImage
      * @param maxImageSize
      * @param filter
@@ -166,15 +167,16 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     /**
      * Dibuja los landmarks
+     *
      * @param canvas
      * @param scale
      * @param face
      * @param p
      */
-    private void drawFaceLandmarks( Canvas canvas, double scale, Face face, Paint p) {
-        p.setColor( Color.GREEN );
-        p.setStyle( Paint.Style.STROKE );
-        p.setStrokeWidth( 5 );
+    private void drawFaceLandmarks(Canvas canvas, double scale, Face face, Paint p) {
+        p.setColor(Color.GREEN);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(5);
 
         for (Landmark landmark : face.getLandmarks()) {
             int cx = (int) (landmark.getPosition().x * scale);
@@ -183,9 +185,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         }
 
 
-     }
-
-
+    }
 
 
 }
