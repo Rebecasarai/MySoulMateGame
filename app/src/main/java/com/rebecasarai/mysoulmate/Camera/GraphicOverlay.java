@@ -16,13 +16,21 @@
 package com.rebecasarai.mysoulmate.Camera;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.face.Face;
+import com.rebecasarai.mysoulmate.R;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class GraphicOverlay extends View {
@@ -152,6 +160,7 @@ public class GraphicOverlay extends View {
                 mWidthScaleFactor = (float) canvas.getWidth() / (float) mPreviewWidth;
                 mHeightScaleFactor = (float) canvas.getHeight() / (float) mPreviewHeight;
             }
+           Random random= new Random();
 
             for (Graphic graphic : mGraphics) {
                 graphic.draw(canvas);

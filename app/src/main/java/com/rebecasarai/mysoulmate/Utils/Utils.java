@@ -26,13 +26,13 @@ public class Utils {
 
     public static boolean isYoutSoulMate(Context pContext){
         Random r = new Random();
-        final int DIFICULTAD_MAXIMA = 250;
+        final int DIFICULTAD_MAXIMA = 50;
         //Obtine y actualiza shared
         boolean findedSoulMate = false;
         int encontradosActual = getProbabilty(pContext);
         updateProbability(pContext, encontradosActual++);
 
-        int prob = r.nextInt(DIFICULTAD_MAXIMA - encontradosActual);
+        int prob = r.nextInt(DIFICULTAD_MAXIMA - 49);
         Log.v("Probabilidad a", prob + "");
 
         Log.v("Encontrados actual a", encontradosActual + "");
@@ -55,7 +55,7 @@ public class Utils {
 
     public static int getProbabilty(Context pContext){
         SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(pContext);
-        int encontradosActual = mSharedPref.getInt("NUM_DETECTADOS_ACTUAL",1);
+        int encontradosActual = mSharedPref.getInt("NUM_DETECTADOS_ACTUAL",48);
 
         return encontradosActual;
     }

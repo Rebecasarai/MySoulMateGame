@@ -243,10 +243,15 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             mOverlay = overlay;
 
             if (Utils.isYoutSoulMate(getContext())) {
-                //mCatchSoulMateButton.setVisibility(View.VISIBLE);
-                mViewmodel.setmHeartButtonVisibilityValue(true);
+
+
+
+
+//                mViewmodel.setmHeartButtonVisibilityValue(true);
                 Log.v("visibitlity del corazon", mViewmodel.getmHeartButtonVisibilityValue()+"");
                 mFaceGraphic = new FaceGraphic(overlay, getContext());
+
+
                 try {
                     if (mediaPlayer.isPlaying()) {
                         mediaPlayer.stop();
@@ -409,6 +414,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
         detector.setProcessor(
                 new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory())
+                        .setMaxGapFrames(0)
                         .build());
 
 
@@ -419,8 +425,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
         mCameraSource = new CameraSource.Builder(context, detector)
                 .setRequestedPreviewSize(640, 480)
+                .setAutoFocusEnabled (true)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedFps(30.0f)
+                //.setRequestedFps(15.0f)
                 .build();
 
     }
@@ -596,14 +604,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             setBitmap();
         }
     }
-
-    public void updateProbability(){
-        editor = mSharedPref.edit();
-        int total = mSharedPref.getInt("NUM_DETECTADOS_ACTUAL", 1);
-        editor.putInt("NUM_DETECTADOS_ACTUAL", total++);
-        editor.apply();
-    }
-
 
 }
 

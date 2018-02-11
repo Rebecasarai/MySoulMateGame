@@ -24,8 +24,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private PagerAdapter mPagerAdapter;
     private MenuItem mPrevMenuItem;
     private BottomNavigationView mNavigationView;
-    private SharedPreferences mSharedPref;
-    private SharedPreferences.Editor editor;
 
 
 
@@ -125,11 +123,5 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         }
         return super.onOptionsItemSelected(item);
     }
-
-    public void setProbability(){
-        editor = mSharedPref.edit();
-        int total = mSharedPref.getInt("NUM_DETECTADOS_ACTUAL", 0);
-        editor.putInt("NUM_DETECTADOS_ACTUAL", total++);
-        editor.apply();}
 
 }
