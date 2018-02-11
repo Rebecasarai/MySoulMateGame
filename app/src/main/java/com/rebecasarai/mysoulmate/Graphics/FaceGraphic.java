@@ -132,7 +132,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             canvas.drawBitmap(scaledBitmap, w, h, p);
         }
 
-        canvas.drawBitmap(scaledBitmap, 400, 300, p);
+        //canvas.drawBitmap(scaledBitmap, 400, 300, p);
 
         /* float xOffset = scaleX(face.getWidth() / 2.0f);
         float yOffset = scaleY(face.getHeight() / 2.0f);

@@ -1,6 +1,8 @@
 package com.rebecasarai.mysoulmate.Utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -11,6 +13,7 @@ import java.util.Random;
  */
 
 public class Utils {
+    int mEncontradosActual;
 
 
     public static int calculateNoOfColumns(Context context) {
@@ -21,15 +24,19 @@ public class Utils {
     }
 
 
-    public static boolean isYoutSoulMate(){
-        final int DIFICULTAD_MAXIMA = 100;
-        int encontradosActual = 10;
+    public static boolean isYoutSoulMate(Context pContext){
         Random r = new Random();
+        final int DIFICULTAD_MAXIMA = 250;
+        //Obtine y actualiza shared
         boolean findedSoulMate = false;
-        int prob = r.nextInt(DIFICULTAD_MAXIMA - encontradosActual);
-        Log.v("Probabilidad a", prob+"");
+        int encontradosActual = getProbabilty(pContext);
+        updateProbability(pContext, encontradosActual++);
 
-        //if(random.next(DIFICULTAD_MAXIMA - encontradosActual)==0={}
+        int prob = r.nextInt(DIFICULTAD_MAXIMA - encontradosActual);
+        Log.v("Probabilidad a", prob + "");
+
+        Log.v("Encontrados actual a", encontradosActual + "");
+
         if(prob==0){
             findedSoulMate = true;
             Log.v("Probabilidad a true con", prob+"");
@@ -38,5 +45,20 @@ public class Utils {
         return findedSoulMate;
 
     }
+
+    public static void updateProbability(Context pContext, int encontradosActual){
+        SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(pContext);
+        SharedPreferences.Editor editor = mSharedPref.edit();
+        editor.putInt("NUM_DETECTADOS_ACTUAL", encontradosActual++);
+        editor.commit();
+    }
+
+    public static int getProbabilty(Context pContext){
+        SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(pContext);
+        int encontradosActual = mSharedPref.getInt("NUM_DETECTADOS_ACTUAL",1);
+
+        return encontradosActual;
+    }
+
 
 }

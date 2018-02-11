@@ -3,6 +3,8 @@ package com.rebecasarai.mysoulmate.Fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +20,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -49,6 +52,7 @@ import com.rebecasarai.mysoulmate.Screenshot.ScreenshotUtils;
 import com.rebecasarai.mysoulmate.Utils.ExifUtils;
 import com.rebecasarai.mysoulmate.Utils.FileManager;
 import com.rebecasarai.mysoulmate.Utils.Utils;
+import com.rebecasarai.mysoulmate.ViewModels.MainViewModel;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -82,6 +86,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     private int mProbability;
     private SharedPreferences mSharedPref;
     private SharedPreferences.Editor editor;
+    private MainViewModel mViewmodel;
 
 
     public CameraFragment() {
@@ -101,7 +106,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         mPreview = (CameraPreview) mRootView.findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) mRootView.findViewById(R.id.faceOverlay);
 
-
         //TODO: Cambiar request de permisos, tratar con on permissionRerquest etc. Usa mi clase permissionUtils
         //Chequeo permisos e inicializo la cameraSource
         int rc = ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA);
@@ -114,13 +118,24 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         mPhotoPeep = (ImageView) mRootView.findViewById(R.id.photoPerson);
 
         mCatchSoulMateButton = (ImageButton) mRootView.findViewById(R.id.catchSoulMateButton);
+        mCatchSoulMateButton.setVisibility(View.INVISIBLE);
+        mViewmodel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewmodel.getmHeartButtonVisibility().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if(aBoolean){
+                    mCatchSoulMateButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         mCatchSoulMateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
                     @Override
                     public void onPictureTaken(final byte[] bytes) {
-                        Log.v(TAG, " Foto Tomada.");
+                        Log.v(TAG, "Foto Tomada.");
                         takeSnapshot(bytes);
                         setBitmap();
                         // new FasterScreenshotAsyncTask().execute(bytes);
@@ -132,14 +147,16 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         });*/
                     }
                 });
-
             }
         });
-
 
         return mRootView;//inflater.inflate(R.layout.fragment_camera, container, false);
     }
 
+
+    /*--------------------------------
+            Override methods
+     ---------------------------------*/
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -150,8 +167,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         getActivity().setTheme(R.style.AppTheme_NoActionBar);
-
-        mSharedPref = PreferenceManager.getDefaultSharedPreferences(mRootView.getContext());
+        mCatchSoulMateButton.setVisibility(View.INVISIBLE);
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(getView().getContext());
     }
 
     @Override
@@ -180,6 +197,130 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         mediaPlayer.stop();
         mediaPlayer.release();
     }
+
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.catchSoulMateButton:
+                mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
+                    @Override
+                    public void onPictureTaken(byte[] bytes) {
+                        Log.v(TAG, " Foto tomada.");
+                        takeSnapshot(bytes);
+                    }
+                });
+                break;
+
+        }
+    }
+
+
+    /*--------------------------------
+          End of Override methods
+     ---------------------------------*/
+
+
+    /**
+     * Fábrica para crear el tracker de cara para asociarlo con una nueva cara. El multiprocesador usa esta fábrica para crear rastreadores de caras según sea necesario, uno para cada persona.
+     */
+    private class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
+        @Override
+        public Tracker<Face> create(Face face) {
+            return new GraphicFaceTracker(mGraphicOverlay);
+        }
+    }
+
+    /**
+     * Tracker para cada individuo detectado. Esto mantiene un gráfico de cara dentro de la superposición de cara asociada a la aplicación.
+     */
+    private class GraphicFaceTracker extends Tracker<Face> {
+        private GraphicOverlay mOverlay;
+        private FaceGraphic mFaceGraphic;
+
+        GraphicFaceTracker(GraphicOverlay overlay) {
+            mOverlay = overlay;
+
+            if (Utils.isYoutSoulMate(getContext())) {
+                //mCatchSoulMateButton.setVisibility(View.VISIBLE);
+                mViewmodel.setmHeartButtonVisibilityValue(true);
+                Log.v("visibitlity del corazon", mViewmodel.getmHeartButtonVisibilityValue()+"");
+                mFaceGraphic = new FaceGraphic(overlay, getContext());
+                try {
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                        mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
+                    }
+
+                    mediaPlayer.start();
+                } catch (Exception e) {
+                    //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
+                }
+            }
+
+        }
+
+
+        /**
+         * Comienza a trackear dentro del overlay.
+         */
+        @Override
+        public void onNewItem(int faceId, Face item) {
+
+            if(mFaceGraphic != null){
+                mFaceGraphic.setId(faceId);
+            }
+
+            //updateProbability();
+        }
+
+        /**
+         * Update the position/characteristics of the face within the overlay.
+         */
+        @Override
+        public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
+            if(mFaceGraphic != null) {
+                mOverlay.add(mFaceGraphic);
+                mFaceGraphic.updateFace(face);
+            }
+        }
+
+        /**
+         * Oculta el gráfico cuando no se detectó la cara.
+         */
+        @Override
+        public void onMissing(FaceDetector.Detections<Face> detectionResults) {
+            if(mFaceGraphic != null) {
+                mOverlay.remove(mFaceGraphic);
+            }
+            Log.v("missing", "");
+        }
+
+        /**
+         * Llamado cuando se supone que la cara no se detecta definitvamente. Elimina el gráfica del overlay.
+         */
+        @Override
+        public void onDone() {
+
+            if(mFaceGraphic != null) {
+                mOverlay.remove(mFaceGraphic);
+                try {
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                        mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
+                    }
+
+                } catch (Exception e) {
+
+                }
+            }
+            Log.v("done", "");
+        }
+    }
+
 
 
     /**
@@ -269,6 +410,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         detector.setProcessor(
                 new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory())
                         .build());
+
 
         if (!detector.isOperational()) {
 
@@ -384,116 +526,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.catchSoulMateButton:
-                mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
-                    @Override
-                    public void onPictureTaken(byte[] bytes) {
-                        Log.v(TAG, " Foto tomada.");
-                        takeSnapshot(bytes);
-                    }
-                });
-                break;
 
-        }
-    }
-
-
-    /**
-     * Fábrica para crear el tracker de cara para asociarlo con una nueva cara. El multiprocesador usa esta fábrica para crear rastreadores de caras según sea necesario, uno para cada persona.
-     */
-    private class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
-        @Override
-        public Tracker<Face> create(Face face) {
-            return new GraphicFaceTracker(mGraphicOverlay);
-        }
-    }
-
-    /**
-     * Tracker para cada individuo detectado. Esto mantiene un gráfico de cara dentro de la superposición de cara asociada a la aplicación.
-     */
-    private class GraphicFaceTracker extends Tracker<Face> {
-        private GraphicOverlay mOverlay;
-        private FaceGraphic mFaceGraphic;
-
-        GraphicFaceTracker(GraphicOverlay overlay) {
-            mOverlay = overlay;
-
-            //TODO: Probability, if(random((MAX)) - FotosTomadas del Shared == 0)
-            //TODO: Tener dos variables de totalDeFotos y otra para la prob
-            if (Utils.isYoutSoulMate()) {
-                mFaceGraphic = new FaceGraphic(overlay, getContext());
-                try {
-                    if (mediaPlayer.isPlaying()) {
-                        mediaPlayer.stop();
-                        mediaPlayer.release();
-                        mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
-                    }
-
-                    mediaPlayer.start();
-                } catch (Exception e) {
-                    //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
-                }
-            }
-
-        }
-
-
-        /**
-         * Comienza a trackear dentro del overlay.
-         */
-        @Override
-        public void onNewItem(int faceId, Face item) {
-            mFaceGraphic.setId(faceId);
-            mCatchSoulMateButton.setVisibility(View.VISIBLE);
-            //TODO: Actualizar shared preferences
-            editor = mSharedPref.edit();
-            editor.putInt("key", 1);
-            editor.apply();
-
-
-        }
-
-        /**
-         * Update the position/characteristics of the face within the overlay.
-         */
-        @Override
-        public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
-            mOverlay.add(mFaceGraphic);
-            mFaceGraphic.updateFace(face);
-        }
-
-        /**
-         * Oculta el gráfico cuando no se detectó la cara.
-         */
-        @Override
-        public void onMissing(FaceDetector.Detections<Face> detectionResults) {
-            mOverlay.remove(mFaceGraphic);
-            Log.v("missing", "");
-        }
-
-        /**
-         * Llamado cuando se supone que la cara no se detecta definitvamente. Elimina el gráfica del overlay.
-         */
-        @Override
-        public void onDone() {
-            mOverlay.remove(mFaceGraphic);
-            Log.v("done", "");
-            try {
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
-                }
-
-            } catch (Exception e) {
-                //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
-
-            }
-        }
-    }
 
     /**
      * Método que tomará una captura de pantalla en base al tipo de captura de pantalla ENUM
@@ -539,7 +572,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     }
 
-
     private void shareScreenshot(File file) {
         Uri uri = Uri.fromFile(file);//Convert file path into Uri for sharing
         Intent intent = new Intent();
@@ -551,42 +583,25 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         startActivity(Intent.createChooser(intent, getString(R.string.share_title)));
     }
 
-
     public class FasterScreenshotAsyncTask extends AsyncTask<byte[], Void, Void> {
-
-
         @Override
         protected Void doInBackground(byte[]... bytes) {
             takeSnapshot(bytes[0]);
             return null;
         }
 
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             setBitmap();
         }
-
-
     }
 
-
-    public void setProbability() {
-        mSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = mSharedPref.edit();
-        editor.putInt("prob", 60);
-        editor.commit();
-
-    }
-
-
-    public int getProbability() {
-        mSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        //int prob = getResources().getInteger("s");
-        int prob = 5;
-        return prob;
-
+    public void updateProbability(){
+        editor = mSharedPref.edit();
+        int total = mSharedPref.getInt("NUM_DETECTADOS_ACTUAL", 1);
+        editor.putInt("NUM_DETECTADOS_ACTUAL", total++);
+        editor.apply();
     }
 
 

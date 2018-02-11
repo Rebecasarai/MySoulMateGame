@@ -43,11 +43,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mPager.addOnPageChangeListener(this);
         mPager.setCurrentItem(1);
 
+        //To save
+       /* SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = mSharedPref.edit();
+        editor.putInt("NUM_DETECTADOS_ACTUAL", 1);
+        editor.apply();*/
 
-        mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = mSharedPref.edit();
-        editor.putInt("key", 1);
-        editor.apply();
 
     }
 
@@ -124,4 +125,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void setProbability(){
+        editor = mSharedPref.edit();
+        int total = mSharedPref.getInt("NUM_DETECTADOS_ACTUAL", 0);
+        editor.putInt("NUM_DETECTADOS_ACTUAL", total++);
+        editor.apply();}
+
 }

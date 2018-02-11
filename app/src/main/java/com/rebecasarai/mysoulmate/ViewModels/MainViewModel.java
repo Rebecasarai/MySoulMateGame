@@ -1,5 +1,7 @@
 package com.rebecasarai.mysoulmate.ViewModels;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.graphics.Bitmap;
 
@@ -12,13 +14,26 @@ import com.rebecasarai.mysoulmate.Repository.UserRepository;
 public class MainViewModel extends ViewModel {
     private UserRepository mRepository;
     private Bitmap mLastSoulMate;
+    private MutableLiveData<Boolean> mHeartButtonVisibility = new MutableLiveData<>();
 
 
     public MainViewModel() {
         mRepository = new UserRepository();
-
+    }
+    public MutableLiveData<Boolean> getmHeartButtonVisibility() {
+        return mHeartButtonVisibility;
     }
 
+    public void setmHeartButtonVisibility(MutableLiveData<Boolean> mHeartButtonVisibility) {
+        this.mHeartButtonVisibility = mHeartButtonVisibility;
+    }
 
+    public void setmHeartButtonVisibilityValue(Boolean mHeartButtonVisibility) {
+        this.mHeartButtonVisibility.setValue(mHeartButtonVisibility);
+    }
+
+    public Boolean getmHeartButtonVisibilityValue() {
+        return mHeartButtonVisibility.getValue();
+    }
 
 }
