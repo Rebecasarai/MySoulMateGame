@@ -4,20 +4,20 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="@string/title_home"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/heart"
+        android:icon="@drawable/ic_favorite_red_24dp"
         app:showAsAction="always"
         android:title="@string/title_heart" />
 
     <item
         android:id="@+id/navigation_notifications"
         android:iconTint="@color/colorPrimaryDark"
-        android:icon="@drawable/user"
+        android:icon="@drawable/ic_person_gray_24dp"
         app:showAsAction="always"
         android:title="Usuario" />
 

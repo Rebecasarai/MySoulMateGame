@@ -22,7 +22,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
-import android.view.Display;
 
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.Landmark;
@@ -55,7 +54,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
 
 
-    public FaceGraphic(GraphicOverlay overlay, Context context) {
+    public FaceGraphic(GraphicOverlay overlay, Context context, int probability) {
         super(overlay);
 
         final int selectedColor = COLOR_CHOICES;
@@ -114,11 +113,13 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
         canvas.drawText("Es tu alma gemelaa" , x - ID_X_OFFSET*3, y - ID_Y_OFFSET*3, mIdPaint);
 
+
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(context.getResources(), R.drawable.heart,options);
         //Lo reduzco por 5
-        options.inSampleSize = 5;
+        options.inSampleSize = 4;
         options.inJustDecodeBounds = false;
         Bitmap scaledBitmap =  BitmapFactory.decodeResource(context.getResources(),R.drawable.heart, options);
 

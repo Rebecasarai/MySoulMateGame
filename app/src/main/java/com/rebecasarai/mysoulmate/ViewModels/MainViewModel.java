@@ -1,6 +1,7 @@
 package com.rebecasarai.mysoulmate.ViewModels;
 
 import android.arch.lifecycle.ViewModel;
+import android.graphics.Bitmap;
 
 import com.rebecasarai.mysoulmate.Repository.UserRepository;
 
@@ -10,6 +11,13 @@ import com.rebecasarai.mysoulmate.Repository.UserRepository;
 
 public class MainViewModel extends ViewModel {
     private UserRepository mRepository;
+    private Bitmap mLastSoulMate;
+
+
+    public MainViewModel() {
+        mRepository = new UserRepository();
+
+    }
 
 
 

@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -53,6 +54,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 
 /**
@@ -72,11 +74,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     private View mRootView;
     private MediaPlayer mediaPlayer;
-    ImageView mPhotoPeep;
-    Context context;
-    ImageButton mCatchSoulMateButton;
+    private ImageView mPhotoPeep;
+    private Context context;
+    private ImageButton mCatchSoulMateButton;
 
     private Bitmap mBitmapPicture;
+
+    private int mProbability;
+    private SharedPreferences mSharedPref;
 
 
     public CameraFragment() {
@@ -129,6 +134,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
             }
         });
+
 
         return mRootView;//inflater.inflate(R.layout.fragment_camera, container, false);
     }
@@ -407,20 +413,28 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
         GraphicFaceTracker(GraphicOverlay overlay) {
             mOverlay = overlay;
-            mFaceGraphic = new FaceGraphic(overlay, getContext());
+
+            int numMax = 60;
+            int fotosTomadas = 40;
 
 
-            try {
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
+            //TODO: Probability, if(random((MAX)) - FotosTomadas del Shared == 0)
+            //TODO: Tener dos variables de totalDeFotos y otra para la prob
+            int mProbability = new Random().nextInt(50);
+            if(mProbability >= 35) {
+                mFaceGraphic = new FaceGraphic(overlay, getContext(), 1);
+                try {
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                        mediaPlayer = MediaPlayer.create(getContext(), R.raw.rebecatech);
+                    }
+
+                    mediaPlayer.start();
+                } catch (Exception e) {
+                    //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
+
                 }
-
-                mediaPlayer.start();
-            } catch (Exception e) {
-                //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
-
             }
 
         }
@@ -432,6 +446,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         @Override
         public void onNewItem(int faceId, Face item) {
             mFaceGraphic.setId(faceId);
+            //TODO:
 
         }
 
@@ -548,6 +563,24 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             setBitmap();
         }
 
+
+    }
+
+
+    public void setProbability(){
+        mSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSharedPref.edit();
+        editor.putInt("prob", 60);
+        editor.commit();
+
+    }
+
+
+    public int getProbability(){
+        mSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        //int prob = getResources().getInteger("s");
+        int prob = 5;
+        return prob;
 
     }
 

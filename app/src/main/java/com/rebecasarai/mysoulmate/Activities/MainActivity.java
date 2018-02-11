@@ -1,5 +1,6 @@
 package com.rebecasarai.mysoulmate.Activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -7,6 +8,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.rebecasarai.mysoulmate.R;
@@ -20,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private PagerAdapter mPagerAdapter;
     private MenuItem mPrevMenuItem;
     private BottomNavigationView mNavigationView;
+    private SharedPreferences mSharedPref;
+
 
 
     @Override
@@ -35,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mPager.setAdapter(mPagerAdapter);
         mPager.addOnPageChangeListener(this);
         mPager.setCurrentItem(1);
+
+        mSharedPref = this.getPreferences(getApplicationContext().MODE_PRIVATE);
 
     }
 
@@ -95,4 +102,20 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             return false;
         }
     };
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
