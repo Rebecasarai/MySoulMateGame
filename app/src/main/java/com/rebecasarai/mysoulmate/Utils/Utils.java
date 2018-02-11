@@ -32,7 +32,7 @@ public class Utils {
         int encontradosActual = getProbabilty(pContext);
         updateProbability(pContext, encontradosActual++);
 
-        int prob = r.nextInt(DIFICULTAD_MAXIMA - encontradosActual);
+        int prob = r.nextInt(DIFICULTAD_MAXIMA - 47);
         Log.v("Probabilidad a", prob + "");
 
         Log.v("Encontrados actual a", encontradosActual + "");

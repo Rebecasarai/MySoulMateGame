@@ -26,6 +26,7 @@ public class MainViewModel extends ViewModel {
 
     public void setmHeartButtonVisibility(MutableLiveData<Boolean> mHeartButtonVisibility) {
         this.mHeartButtonVisibility = mHeartButtonVisibility;
+
     }
 
     public void setmHeartButtonVisibilityValue(Boolean mHeartButtonVisibility) {

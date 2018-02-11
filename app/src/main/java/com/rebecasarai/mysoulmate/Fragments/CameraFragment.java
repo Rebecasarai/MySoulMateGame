@@ -244,11 +244,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
             if (Utils.isYoutSoulMate(getContext())) {
 
+                final Runnable updateRunnable = new Runnable() {
+                    public void run() {
 
+                        mViewmodel.setmHeartButtonVisibilityValue(true);
+                    }
+                };
 
-
-//                mViewmodel.setmHeartButtonVisibilityValue(true);
-                Log.v("visibitlity del corazon", mViewmodel.getmHeartButtonVisibilityValue()+"");
+                Log.d("visibitlity del corazon", mViewmodel.getmHeartButtonVisibilityValue()+"");
                 mFaceGraphic = new FaceGraphic(overlay, getContext());
 
 

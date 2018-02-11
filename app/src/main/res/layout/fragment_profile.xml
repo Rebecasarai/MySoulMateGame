@@ -14,11 +14,14 @@
         />
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:id="@+id/lastSoulMatePreview"
-        android:src="@mipmap/ic_launcher"/>
-
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_launcher"
+        android:rotation="20"
+        />
 
     <!--TODO:Panel de perfil, estadisticas de soulmates, Probabilidad de que salga el soulmate Cuantos buu-->
 

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -35,6 +37,8 @@ import com.squareup.picasso.Picasso;
  * A simple {@link Fragment} subclass.
  */
 public class ProfileFragment extends Fragment implements RecyclerItemClickListener {
+
+    private static final String TAG=ProfileFragment.class.getSimpleName();
 
     private ImageView mLastSoulMateImage;
     private StorageReference storageRef;
@@ -55,6 +59,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         mRootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         mLastSoulMateImage = mRootView.findViewById(R.id.lastSoulMatePreview);
+        setLastSoulmate();
 
         return mRootView;
     }
@@ -86,6 +91,22 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
 
     }
 
+    public void setLastSoulmate(){
+        Query query = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("screenshots").orderByKey().limitToLast(1);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG,dataSnapshot.getValue(Screenshot.class).getImageURL());
+                //Picasso.with(getView().getContext()).load(dataSnapshot.getValue()+"").into(mLastSoulMateImage);
+                Picasso.with(getView().getContext()).load(dataSnapshot.getValue(Screenshot.class).getImageURL()).placeholder(R.drawable.ic_launcher_background).fit().into(mLastSoulMateImage);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 
 }

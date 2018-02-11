@@ -6,7 +6,7 @@ package com.rebecasarai.mysoulmate.Models;
 
 public class Screenshot {
 
-    public String imageURL;
+    private String imageURL;
 
     public Screenshot() {
     }
