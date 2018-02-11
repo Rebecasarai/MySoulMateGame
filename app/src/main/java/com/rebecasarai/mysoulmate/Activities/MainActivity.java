@@ -2,6 +2,7 @@ package com.rebecasarai.mysoulmate.Activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.PagerAdapter;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private MenuItem mPrevMenuItem;
     private BottomNavigationView mNavigationView;
     private SharedPreferences mSharedPref;
+    private SharedPreferences.Editor editor;
 
 
 
@@ -41,7 +43,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mPager.addOnPageChangeListener(this);
         mPager.setCurrentItem(1);
 
-        mSharedPref = this.getPreferences(getApplicationContext().MODE_PRIVATE);
+
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = mSharedPref.edit();
+        editor.putInt("key", 1);
+        editor.apply();
 
     }
 

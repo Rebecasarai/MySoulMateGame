@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.rebecasarai.mysoulmate.Fragments.CameraFragment;
 import com.rebecasarai.mysoulmate.Fragments.DashboardFragment;
+import com.rebecasarai.mysoulmate.Fragments.ProfileFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private int NUM_PAGES = 3;
@@ -29,7 +30,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return new CameraFragment();
             case 2:
-                return new DashboardFragment();
+                return new ProfileFragment();
             default:
                 return new DashboardFragment();
 

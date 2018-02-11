@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -47,6 +48,7 @@ import com.rebecasarai.mysoulmate.Screenshot.ScreenshotType;
 import com.rebecasarai.mysoulmate.Screenshot.ScreenshotUtils;
 import com.rebecasarai.mysoulmate.Utils.ExifUtils;
 import com.rebecasarai.mysoulmate.Utils.FileManager;
+import com.rebecasarai.mysoulmate.Utils.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -79,6 +81,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     private int mProbability;
     private SharedPreferences mSharedPref;
+    private SharedPreferences.Editor editor;
 
 
     public CameraFragment() {
@@ -147,6 +150,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         getActivity().setTheme(R.style.AppTheme_NoActionBar);
+
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(mRootView.getContext());
     }
 
     @Override
@@ -415,16 +420,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
         GraphicFaceTracker(GraphicOverlay overlay) {
             mOverlay = overlay;
-            mFaceGraphic = new FaceGraphic(overlay, getContext());
-
-            int numMax = 60;
-            int fotosTomadas = 40;
-
 
             //TODO: Probability, if(random((MAX)) - FotosTomadas del Shared == 0)
             //TODO: Tener dos variables de totalDeFotos y otra para la prob
-            int mProbability = new Random().nextInt(50);
-            if (mProbability >= 35) {
+            if (Utils.isYoutSoulMate()) {
                 mFaceGraphic = new FaceGraphic(overlay, getContext());
                 try {
                     if (mediaPlayer.isPlaying()) {
@@ -436,7 +435,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                     mediaPlayer.start();
                 } catch (Exception e) {
                     //Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
-
                 }
             }
 
@@ -450,6 +448,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         public void onNewItem(int faceId, Face item) {
             mFaceGraphic.setId(faceId);
             //TODO: Actualizar shared preferences
+            editor = mSharedPref.edit();
+            editor.putInt("key", 1);
+            editor.apply();
+
 
         }
 
