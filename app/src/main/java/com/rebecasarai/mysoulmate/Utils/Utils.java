@@ -6,15 +6,18 @@ import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.rebecasarai.mysoulmate.R;
+
 import java.util.Random;
 
 /**
- * Created by michael on 10/2/18.
+ * Some static utils methods.
  */
 
 public class Utils {
-    int mEncontradosActual;
 
+
+    private static final String TAG = Utils.class.getSimpleName();
 
     public static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -24,39 +27,30 @@ public class Utils {
     }
 
 
-    public static boolean isYoutSoulMate(Context pContext){
-        Random r = new Random();
-        final int DIFICULTAD_MAXIMA = 50;
-        //Obtine y actualiza shared
-        boolean findedSoulMate = false;
-        int encontradosActual = getProbabilty(pContext);
-        updateProbability(pContext, encontradosActual++);
+    public static boolean isYourSoulMate(Context context) {
 
-        int prob = r.nextInt(DIFICULTAD_MAXIMA - 47);
-        Log.v("Probabilidad a", prob + "");
+        int snapshotsTaken = getSnapshotsTaken(context);
+        updateSnapshotsTaken(context, snapshotsTaken++);
 
-        Log.v("Encontrados actual a", encontradosActual + "");
+        int chance = new Random().nextInt(Constants.MAX_NUM_SCREENSHOTS_TO_SOULMATE - snapshotsTaken);
+        Log.d(TAG, "Probability: " + (Constants.MAX_NUM_SCREENSHOTS_TO_SOULMATE - snapshotsTaken));
+        Log.d(TAG, "SnapshotsTaken" + snapshotsTaken);
 
-        if(prob==0){
-            findedSoulMate = true;
-            Log.v("Probabilidad a true con", prob+"");
-        }
+        if (chance == 0) return true;
 
-        return findedSoulMate;
-
+        return false;
     }
 
-    public static void updateProbability(Context pContext, int encontradosActual){
-        SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(pContext);
+    private static void updateSnapshotsTaken(Context context, int snapshotsTaken) {
+        SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = mSharedPref.edit();
-        editor.putInt("NUM_DETECTADOS_ACTUAL", encontradosActual++);
+        editor.putInt(context.getString(R.string.pref_num_snapshots_taken), snapshotsTaken++);
         editor.commit();
     }
 
-    public static int getProbabilty(Context pContext){
+    private static int getSnapshotsTaken(Context pContext) {
         SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(pContext);
-        int encontradosActual = mSharedPref.getInt("NUM_DETECTADOS_ACTUAL",48);
-
+        int encontradosActual = mSharedPref.getInt(pContext.getString(R.string.pref_num_snapshots_taken), 48);
         return encontradosActual;
     }
 

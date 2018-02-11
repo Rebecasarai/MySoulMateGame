@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate.Views;
+package com.rebecasarai.mysoulmate.Views.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseError;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
+import com.rebecasarai.mysoulmate.Views.PhotoHolder;
+import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
 import com.squareup.picasso.Picasso;
 
 /**

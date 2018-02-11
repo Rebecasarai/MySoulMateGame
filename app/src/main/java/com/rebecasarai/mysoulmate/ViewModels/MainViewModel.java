@@ -20,28 +20,20 @@ public class MainViewModel extends ViewModel {
     public MainViewModel() {
         mRepository = new UserRepository();
     }
-    public MutableLiveData<Boolean> getmHeartButtonVisibility() {
+
+    public MutableLiveData<Boolean> getHeartButtonVisibility() {
         return mHeartButtonVisibility;
     }
 
-    public void setmHeartButtonVisibility(MutableLiveData<Boolean> mHeartButtonVisibility) {
-        this.mHeartButtonVisibility = mHeartButtonVisibility;
-
+    public void setHeartButtonVisibility(Boolean mHeartButtonVisibility) {
+        this.mHeartButtonVisibility.postValue(mHeartButtonVisibility);
     }
 
-    public void setmHeartButtonVisibilityValue(Boolean mHeartButtonVisibility) {
-        this.mHeartButtonVisibility.setValue(mHeartButtonVisibility);
-    }
-
-    public Boolean getmHeartButtonVisibilityValue() {
-        return mHeartButtonVisibility.getValue();
-    }
-
-    public LiveData<Bitmap> getmLastSoulMate() {
+    public LiveData<Bitmap> getLastSoulMate() {
         return mLastSoulMate;
     }
 
-    public void setmLastSoulMate(LiveData<Bitmap> mLastSoulMate) {
+    public void setLastSoulMate(LiveData<Bitmap> mLastSoulMate) {
         this.mLastSoulMate = mLastSoulMate;
     }
 }
