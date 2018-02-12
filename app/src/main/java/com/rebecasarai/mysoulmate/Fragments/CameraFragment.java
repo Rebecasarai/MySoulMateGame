@@ -48,8 +48,8 @@ import com.rebecasarai.mysoulmate.Camera.CameraPreview;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
 import com.rebecasarai.mysoulmate.Graphics.FaceGraphic;
 import com.rebecasarai.mysoulmate.R;
-import com.rebecasarai.mysoulmate.Screenshot.ScreenshotType;
-import com.rebecasarai.mysoulmate.Screenshot.ScreenshotUtils;
+import com.rebecasarai.mysoulmate.Utils.ScreenshotType;
+import com.rebecasarai.mysoulmate.Utils.ScreenshotUtils;
 import com.rebecasarai.mysoulmate.Utils.ExifUtils;
 import com.rebecasarai.mysoulmate.Utils.FileManager;
 import com.rebecasarai.mysoulmate.Utils.Utils;
@@ -486,7 +486,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         mPhotoPeep.setVisibility(View.INVISIBLE);
         Intent newSoulMateIntent = new Intent(getView().getContext(), NewSoulMateActivity.class);
         startActivity(newSoulMateIntent);
-        shareScreenshot(mScreenShotFile);
+        //shareScreenshot(mScreenShotFile);
     }
 
 
@@ -572,8 +572,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void shareScreenshot(File file) {
-        Uri uri = Uri.fromFile(file);//Convert file path into Uri for sharing
+    private void shareScreenshot(Bitmap bitmap, ScreenshotType screenshotType) {
+        File saveFile = ScreenshotUtils.getMainDirectoryName(getContext());//el directoria para guardar
+        File screenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
+        Uri uri = Uri.fromFile(screenShotFile);
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.setType("image/*");

@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate.Screenshot;
+package com.rebecasarai.mysoulmate.Utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -34,7 +34,7 @@ public class ScreenshotUtils {
         //Here we will use getExternalFilesDir and inside that we will make our Demo folder
         //benefit of getExternalFilesDir is that whenever the app uninstalls the images will get deleted automatically.
         File mainDir = new File(
-                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Demo");
+                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "");
 
         //If File is not present create directory
         if (!mainDir.exists()) {

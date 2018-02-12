@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate.Screenshot;
+package com.rebecasarai.mysoulmate.Utils;
 
 /**
  * Created by sonu on 23/03/17.
