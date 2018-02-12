@@ -113,7 +113,7 @@
                 <xyz.hanks.library.bang.SmallBangView
                     android:id="@+id/like_heart"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_gravity="center">
 
@@ -121,7 +121,7 @@
                         android:id="@+id/imgSmallHeart"
                         android:layout_width="34dp"
                         android:layout_height="34dp"
-                        android:layout_gravity="center_vertical"
+                        android:layout_gravity="center"
                         android:textAlignment="center"
                         android:src="@drawable/ic_favorite_red_24dp" />
                 </xyz.hanks.library.bang.SmallBangView>
