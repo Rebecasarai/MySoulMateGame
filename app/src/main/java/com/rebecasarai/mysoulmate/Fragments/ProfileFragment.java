@@ -31,6 +31,8 @@ import com.rebecasarai.mysoulmate.Views.Adapters.PhotoAdapter;
 import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
 import com.squareup.picasso.Picasso;
 
+import xyz.hanks.library.bang.SmallBangView;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -41,6 +43,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     private ImageView mLastSoulMateImage;
     private View mRootView;
     private MainViewModel mViewModel;
+    private SmallBangView mSmallBang;
 
 
     public ProfileFragment() {
@@ -53,8 +56,9 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.fragment_profile, container, false);
-
         mLastSoulMateImage = mRootView.findViewById(R.id.lastSoulMatePreview);
+        ImageView imgSmallHeart = (ImageView) getView().findViewById(R.id.imgSmallHeart);
+        mSmallBang.likeAnimation();
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         setLastSoulmate();
 
