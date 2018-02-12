@@ -43,6 +43,7 @@ import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.firebase.auth.FirebaseAuth;
+import com.rebecasarai.mysoulmate.Activities.NewSoulMateActivity;
 import com.rebecasarai.mysoulmate.Camera.CameraPreview;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
 import com.rebecasarai.mysoulmate.Graphics.FaceGraphic;
@@ -81,6 +82,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     private ImageView mPhotoPeep;
     private ImageButton mCatchSoulMateButton;
     private Bitmap mBitmapPicture;
+    private File mScreenShotFile;
 
     private int mProbability;
     private SharedPreferences mSharedPref;
@@ -481,6 +483,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     public void setBitmap() {
         mPhotoPeep.setImageBitmap(mBitmapPicture);
         takeScreenshot(ScreenshotType.FULL);
+        mPhotoPeep.setVisibility(View.INVISIBLE);
+        Intent newSoulMateIntent = new Intent(getView().getContext(), NewSoulMateActivity.class);
+        startActivity(newSoulMateIntent);
+        shareScreenshot(mScreenShotFile);
     }
 
 
@@ -535,11 +541,13 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 //Puedo hacer invisible o visible lo que me parezca
                 break;
         }
+        guardarScreenshot(bitmap, screenshotType);
+    }
 
+    public void guardarScreenshot(Bitmap bitmap, ScreenshotType screenshotType){
         //Si el bitmap no es nulo
         if (bitmap != null) {
 
-            //TODO: pasarlo al repository
             FileManager.uploadScreenshot(FirebaseAuth.getInstance(), bitmap, new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -555,14 +563,13 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             });
 
             File saveFile = ScreenshotUtils.getMainDirectoryName(getContext());//el directoria para guardar
-            File file = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-            shareScreenshot(file);
+            mScreenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
+
 
         } else {
             //Si es nulo
             Toast.makeText(getContext(), R.string.screenshot_take_failed, Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void shareScreenshot(File file) {

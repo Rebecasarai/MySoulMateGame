@@ -92,7 +92,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //if (dataSnapshot.getChildrenCount() != 1) {
                     Screenshot screenshot = dataSnapshot.getChildren().iterator().next().getValue(Screenshot.class);
-                    Picasso.with(getView().getContext()).load(screenshot.getImageURL()).placeholder(R.drawable.ic_launcher_background).fit().into(mLastSoulMateImage);
+                    Picasso.with(getView().getContext()).load(screenshot.getImageURL()).placeholder(R.drawable.ic_launcher_foreground).fit().into(mLastSoulMateImage);
                     Log.d(TAG,screenshot.getImageURL()+"");
                     Log.d(TAG,dataSnapshot.getChildrenCount()+"");
 
