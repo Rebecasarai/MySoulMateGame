@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MySoulMate</string>
     <string name="title_home">Dashboard</string>
-    <string name="title_heart">Find Soulmate</string>
+    <string name="title_heart">Find</string>
     <string name="title_notifications">Notifications</string>
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
@@ -21,7 +21,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_dashboard">DashboardActivity</string>
+    <string name="title_activity_dashboard">Dashboard</string>
 
     <string name="action_settings">Settings</string>
 
@@ -53,8 +53,8 @@
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
 
-    <string name="sharing_text">My Soul Mate the best app</string>
-    <string name="share_title">Compartir Soul Mate</string>
+    <string name="sharing_text">I just find my soul Mate!</string>
+    <string name="share_title">Share Soul Mate</string>
     <string name="screenshot_take_failed">Failed capture.</string>
     <string name="wait">Please wait</string>
     <string name="full_page_screenshot">Full Sharing</string>
@@ -67,9 +67,9 @@
     <string name="twitter_consumer_secret" translatable="false">YOUR_CONSUMER_SECRET</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pref_num_snapshots_taken">NUM_SNAPSHOTS_TAKEN</string>
     <string name="content_no_connection">Ooops seems like you\'ve no internet connection!</string>
+    <string name="content_share">Share!</string>
 
 
 </resources>

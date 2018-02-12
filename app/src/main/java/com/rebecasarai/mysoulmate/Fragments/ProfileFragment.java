@@ -39,9 +39,6 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     private static final String TAG = ProfileFragment.class.getSimpleName();
 
     private ImageView mLastSoulMateImage;
-    private StorageReference storageRef;
-    private RecyclerView mRecyclerView;
-    private PhotoAdapter mPhotoAdapter;
     private View mRootView;
     private MainViewModel mViewModel;
 
@@ -60,7 +57,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         mLastSoulMateImage = mRootView.findViewById(R.id.lastSoulMatePreview);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         setLastSoulmate();
-        animation();
+
         return mRootView;
     }
 
@@ -72,20 +69,14 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     @Override
     public void onStart() {
         super.onStart();
-        if (mPhotoAdapter != null) {
-            mPhotoAdapter.startListening();
-        }
         anotheranim();
+        animation();
 
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mPhotoAdapter != null) {
-            mPhotoAdapter.stopListening();
-            mPhotoAdapter = null;
-        }
     }
 
 

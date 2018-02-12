@@ -48,7 +48,7 @@ public class Utils {
 
     private static int getSnapshotsTaken(Context pContext) {
         SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(pContext);
-        int encontradosActual = mSharedPref.getInt(pContext.getString(R.string.pref_num_snapshots_taken), 48);
+        int encontradosActual = mSharedPref.getInt(pContext.getString(R.string.pref_num_snapshots_taken), 1);
         Log.d(TAG,encontradosActual+"");
         return encontradosActual;
     }

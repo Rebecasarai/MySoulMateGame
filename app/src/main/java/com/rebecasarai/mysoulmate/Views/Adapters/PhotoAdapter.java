@@ -47,6 +47,11 @@ public class PhotoAdapter extends FirebaseRecyclerAdapter<Screenshot, PhotoHolde
     @Override
     public PhotoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_item, parent, false);
+
+        int height = parent.getMeasuredHeight() / 4;
+        int width = parent.getMeasuredWidth() / 4;
+        itemView.setMinimumHeight(height);
+        itemView.setMinimumWidth(width);
         return new PhotoHolder(itemView, mRecyclerItemClickListener);
     }
 }

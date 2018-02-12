@@ -157,7 +157,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
        Rect r = new Rect(canvas.getWidth()-(less-20), canvas.getHeight()-(canvas.getHeight()-20), canvas.getWidth(), canvas.getHeight());
         // fill
         paintCameraEntera.setStyle(Paint.Style.FILL);
-        paintCameraEntera.setAlpha(70);
+        paintCameraEntera.setAlpha(100);
         //paintCameraEntera.setColor(Color.RED);
         canvas.drawRect(r, paintCameraEntera);
 
