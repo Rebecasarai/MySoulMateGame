@@ -1,13 +1,19 @@
 package com.rebecasarai.mysoulmate.Fragments;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -20,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
+import com.rebecasarai.mysoulmate.ViewModels.MainViewModel;
 import com.rebecasarai.mysoulmate.Views.Adapters.PhotoAdapter;
 import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
 import com.squareup.picasso.Picasso;
@@ -36,6 +43,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     private RecyclerView mRecyclerView;
     private PhotoAdapter mPhotoAdapter;
     private View mRootView;
+    private MainViewModel mViewModel;
 
 
     public ProfileFragment() {
@@ -50,8 +58,9 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         mRootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         mLastSoulMateImage = mRootView.findViewById(R.id.lastSoulMatePreview);
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         setLastSoulmate();
-
+        animation();
         return mRootView;
     }
 
@@ -66,6 +75,8 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         if (mPhotoAdapter != null) {
             mPhotoAdapter.startListening();
         }
+        anotheranim();
+
     }
 
     @Override
@@ -88,10 +99,13 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() != 1) {
+                //if (dataSnapshot.getChildrenCount() != 1) {
                     Screenshot screenshot = dataSnapshot.getChildren().iterator().next().getValue(Screenshot.class);
                     Picasso.with(getView().getContext()).load(screenshot.getImageURL()).placeholder(R.drawable.ic_launcher_background).fit().into(mLastSoulMateImage);
-                }
+                    Log.d(TAG,screenshot.getImageURL()+"");
+                    Log.d(TAG,dataSnapshot.getChildrenCount()+"");
+
+               // }
             }
 
             @Override
@@ -102,4 +116,26 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     }
 
 
+    public void animation(){
+        RotateAnimation anim = new RotateAnimation(0f, 350f, 15f, 15f);
+        anim.setInterpolator(new LinearInterpolator());
+        anim.setRepeatCount(Animation.INFINITE);
+        anim.setDuration(700);
+
+        // Start animating the image
+        final ImageView splash = mLastSoulMateImage;
+        splash.startAnimation(anim);
+
+        // Later.. stop the animation
+        splash.setAnimation(null);
+    }
+
+    public void anotheranim(){
+        TranslateAnimation animate = new TranslateAnimation(0, -mLastSoulMateImage.getWidth(), 0, 0);
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        mLastSoulMateImage.startAnimation(animate);
+
+
+    }
 }

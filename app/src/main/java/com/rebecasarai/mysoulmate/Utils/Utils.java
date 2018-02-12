@@ -28,11 +28,11 @@ public class Utils {
     public static boolean isYourSoulMate(Context context) {
 
         int snapshotsTaken = getSnapshotsTaken(context);
-        updateSnapshotsTaken(context, snapshotsTaken++);
+        updateSnapshotsTaken(context, snapshotsTaken);
 
         int chance = new Random().nextInt(Constants.MAX_NUM_SCREENSHOTS_TO_SOULMATE - snapshotsTaken);
         Log.d(TAG, "Probability: " + (Constants.MAX_NUM_SCREENSHOTS_TO_SOULMATE - snapshotsTaken));
-        Log.d(TAG, "SnapshotsTaken" + snapshotsTaken);
+        Log.d(TAG, "SnapshotsTaken " + snapshotsTaken);
 
         if (chance == 0) return true;
 
@@ -49,6 +49,7 @@ public class Utils {
     private static int getSnapshotsTaken(Context pContext) {
         SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(pContext);
         int encontradosActual = mSharedPref.getInt(pContext.getString(R.string.pref_num_snapshots_taken), 48);
+        Log.d(TAG,encontradosActual+"");
         return encontradosActual;
     }
 

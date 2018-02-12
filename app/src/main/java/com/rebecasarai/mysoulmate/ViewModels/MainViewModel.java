@@ -13,7 +13,7 @@ import com.rebecasarai.mysoulmate.Repository.UserRepository;
 
 public class MainViewModel extends ViewModel {
     private UserRepository mRepository;
-    private LiveData<Bitmap> mLastSoulMate;
+    private MutableLiveData<Bitmap> mLastSoulMate;
     private MutableLiveData<Boolean> mHeartButtonVisibility = new MutableLiveData<>();
 
 
@@ -29,11 +29,11 @@ public class MainViewModel extends ViewModel {
         this.mHeartButtonVisibility.postValue(mHeartButtonVisibility);
     }
 
-    public LiveData<Bitmap> getLastSoulMate() {
+    public MutableLiveData<Bitmap> getLastSoulMate() {
         return mLastSoulMate;
     }
 
-    public void setLastSoulMate(LiveData<Bitmap> mLastSoulMate) {
-        this.mLastSoulMate = mLastSoulMate;
+    public void setLastSoulMate(Bitmap mLastSoulMate) {
+        this.mLastSoulMate.postValue(mLastSoulMate);
     }
 }
