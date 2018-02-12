@@ -28,11 +28,17 @@ public class Utils {
     public static boolean isYourSoulMate(Context context) {
 
         int snapshotsTaken = getSnapshotsTaken(context);
+        if(snapshotsTaken >= Constants.MAX_NUM_SCREENSHOTS_TO_SOULMATE){
+            updateSnapshotsTaken(context, Constants.MAX_NUM_SCREENSHOTS_TO_SOULMATE/2);
+        }
+        snapshotsTaken = getSnapshotsTaken(context);
+        snapshotsTaken++;
         updateSnapshotsTaken(context, snapshotsTaken);
 
         int chance = new Random().nextInt(Constants.MAX_NUM_SCREENSHOTS_TO_SOULMATE - snapshotsTaken);
         Log.d(TAG, "Probability: " + (Constants.MAX_NUM_SCREENSHOTS_TO_SOULMATE - snapshotsTaken));
         Log.d(TAG, "SnapshotsTaken " + snapshotsTaken);
+        Log.d(TAG, "Chance " + chance);
 
         if (chance == 0) return true;
 
@@ -42,13 +48,13 @@ public class Utils {
     private static void updateSnapshotsTaken(Context context, int snapshotsTaken) {
         SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = mSharedPref.edit();
-        editor.putInt(context.getString(R.string.pref_num_snapshots_taken), snapshotsTaken++);
-        editor.commit();
+        editor.putInt(context.getString(R.string.pref_num_snapshots_taken), snapshotsTaken);
+        editor.apply();
     }
 
     private static int getSnapshotsTaken(Context pContext) {
         SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(pContext);
-        int encontradosActual = mSharedPref.getInt(pContext.getString(R.string.pref_num_snapshots_taken), 1);
+        int encontradosActual = mSharedPref.getInt(pContext.getString(R.string.pref_num_snapshots_taken), 49);
         Log.d(TAG,encontradosActual+"");
         return encontradosActual;
     }

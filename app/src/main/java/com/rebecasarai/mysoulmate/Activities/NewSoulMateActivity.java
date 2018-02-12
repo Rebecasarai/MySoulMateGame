@@ -2,14 +2,18 @@ package com.rebecasarai.mysoulmate.Activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,8 +26,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.rebecasarai.mysoulmate.Fragments.ProfileFragment;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
+import com.rebecasarai.mysoulmate.Utils.ScreenshotType;
+import com.rebecasarai.mysoulmate.Utils.ScreenshotUtils;
 import com.rebecasarai.mysoulmate.ViewModels.MainViewModel;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
+
+import xyz.hanks.library.bang.SmallBangView;
 
 public class NewSoulMateActivity extends AppCompatActivity {
     private static final String TAG = NewSoulMateActivity.class.getSimpleName();
@@ -36,17 +46,27 @@ public class NewSoulMateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_soul_mate);
-
-        mImageNewSoulMate = mRootView.findViewById(R.id.imageNewSoulMate);
+        mImageNewSoulMate = (ImageView) findViewById(R.id.imageNewSoulMate);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         setLastSoulmate();
-
-        mViewModel.getLastSoulMate().observe(null, new Observer<Bitmap>() {
+        ImageButton shareButton =  (ImageButton) findViewById(R.id.shareBtn);
+        shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(@Nullable Bitmap bitmap) {
-                mImageNewSoulMate.setImageBitmap(bitmap);
+            public void onClick(View v) {
+                //shareScreenshot(ScreenshotType.FULL);
             }
         });
+
+
+
+/*        mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
+            @Override
+            public void onChanged(@Nullable Bitmap bitmap) {
+
+            }
+        });*/
+
+
     }
 
 
@@ -55,15 +75,15 @@ public class NewSoulMateActivity extends AppCompatActivity {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //if (dataSnapshot.getChildrenCount() != 1) {
-                Screenshot screenshot = dataSnapshot.getChildren().iterator().next().getValue(Screenshot.class);
-
-                mViewModel.setLastSoulMate(stringToBitMap(screenshot.getImageURL()));
-                //Picasso.with(getView().getContext()).load(screenshot.getImageURL()).placeholder(R.drawable.ic_launcher_foreground).fit().into(mLastSoulMateImage);
-                //Log.d(TAG,screenshot.getImageURL()+"");
-                //Log.d(TAG,dataSnapshot.getChildrenCount()+"");
-
-                // }
+                Log.d(TAG,dataSnapshot.getChildrenCount()+"");
+                if (dataSnapshot.getChildrenCount() == 1) {
+                    Screenshot screenshot = dataSnapshot.getChildren().iterator().next().getValue(Screenshot.class);
+                    Picasso.with(getApplicationContext()).load(screenshot.getImageURL()).fit().into(mImageNewSoulMate);
+                    Log.d(TAG,screenshot.getImageURL()+"");
+                    Log.d(TAG,dataSnapshot.getChildrenCount()+"");
+                    final SmallBangView smallBangImage = mRootView.findViewById(R.id.smallBangImageNew);
+                    smallBangImage.likeAnimation();
+                }
             }
 
             @Override
@@ -73,15 +93,18 @@ public class NewSoulMateActivity extends AppCompatActivity {
         });
     }
 
-    public Bitmap stringToBitMap(String encodedString){
-        try{
-            byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
-            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        }catch(Exception e){
-            e.getMessage();
-            return null;
-        }
+
+    private void shareScreenshot(Bitmap bitmap, ScreenshotType screenshotType) {
+        File saveFile = ScreenshotUtils.getMainDirectoryName(getApplicationContext());
+        File screenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
+        Uri uri = Uri.fromFile(screenShotFile);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("image/*");
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.sharing_text));
+        intent.putExtra(Intent.EXTRA_STREAM, uri);//pass uri here
+        startActivity(Intent.createChooser(intent, getString(R.string.share_title)));
     }
 
 }

@@ -483,9 +483,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     public void setBitmap() {
         mPhotoPeep.setImageBitmap(mBitmapPicture);
         takeScreenshot(ScreenshotType.FULL);
-        mPhotoPeep.setVisibility(View.INVISIBLE);
-        Intent newSoulMateIntent = new Intent(getView().getContext(), NewSoulMateActivity.class);
+        Intent newSoulMateIntent = new Intent(mRootView.getContext(), NewSoulMateActivity.class);
         startActivity(newSoulMateIntent);
+        mPhotoPeep.setVisibility(View.INVISIBLE);
         //shareScreenshot(mScreenShotFile);
     }
 
@@ -536,12 +536,36 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         switch (screenshotType) {
             case FULL:
                 bitmap = ScreenshotUtils.getScreenShot(mPreview);
+                Log.d(TAG,"Bitmap "+bitmap.toString());
                 break;
             case CUSTOM:
                 //Puedo hacer invisible o visible lo que me parezca
                 break;
         }
-        guardarScreenshot(bitmap, screenshotType);
+        //guardarScreenshot(bitmap, screenshotType);
+        if (bitmap != null) {
+            FileManager.uploadScreenshot(FirebaseAuth.getInstance(), bitmap, new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    //TODO: maybe say something else
+                    Toast.makeText(getActivity(), "Image uploaded.", Toast.LENGTH_SHORT).show();
+                }
+            }, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    //TODO: treat
+                    Toast.makeText(getActivity(), "Uploading failed.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            File saveFile = ScreenshotUtils.getMainDirectoryName(mRootView.getContext());
+            mScreenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
+//          mViewmodel.setLastSoulMate(bitmap);
+
+        } else {
+            //Si es nulo
+            Toast.makeText(getContext(), R.string.screenshot_take_failed, Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -562,9 +586,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 }
             });
 
-            File saveFile = ScreenshotUtils.getMainDirectoryName(getContext());//el directoria para guardar
+            File saveFile = ScreenshotUtils.getMainDirectoryName(mRootView.getContext());
             mScreenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-            mViewmodel.setLastSoulMate(bitmap);
+//          mViewmodel.setLastSoulMate(bitmap);
 
         } else {
             //Si es nulo

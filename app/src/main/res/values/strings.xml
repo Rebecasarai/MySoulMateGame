@@ -70,6 +70,7 @@
     <string name="pref_num_snapshots_taken">NUM_SNAPSHOTS_TAKEN</string>
     <string name="content_no_connection">Ooops seems like you\'ve no internet connection!</string>
     <string name="content_share">Share!</string>
+    <string name="content_profile">Your last soul mate!</string>
 
 
 </resources>

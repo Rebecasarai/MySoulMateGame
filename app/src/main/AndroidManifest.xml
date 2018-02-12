@@ -41,11 +41,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".Activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activities.NewSoulMateActivity"></activity>
+        <activity android:name=".Activities.NewSoulMateActivity"
+            android:parentActivityName=".Activities.MainActivity">
+        </activity>
     </application>
 
 </manifest>

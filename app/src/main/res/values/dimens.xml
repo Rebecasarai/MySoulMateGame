@@ -13,6 +13,6 @@
     <dimen name="default_card_corner_radius">4dp</dimen>
     <dimen name="default_small_margin">8dp</dimen>
     <dimen name="default_fading_edge_length">4dp</dimen>
-    <dimen name="my_default_small_margin">8dp</dimen>
+    <dimen name="my_default_small_margin">10dp</dimen>
     <dimen name="top_of_navigation">96dp</dimen>
 </resources>

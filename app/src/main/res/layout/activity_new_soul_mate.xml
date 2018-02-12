@@ -17,16 +17,21 @@
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark" />
 
-    <ImageView
+
+    <xyz.hanks.library.bang.SmallBangView
+        android:id="@+id/smallBangImageNew"
         android:layout_width="222dp"
         android:layout_height="300dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/imageNewSoulMate"
         android:scaleType="centerCrop"
-        android:layout_marginTop="50dp"
-        android:layout_gravity="center"
-        android:src="@mipmap/ic_launcher"
         android:rotation="20"
         />
+    </xyz.hanks.library.bang.SmallBangView>
 
     <!--TODO:Panel de perfil, estadisticas de soulmates, Probabilidad de que salga el soulmate Cuantos buu-->
 
@@ -43,11 +48,12 @@
             android:text="@string/content_share"
             android:layout_weight="1"/>
 
-        <ImageView
+        <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="5"
             android:layout_gravity="left"
+            android:id="@+id/shareBtn"
             android:src="@drawable/ic_share_red_24dp" />
     </LinearLayout>
 
@@ -77,11 +83,17 @@
                 android:textSize="@dimen/default_text_size"
                 android:layout_gravity="center_horizontal"
                 android:text="40"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_favorite_red_24dp"
-                android:layout_gravity="center_vertical"/>
+            <xyz.hanks.library.bang.SmallBangView
+                android:id="@+id/like_heart"
+                android:layout_gravity="center_vertical"
+                android:layout_width="24dp"
+                android:layout_height="24dp">
+                <ImageView
+                    android:id="@+id/imgSmallHeart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_favorite_red_24dp"/>
+            </xyz.hanks.library.bang.SmallBangView>
         </LinearLayout>
 
 

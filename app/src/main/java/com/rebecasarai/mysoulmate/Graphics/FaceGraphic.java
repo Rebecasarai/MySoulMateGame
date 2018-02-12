@@ -16,6 +16,7 @@
 package com.rebecasarai.mysoulmate.Graphics;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -26,6 +27,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.vision.face.Face;
@@ -44,6 +46,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float BOX_STROKE_WIDTH = 5.0f;
     private Context context;
     private int TopX, TopY, LeftX, LeftY, RightX, RightY, BottomX, BottomY;
+    SharedPreferences mSharedPref;
 
     Random random = new Random();
 
@@ -137,46 +140,58 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         p.setFilterBitmap(true);
         p.setDither(true);
 
-        paintCameraEntera.setColorFilter(new PorterDuffColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY));
+        paintCameraEntera.setColorFilter(new PorterDuffColorFilter(context.getResources().getColor(R.color.colorPrimaryDark), PorterDuff.Mode.MULTIPLY));
 
-        //for (int i = 0; i < 3; i++) {
-            TopX = random.nextInt(800);
+
+
+        TopX = 10;/*mSharedPref.getInt("startingTopX", 1);*/
+        //TopY = mSharedPref.getInt("startingTopX", 1);
+        //TopX = mSharedPref.getInt("startingTopX", 1);
+        Log.d("",TopX+"");
+        //if(TopX>0&&TopX<800) {
+        if(TopX>800){
+
+
+        }
+        if(LeftX>100||LeftY>800){
+
+        }
+        if(RightX>1000||RightY>1200){
+        }
+        if(BottomX>800||BottomX>1300) {
+        }
+            //TopX = mSharedPref.getInt("startingTopX", 1);
+
+            // TopX = random.nextInt(800);
             TopY = random.nextInt(100);
 
             LeftX = random.nextInt(100);
             LeftY = random.nextInt(800);
 
-            RightX = randomRango(900,1000);
+            RightX = randomRango(900, 1000);
             RightY = random.nextInt(1200);
 
             BottomX = random.nextInt(800);
-            BottomY = randomRango(1200,1300);
+            BottomY = randomRango(1200, 1300);
+
+       Rect r = new Rect(canvas.getWidth(), canvas.getHeight()-canvas.getHeight(), canvas.getWidth(), canvas.getHeight());
 
 
-        int less = canvas.getWidth();
-       Rect r = new Rect(canvas.getWidth()-(less-20), canvas.getHeight()-(canvas.getHeight()-20), canvas.getWidth(), canvas.getHeight());
         // fill
         paintCameraEntera.setStyle(Paint.Style.FILL);
         paintCameraEntera.setAlpha(100);
         //paintCameraEntera.setColor(Color.RED);
         canvas.drawRect(r, paintCameraEntera);
 
-        //}
-
         canvas.drawBitmap(scaledBitmap, TopX, TopY, p);
         canvas.drawBitmap(scaledBitmap, LeftX, LeftY, p);
         canvas.drawBitmap(scaledBitmap, RightX, RightY, p);
         canvas.drawBitmap(scaledBitmap, BottomX, BottomY, p);
-        //canvas.drawBitmap(scaledBitmap, 400, 300, p);
+    }
 
-        /* float xOffset = scaleX(face.getWidth() / 2.0f);
-        float yOffset = scaleY(face.getHeight() / 2.0f);
-        float left = x - xOffset;
-        float top = y - yOffset;
-        float right = x + xOffset;
-        float bottom = y + yOffset;*/
-        //drawFaceLandmarks(canvas, scale, face, p);
-        //canvas.drawRect(left, top, right, bottom, mBoxPaint);
+
+    public void mayorQue(int punto,int pos ){
+
     }
 
 
