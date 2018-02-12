@@ -542,12 +542,12 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 break;
         }
         guardarScreenshot(bitmap, screenshotType);
+
     }
 
     public void guardarScreenshot(Bitmap bitmap, ScreenshotType screenshotType){
         //Si el bitmap no es nulo
         if (bitmap != null) {
-
             FileManager.uploadScreenshot(FirebaseAuth.getInstance(), bitmap, new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -564,7 +564,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
             File saveFile = ScreenshotUtils.getMainDirectoryName(getContext());//el directoria para guardar
             mScreenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-
+            mViewmodel.setLastSoulMate(bitmap);
 
         } else {
             //Si es nulo
