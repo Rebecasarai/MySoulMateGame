@@ -37,6 +37,7 @@ import com.rebecasarai.mysoulmate.Models.Heart;
 import com.rebecasarai.mysoulmate.R;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class FaceGraphic extends GraphicOverlay.Graphic {
@@ -47,11 +48,10 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float BOX_STROKE_WIDTH = 5.0f;
     private Context context;
     private int TopX, TopY, LeftX, LeftY, RightX, RightY, BottomX, BottomY;
-    private Heart mHeart;
+    private ArrayList<Heart> mHearts;
 
     Random random = new Random();
     SecureRandom r = new SecureRandom();
-
 
     private static final int COLOR_CHOICES = Color.RED;
 
@@ -61,11 +61,12 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     private volatile Face mFace;
     private int mFaceId;
+    private int heartTopX;
 
 
 
 
-    public FaceGraphic(GraphicOverlay overlay, Context context) {
+    public FaceGraphic(GraphicOverlay overlay, Context context, ArrayList<Heart> hearts) {
         super(overlay);
 
         final int selectedColor = COLOR_CHOICES;
@@ -81,6 +82,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         mBoxPaint.setColor(selectedColor);
         mBoxPaint.setStyle(Paint.Style.STROKE);
         mBoxPaint.setStrokeWidth(BOX_STROKE_WIDTH);
+
+        this.mHearts = hearts;
 
         this.context = context;
     }
@@ -111,7 +114,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             return;
         }
 
-
         double viewWidth = canvas.getWidth();
         double viewHeight = canvas.getHeight();
         //double imageWidth = mBitmap.getWidth();
@@ -119,13 +121,12 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         double scale = Math.min(viewWidth / face.getPosition().x + face.getWidth(), viewHeight / face.getPosition().y + face.getHeight());
         Log.v("scale", "" + scale);
 
-        // Draws a circle at the position of the detected face, with the face's track id below.
+        //Punto medio de la cara
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
-        canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
-        canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
+        //canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
+        //canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
         //canvas.drawText("Es tu alma gemelaa", x - ID_X_OFFSET * 3, y - ID_Y_OFFSET * 3, mIdPaint);
-
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -144,15 +145,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
         paintCameraEntera.setColorFilter(new PorterDuffColorFilter(context.getResources().getColor(R.color.colorPrimaryDark), PorterDuff.Mode.MULTIPLY));
 
-        TopX = 10;/*mSharedPref.getInt("startingTopX", 1);*/
-        //TopY = mSharedPref.getInt("startingTopX", 1);
-        //TopX = mSharedPref.getInt("startingTopX", 1);
-        Log.d("",TopX+"");
-        //if(TopX>0&&TopX<800) {
-        if(TopX>800){
 
-
-        }
         if(LeftX>100||LeftY>800){
 
         }
@@ -176,17 +169,77 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
        Rect r = new Rect(canvas.getWidth(), canvas.getHeight()-canvas.getHeight(), canvas.getWidth(), canvas.getHeight());
 
-
-        // fill
         paintCameraEntera.setStyle(Paint.Style.FILL);
         paintCameraEntera.setAlpha(100);
         //paintCameraEntera.setColor(Color.RED);
         canvas.drawRect(r, paintCameraEntera);
 
-        canvas.drawBitmap(scaledBitmap, TopX, TopY, p);
-        canvas.drawBitmap(scaledBitmap, LeftX, LeftY, p);
-        canvas.drawBitmap(scaledBitmap, RightX, RightY, p);
-        canvas.drawBitmap(scaledBitmap, BottomX, BottomY, p);
+       // canvas.drawBitmap(scaledBitmap, TopX, TopY, p);
+       // canvas.drawBitmap(scaledBitmap, LeftX, LeftY, p);
+        //canvas.drawBitmap(scaledBitmap, RightX, RightY, p);
+
+        Heart heartTop = mHearts.get(0);
+        Heart heartRight = mHearts.get(1);
+        Heart heartBottom = mHearts.get(2);
+        Heart heartLeft = mHearts.get(3);
+
+        heartTopX= heartTop.getPositionX();
+
+
+            if(heartRight.getPositionX()>=1000){
+
+                heartRight.setPositionX(heartRight.getPositionX() - heartRight.getSpeedX());
+            }
+            if(heartRight.getPositionX()<=900){
+                heartRight.setPositionX(heartRight.getPositionX() + heartRight.getSpeedX());
+            }
+
+            heartRight.setPositionX(heartRight.getPositionX() - heartRight.getSpeedX());
+            heartRight.setPositionY(heartRight.getPositionY() + heartRight.getSpeedY());
+
+
+        //------------TOP
+
+
+            if(!heartTop.isDevueltaX()){
+                if(heartTopX>1100){
+                    heartTop.setDevueltaX(true);
+                }
+                heartTop.setPositionX(heartTopX + heartTop.getSpeedX());
+            }else{
+                if(heartTopX<40){
+                heartTop.setDevueltaX(false);
+                }
+                heartTop.setPositionX(heartTopX - heartTop.getSpeedX());
+            }
+
+            if(!heartTop.isDevueltaY()){
+                if(heartTop.getPositionY()>200){
+                    heartTop.setDevueltaY(true);
+                }
+                heartTop.setPositionY(heartTop.getPositionY() + heartTop.getSpeedY());
+            }else{
+                if(heartTop.getPositionY()<40){
+                    heartTop.setDevueltaY(false);
+                }
+                heartTop.setPositionY(heartTop.getPositionY() - heartTop.getSpeedY());
+            }
+
+        //------------TOP
+
+        if(heartBottom.getPositionX()>1100){
+            heartBottom.setPositionX(heartTop.getPositionX() - heartTop.getSpeedX());
+        }
+        if(heartBottom.getPositionX()<5){
+            heartBottom.setPositionX(heartBottom.getPositionX() + heartBottom.getSpeedX());
+        }
+        heartBottom.setPositionX(heartBottom.getPositionX() + heartBottom.getSpeedX());
+
+
+
+        canvas.drawBitmap(scaledBitmap, heartTop.getPositionX(), heartTop.getPositionY(), p);
+        canvas.drawBitmap(scaledBitmap, heartRight.getPositionX(), heartRight.getPositionY() + heartRight.getSpeedY(), p);
+        canvas.drawBitmap(scaledBitmap, heartBottom.getPositionX(), heartBottom.getPositionY(), p);
     }
 
 

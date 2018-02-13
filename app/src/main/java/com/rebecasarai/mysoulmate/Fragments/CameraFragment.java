@@ -47,6 +47,7 @@ import com.rebecasarai.mysoulmate.Activities.NewSoulMateActivity;
 import com.rebecasarai.mysoulmate.Camera.CameraPreview;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
 import com.rebecasarai.mysoulmate.Graphics.FaceGraphic;
+import com.rebecasarai.mysoulmate.Models.Heart;
 import com.rebecasarai.mysoulmate.R;
 import com.rebecasarai.mysoulmate.Utils.ScreenshotType;
 import com.rebecasarai.mysoulmate.Utils.ScreenshotUtils;
@@ -59,6 +60,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -240,9 +242,20 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
             if (Utils.isYourSoulMate(getContext())) {
 
-                mFaceGraphic = new FaceGraphic(overlay, getContext());
-                mViewmodel.setHeartButtonVisibility(true);
+                ArrayList<Heart> hearts = new ArrayList<>();
+                //top
+                hearts.add(new Heart(10, 5, 10, 10));
+                //right
+                hearts.add(new Heart(1000, 100, 10, 10));
+                //bottom
+                hearts.add(new Heart(200, 900, 10, 10));
+                //left
+                hearts.add(new Heart(10, 200, 10, 10));
 
+
+                mFaceGraphic = new FaceGraphic(overlay, getContext(),hearts);
+
+                mViewmodel.setHeartButtonVisibility(true);
                 try {
                     if (mediaPlayer.isPlaying()) {
                         mediaPlayer.stop();

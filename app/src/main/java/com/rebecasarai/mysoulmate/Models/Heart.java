@@ -6,12 +6,31 @@ package com.rebecasarai.mysoulmate.Models;
 
 public class Heart {
     private int positionX, positionY,speedX,speedY;
+    private boolean devueltaX,devueltaY;
 
     public Heart(int positionX, int positionY, int speedX, int speedY) {
         this.positionX = positionX;
         this.positionY = positionY;
         this.speedX = speedX;
         this.speedY = speedY;
+        devueltaX=false;
+        devueltaY = false;
+    }
+
+    public boolean isDevueltaX() {
+        return devueltaX;
+    }
+
+    public void setDevueltaX(boolean devueltaX) {
+        this.devueltaX = devueltaX;
+    }
+
+    public boolean isDevueltaY() {
+        return devueltaY;
+    }
+
+    public void setDevueltaY(boolean devueltaY) {
+        this.devueltaY = devueltaY;
     }
 
     public int getPositionX() {

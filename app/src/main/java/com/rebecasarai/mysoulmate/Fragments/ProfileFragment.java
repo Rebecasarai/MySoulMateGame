@@ -19,6 +19,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,7 +57,6 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_profile, container, false);
-        mNotFinalsmallBangImage = mRootView.findViewById(R.id.smallBangImage);
 
         final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
         mLastSoulMateImage = mRootView.findViewById(R.id.lastSoulMatePreview);
@@ -76,19 +77,6 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
             }
         });
 
-        final SmallBangView smallBangImage = mRootView.findViewById(R.id.smallBangImage);
-        //smallBangImage.likeAnimation();
-        smallBangImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (smallBangImage.isSelected()) {
-                    smallBangImage.setSelected(false);
-                } else {
-                    smallBangImage.setSelected(true);
-                    smallBangImage.likeAnimation();
-                }
-            }
-        });
 
         ImageView imgSmallHeart = (ImageView) mRootView.findViewById(R.id.imgSmallHeart);
         //mSmallBang.likeAnimation();
@@ -105,7 +93,6 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     @Override
     public void onStart() {
         super.onStart();
-        final SmallBangView smallBangImage = mRootView.findViewById(R.id.smallBangImage);
     }
 
     @Override
@@ -116,8 +103,6 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     @Override
     public void onResume() {
         super.onResume();
-        final SmallBangView smallBangImage = mRootView.findViewById(R.id.smallBangImage);
-//        smallBangImage.likeAnimation();
     }
 
     @Override
@@ -136,7 +121,13 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
                     Picasso.with(getView().getContext()).load(screenshot.getImageURL()).fit().into(mLastSoulMateImage);
                     Log.d(TAG,screenshot.getImageURL()+"");
                     Log.d(TAG,dataSnapshot.getChildrenCount()+"");
-                    mNotFinalsmallBangImage.likeAnimation();
+
+                    YoYo.with(Techniques.Tada)
+                            .duration(700)
+                            .repeat(5)
+                            .playOn(mRootView.findViewById(R.id.lastSoulMatePreview));
+                    final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
+                   like_heart.likeAnimation();
                }
             }
 
@@ -147,10 +138,6 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         });
     }
 
-    public void animar(){
-        final SmallBangView smallBangImage = mRootView.findViewById(R.id.smallBangImage);
-        smallBangImage.likeAnimation();
-    }
 
     public void animation(){
         RotateAnimation anim = new RotateAnimation(0f, 350f, 15f, 15f);
