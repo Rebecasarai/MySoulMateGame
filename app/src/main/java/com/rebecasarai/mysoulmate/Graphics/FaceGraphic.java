@@ -33,6 +33,7 @@ import android.util.Log;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.Landmark;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
+import com.rebecasarai.mysoulmate.Models.Heart;
 import com.rebecasarai.mysoulmate.R;
 
 import java.security.SecureRandom;
@@ -46,10 +47,9 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float BOX_STROKE_WIDTH = 5.0f;
     private Context context;
     private int TopX, TopY, LeftX, LeftY, RightX, RightY, BottomX, BottomY;
-    SharedPreferences mSharedPref;
+    private Heart mHeart;
 
     Random random = new Random();
-
     SecureRandom r = new SecureRandom();
 
 
@@ -61,6 +61,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     private volatile Face mFace;
     private int mFaceId;
+
+
 
 
     public FaceGraphic(GraphicOverlay overlay, Context context) {
@@ -141,8 +143,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         p.setDither(true);
 
         paintCameraEntera.setColorFilter(new PorterDuffColorFilter(context.getResources().getColor(R.color.colorPrimaryDark), PorterDuff.Mode.MULTIPLY));
-
-
 
         TopX = 10;/*mSharedPref.getInt("startingTopX", 1);*/
         //TopY = mSharedPref.getInt("startingTopX", 1);

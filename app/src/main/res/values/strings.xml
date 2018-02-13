@@ -72,6 +72,9 @@
     <string name="content_share">Share!</string>
     <string name="content_profile">Your last soul mate!</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>
 

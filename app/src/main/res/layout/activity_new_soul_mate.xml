@@ -12,26 +12,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/croissant_one"
-        android:text="Your Last SoulMate!"
+        android:text="¡Le has encontrado!"
         android:textSize="@dimen/default_text_size"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark" />
 
 
-    <xyz.hanks.library.bang.SmallBangView
-        android:id="@+id/smallBangImageNew"
-        android:layout_width="222dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="50dp"
-        android:layout_gravity="center">
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
         android:id="@+id/imageNewSoulMate"
         android:scaleType="centerCrop"
-        android:rotation="20"
         />
-    </xyz.hanks.library.bang.SmallBangView>
 
     <!--TODO:Panel de perfil, estadisticas de soulmates, Probabilidad de que salga el soulmate Cuantos buu-->
 

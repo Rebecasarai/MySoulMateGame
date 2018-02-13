@@ -45,19 +45,17 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     private ImageView mLastSoulMateImage;
     private View mRootView;
     private MainViewModel mViewModel;
-    private SmallBangView mSmallBang;
-
+    private SmallBangView mNotFinalsmallBangImage;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        mNotFinalsmallBangImage = mRootView.findViewById(R.id.smallBangImage);
 
         final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
         mLastSoulMateImage = mRootView.findViewById(R.id.lastSoulMatePreview);
@@ -79,7 +77,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         });
 
         final SmallBangView smallBangImage = mRootView.findViewById(R.id.smallBangImage);
-//        smallBangImage.likeAnimation();
+        //smallBangImage.likeAnimation();
         smallBangImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,9 +136,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
                     Picasso.with(getView().getContext()).load(screenshot.getImageURL()).fit().into(mLastSoulMateImage);
                     Log.d(TAG,screenshot.getImageURL()+"");
                     Log.d(TAG,dataSnapshot.getChildrenCount()+"");
-                    final SmallBangView smallBangImage = mRootView.findViewById(R.id.smallBangImage);
-                    smallBangImage.likeAnimation();
-
+                    mNotFinalsmallBangImage.likeAnimation();
                }
             }
 

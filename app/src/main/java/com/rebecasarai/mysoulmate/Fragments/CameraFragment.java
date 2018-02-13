@@ -484,8 +484,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         mPhotoPeep.setImageBitmap(mBitmapPicture);
         takeScreenshot(ScreenshotType.FULL);
         Intent newSoulMateIntent = new Intent(mRootView.getContext(), NewSoulMateActivity.class);
-        startActivity(newSoulMateIntent);
         mPhotoPeep.setVisibility(View.INVISIBLE);
+        startActivity(newSoulMateIntent);
         //shareScreenshot(mScreenShotFile);
     }
 
