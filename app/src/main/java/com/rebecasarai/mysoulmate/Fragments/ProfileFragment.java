@@ -122,9 +122,8 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
                     Log.d(TAG,screenshot.getImageURL()+"");
                     Log.d(TAG,dataSnapshot.getChildrenCount()+"");
 
-                    YoYo.with(Techniques.Tada)
-                            .duration(700)
-                            .repeat(5)
+                    YoYo.with(Techniques.Landing)
+                            .duration(800)
                             .playOn(mRootView.findViewById(R.id.lastSoulMatePreview));
                     final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
                    like_heart.likeAnimation();
