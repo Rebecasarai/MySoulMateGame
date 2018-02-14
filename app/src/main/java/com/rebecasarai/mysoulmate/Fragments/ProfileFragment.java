@@ -135,7 +135,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG,dataSnapshot.getChildrenCount()+"");
-                //if (dataSnapshot.getChildrenCount() == 1) {
+                if (dataSnapshot.getChildrenCount() == 1) {
                     Screenshot screenshot = dataSnapshot.getChildren().iterator().next().getValue(Screenshot.class);
                     Picasso.with(getContext()).load(screenshot.getImageURL()).fit().into(mLastSoulMateImage);
                     Log.d(TAG,screenshot.getImageURL()+"");
@@ -144,10 +144,10 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
                             .duration(800)
                             .playOn(mRootView.findViewById(R.id.lastSoulMatePreview));
                     final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
-                   like_heart.likeAnimation();
+                    like_heart.likeAnimation();
 
                    mViewModel.setLastSoulMate(StringToBitMap(screenshot.getImageURL()+""));
-             //}
+             }
             }
 
             @Override

@@ -28,7 +28,7 @@ public class Utils {
     public static boolean isYourSoulMate(Context context) {
 
         int snapshotsTaken = getSnapshotsTaken(context);
-        if(snapshotsTaken >= Constants.MAX_NUM_SCREENSHOTS_TO_SOULMATE){
+        if(snapshotsTaken > Constants.MAX_NUM_SCREENSHOTS_TO_SOULMATE){
             updateSnapshotsTaken(context, Constants.MAX_NUM_SCREENSHOTS_TO_SOULMATE/2);
         }
         snapshotsTaken = getSnapshotsTaken(context);

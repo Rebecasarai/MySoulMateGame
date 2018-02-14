@@ -54,7 +54,7 @@ public class NewSoulMateActivity extends AppCompatActivity {
                 mImageNewSoulMate.setImageBitmap(bitmap);
             }
         });
-        //setLastSoulmate();
+        setLastSoulmate();
         ImageButton shareButton =  (ImageButton) findViewById(R.id.shareBtn);
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +68,6 @@ public class NewSoulMateActivity extends AppCompatActivity {
 
             }
         });*/
-
 
     }
 
