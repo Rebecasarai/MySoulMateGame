@@ -52,6 +52,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     Random random = new Random();
     SecureRandom r = new SecureRandom();
+    Bitmap scaledBitmap;
+    BitmapFactory.Options options;
 
     private static final int COLOR_CHOICES = Color.RED;
 
@@ -62,6 +64,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private volatile Face mFace;
     private int mFaceId;
     private int heartTopX;
+    private Rect recta;
+    Paint p = new Paint();
 
 
 
@@ -82,6 +86,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         mBoxPaint.setColor(selectedColor);
         mBoxPaint.setStyle(Paint.Style.STROKE);
         mBoxPaint.setStrokeWidth(BOX_STROKE_WIDTH);
+
 
         this.mHearts = hearts;
 
@@ -128,118 +133,152 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         //canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
         //canvas.drawText("Es tu alma gemelaa", x - ID_X_OFFSET * 3, y - ID_Y_OFFSET * 3, mIdPaint);
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
         //Lo reduzco por 5
         options.inSampleSize = 4;
         options.inJustDecodeBounds = false;
-        Bitmap scaledBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
+        scaledBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
 
-        Paint p = new Paint();
+
         Paint paintCameraEntera = new Paint();
-        p.setColor(Color.RED);
-        p.setAntiAlias(true);
-        p.setFilterBitmap(true);
-        p.setDither(true);
+        paintCameraEntera.setColor(Color.RED);
+        paintCameraEntera.setAntiAlias(true);
+        paintCameraEntera.setFilterBitmap(true);
+        paintCameraEntera.setDither(true);
 
         paintCameraEntera.setColorFilter(new PorterDuffColorFilter(context.getResources().getColor(R.color.colorPrimaryDark), PorterDuff.Mode.MULTIPLY));
 
 
-        if(LeftX>100||LeftY>800){
-
-        }
-        if(RightX>1000||RightY>1200){
-        }
-        if(BottomX>800||BottomX>1300) {
-        }
-            //TopX = mSharedPref.getInt("startingTopX", 1);
-
-            // TopX = random.nextInt(800);
-            TopY = random.nextInt(100);
-
-            LeftX = random.nextInt(100);
-            LeftY = random.nextInt(800);
-
-            RightX = randomRango(900, 1000);
-            RightY = random.nextInt(1200);
-
-            BottomX = random.nextInt(800);
-            BottomY = randomRango(1200, 1300);
-
-       Rect r = new Rect(canvas.getWidth(), canvas.getHeight()-canvas.getHeight(), canvas.getWidth(), canvas.getHeight());
+       recta = new Rect(canvas.getWidth(), canvas.getHeight()-canvas.getHeight(), canvas.getWidth(), canvas.getHeight());
 
         paintCameraEntera.setStyle(Paint.Style.FILL);
-        paintCameraEntera.setAlpha(100);
-        //paintCameraEntera.setColor(Color.RED);
-        canvas.drawRect(r, paintCameraEntera);
+        paintCameraEntera.setAlpha(200);
+        canvas.drawRect(recta, paintCameraEntera);
+        //Heart mHearts.get(0) = mHearts.get(0);
+        //Heart mHearts.get(1) = mHearts.get(1);
+        //Heart mHearts.get(2) = mHearts.get(2);
+        //Heart mHearts.get(3) = mHearts.get(3);
 
-       // canvas.drawBitmap(scaledBitmap, TopX, TopY, p);
-       // canvas.drawBitmap(scaledBitmap, LeftX, LeftY, p);
-        //canvas.drawBitmap(scaledBitmap, RightX, RightY, p);
+        heartTopX= mHearts.get(0).getPositionX();
+        //------------TOP--------//
 
-        Heart heartTop = mHearts.get(0);
-        Heart heartRight = mHearts.get(1);
-        Heart heartBottom = mHearts.get(2);
-        Heart heartLeft = mHearts.get(3);
-
-        heartTopX= heartTop.getPositionX();
-
-
-            if(heartRight.getPositionX()>=1000){
-
-                heartRight.setPositionX(heartRight.getPositionX() - heartRight.getSpeedX());
-            }
-            if(heartRight.getPositionX()<=900){
-                heartRight.setPositionX(heartRight.getPositionX() + heartRight.getSpeedX());
-            }
-
-            heartRight.setPositionX(heartRight.getPositionX() - heartRight.getSpeedX());
-            heartRight.setPositionY(heartRight.getPositionY() + heartRight.getSpeedY());
-
-
-        //------------TOP
-
-
-            if(!heartTop.isDevueltaX()){
+            if(!mHearts.get(0).isDevueltaX()){
                 if(heartTopX>1100){
-                    heartTop.setDevueltaX(true);
+                    mHearts.get(0).setDevueltaX(true);
                 }
-                heartTop.setPositionX(heartTopX + heartTop.getSpeedX());
+                mHearts.get(0).setPositionX(heartTopX + mHearts.get(0).getSpeedX());
             }else{
                 if(heartTopX<40){
-                heartTop.setDevueltaX(false);
+                mHearts.get(0).setDevueltaX(false);
                 }
-                heartTop.setPositionX(heartTopX - heartTop.getSpeedX());
+                mHearts.get(0).setPositionX(heartTopX - mHearts.get(0).getSpeedX());
             }
 
-            if(!heartTop.isDevueltaY()){
-                if(heartTop.getPositionY()>200){
-                    heartTop.setDevueltaY(true);
+            if(!mHearts.get(0).isDevueltaY()){
+                if(mHearts.get(0).getPositionY()>200){
+                    mHearts.get(0).setDevueltaY(true);
                 }
-                heartTop.setPositionY(heartTop.getPositionY() + heartTop.getSpeedY());
+                mHearts.get(0).setPositionY(mHearts.get(0).getPositionY() + mHearts.get(0).getSpeedY());
             }else{
-                if(heartTop.getPositionY()<40){
-                    heartTop.setDevueltaY(false);
+                if(mHearts.get(0).getPositionY()<100){
+                    mHearts.get(0).setDevueltaY(false);
                 }
-                heartTop.setPositionY(heartTop.getPositionY() - heartTop.getSpeedY());
+                mHearts.get(0).setPositionY(mHearts.get(0).getPositionY() - mHearts.get(0).getSpeedY());
             }
 
-        //------------TOP
+        //------------------- RIGTH---------------//
 
-        if(heartBottom.getPositionX()>1100){
-            heartBottom.setPositionX(heartTop.getPositionX() - heartTop.getSpeedX());
+        if(!mHearts.get(1).isDevueltaX()){
+            if(mHearts.get(1).getPositionX()>1100){
+                mHearts.get(1).setDevueltaX(true);
+            }
+            mHearts.get(1).setPositionX(mHearts.get(1).getPositionX() + mHearts.get(1).getSpeedX());
+        }else{
+            if(mHearts.get(1).getPositionX()<900){
+                mHearts.get(1).setDevueltaX(false);
+            }
+            mHearts.get(1).setPositionX(mHearts.get(1).getPositionX() - mHearts.get(1).getSpeedX());
         }
-        if(heartBottom.getPositionX()<5){
-            heartBottom.setPositionX(heartBottom.getPositionX() + heartBottom.getSpeedX());
+
+        if(!mHearts.get(1).isDevueltaY()){
+            if(mHearts.get(1).getPositionY()>1200){
+                mHearts.get(1).setDevueltaY(true);
+            }
+            mHearts.get(1).setPositionY(mHearts.get(1).getPositionY() + mHearts.get(1).getSpeedY());
+        }else{
+            if(mHearts.get(1).getPositionY()<200){
+                mHearts.get(1).setDevueltaY(false);
+            }
+            mHearts.get(1).setPositionY(mHearts.get(1).getPositionY() - mHearts.get(1).getSpeedY());
         }
-        heartBottom.setPositionX(heartBottom.getPositionX() + heartBottom.getSpeedX());
+
+        //------------------- BOTTOM ---------------//
+
+        if(!mHearts.get(2).isDevueltaX()){
+            if(mHearts.get(2).getPositionX()>1100){
+                mHearts.get(2).setDevueltaX(true);
+            }
+            mHearts.get(2).setPositionX(mHearts.get(2).getPositionX() + mHearts.get(2).getSpeedX());
+        }else{
+            if(mHearts.get(2).getPositionX()<100){
+                mHearts.get(2).setDevueltaX(false);
+            }
+            mHearts.get(2).setPositionX(mHearts.get(2).getPositionX() - mHearts.get(2).getSpeedX());
+        }
+
+        if(!mHearts.get(2).isDevueltaY()){
+            if(mHearts.get(2).getPositionY()>1300){
+                mHearts.get(2).setDevueltaY(true);
+            }
+            mHearts.get(2).setPositionY(mHearts.get(2).getPositionY() + mHearts.get(2).getSpeedY());
+        }else{
+            if(mHearts.get(2).getPositionY()<1050){
+                mHearts.get(2).setDevueltaY(false);
+            }
+            mHearts.get(2).setPositionY(mHearts.get(2).getPositionY() - mHearts.get(2).getSpeedY());
+        }
+
+        //------------------- Left -----------------//
+
+        if(!mHearts.get(3).isDevueltaX()){
+            if(mHearts.get(3).getPositionX()>180){
+                mHearts.get(3).setDevueltaX(true);
+            }
+            mHearts.get(3).setPositionX(mHearts.get(3).getPositionX() + mHearts.get(3).getSpeedX());
+        }else{
+            if(mHearts.get(3).getPositionX()<10){
+                mHearts.get(3).setDevueltaX(false);
+            }
+            mHearts.get(3).setPositionX(mHearts.get(3).getPositionX() - mHearts.get(3).getSpeedX());
+        }
+
+        if(!mHearts.get(3).isDevueltaY()){
+            if(mHearts.get(3).getPositionY()>1300){
+                mHearts.get(3).setDevueltaY(true);
+            }
+            mHearts.get(3).setPositionY(mHearts.get(3).getPositionY() + mHearts.get(3).getSpeedY());
+        }else{
+            if(mHearts.get(3).getPositionY()<200){
+                mHearts.get(3).setDevueltaY(false);
+            }
+            mHearts.get(3).setPositionY(mHearts.get(3).getPositionY() - mHearts.get(3).getSpeedY());
+        }
+        canvas.drawBitmap(scaledBitmap, mHearts.get(0).getPositionX(), mHearts.get(0).getPositionY(), p);
+        canvas.drawBitmap(scaledBitmap, mHearts.get(1).getPositionX(), mHearts.get(1).getPositionY(), p);
+        canvas.drawBitmap(scaledBitmap, mHearts.get(2).getPositionX(), mHearts.get(2).getPositionY(), p);
+        canvas.drawBitmap(scaledBitmap, mHearts.get(3).getPositionX(), mHearts.get(3).getPositionY(), p);
 
 
+        options.inSampleSize=6;
+        scaledBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
 
-        canvas.drawBitmap(scaledBitmap, heartTop.getPositionX(), heartTop.getPositionY(), p);
-        canvas.drawBitmap(scaledBitmap, heartRight.getPositionX(), heartRight.getPositionY() + heartRight.getSpeedY(), p);
-        canvas.drawBitmap(scaledBitmap, heartBottom.getPositionX(), heartBottom.getPositionY(), p);
+        canvas.drawBitmap(scaledBitmap, random.nextInt(canvas.getWidth()-100), random.nextInt(200), p);
+        canvas.drawBitmap(scaledBitmap, randomRango(1200,1300), random.nextInt(canvas.getHeight()-200), p);
+        canvas.drawBitmap(scaledBitmap, random.nextInt(canvas.getWidth()-100), randomRango(1300,1500), p);
+        canvas.drawBitmap(scaledBitmap, randomRango(50, 100), random.nextInt(canvas.getHeight()), p);
+
     }
 
 
@@ -268,9 +307,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         int width = Math.round((float) ratio * realImage.getWidth());
         int height = Math.round((float) ratio * realImage.getHeight());
 
-        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
+        return Bitmap.createScaledBitmap(realImage, width,
                 height, filter);
-        return newBitmap;
     }
 
     /**

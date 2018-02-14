@@ -19,7 +19,7 @@ import com.rebecasarai.mysoulmate.Repository.UserRepository;
 
 public class MainViewModel extends AndroidViewModel {
     private UserRepository mRepository;
-    private MutableLiveData<Bitmap> mLastSoulMate;
+    private MutableLiveData<Bitmap> mLastSoulMate = new MutableLiveData<>();
     private MutableLiveData<Boolean> mHeartButtonVisibility = new MutableLiveData<>();
     private LiveData<Bitmap> ultimo;
 

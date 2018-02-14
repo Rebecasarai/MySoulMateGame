@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Check if the user is logged in
                 if (mCurrentFirebaseUser != null) {
-                    //TODO: add toast.
+                    Toast.makeText(LoginActivity.this, "Iniciado Sesion!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 } else {
@@ -70,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
                                                     new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()
                                             )
                                     )
-                                    .setTheme(R.style.AppTheme)
-                                    .setLogo(R.drawable.btn_heart)
+                                    //.setTheme(R.style.AppTheme)
+                                    //.setLogo(R.drawable.btn_heart)
                                     .build(),
                             RC_SIGN_IN);
                 }

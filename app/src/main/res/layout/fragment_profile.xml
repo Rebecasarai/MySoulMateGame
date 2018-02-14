@@ -49,25 +49,14 @@
                 android:scaleType="centerCrop"
                 android:src="@mipmap/ic_launcher" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
+        <ImageButton
+            android:id="@+id/share"
+            android:background="@android:color/white"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_share_red_24dp" />
-        <!--TODO:Panel de perfil, estadisticas de soulmates, Probabilidad de que salga el soulmate Cuantos buu-->
-
-       <!-- <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_weight="5"
-                android:src="@drawable/ic_share_red_24dp" />
-        </LinearLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -118,6 +107,19 @@
                 </xyz.hanks.library.bang.SmallBangView>
             </LinearLayout>
         </LinearLayout>
+
+
+        <Button
+            android:id="@+id/cerrarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cerrar sesión"
+            android:background="@color/colorSecondary"
+            android:fontFamily="@font/croissant_one"
+            android:textSize="@dimen/default_text_size" />
+
+
+
     </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -246,11 +246,11 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 //top
                 hearts.add(new Heart(10, 5, 10, 10));
                 //right
-                hearts.add(new Heart(1000, 100, 10, 10));
+                hearts.add(new Heart(1100, 100, 10, 10));
                 //bottom
-                hearts.add(new Heart(200, 900, 10, 10));
+                hearts.add(new Heart(200, 1300, 10, 10));
                 //left
-                hearts.add(new Heart(10, 200, 10, 10));
+                hearts.add(new Heart(20, 200, 10, 10));
 
 
                 mFaceGraphic = new FaceGraphic(overlay, getContext(),hearts);
@@ -557,6 +557,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
         //guardarScreenshot(bitmap, screenshotType);
         if (bitmap != null) {
+
             FileManager.uploadScreenshot(FirebaseAuth.getInstance(), bitmap, new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -570,10 +571,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(getActivity(), "Uploading failed.", Toast.LENGTH_SHORT).show();
                 }
             });
-
             File saveFile = ScreenshotUtils.getMainDirectoryName(mRootView.getContext());
             mScreenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-//          mViewmodel.setLastSoulMate(bitmap);
+
+            mViewmodel.setLastSoulMate(bitmap);
 
         } else {
             //Si es nulo

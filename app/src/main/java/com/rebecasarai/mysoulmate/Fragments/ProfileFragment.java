@@ -4,10 +4,15 @@ package com.rebecasarai.mysoulmate.Fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +21,9 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -28,19 +35,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
+import com.rebecasarai.mysoulmate.Activities.LoginActivity;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
+import com.rebecasarai.mysoulmate.Utils.ScreenshotType;
+import com.rebecasarai.mysoulmate.Utils.ScreenshotUtils;
 import com.rebecasarai.mysoulmate.ViewModels.MainViewModel;
 import com.rebecasarai.mysoulmate.Views.Adapters.PhotoAdapter;
 import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import xyz.hanks.library.bang.SmallBangView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment implements RecyclerItemClickListener {
+public class ProfileFragment extends Fragment implements RecyclerItemClickListener, View.OnClickListener {
 
     private static final String TAG = ProfileFragment.class.getSimpleName();
 
@@ -48,6 +60,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     private View mRootView;
     private MainViewModel mViewModel;
     private SmallBangView mNotFinalsmallBangImage;
+    private SmallBangView mlike_heart;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -59,8 +72,11 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         mRootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
+        mlike_heart = mRootView.findViewById(R.id.like_heart);
+        TextView cerrarSesionText = mRootView.findViewById(R.id.cerrarSesion);
+        cerrarSesionText.setOnClickListener(this);
         mLastSoulMateImage = mRootView.findViewById(R.id.lastSoulMatePreview);
-        like_heart.setOnClickListener(new View.OnClickListener() {
+        like_heart.setOnClickListener(this);/*new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (like_heart.isSelected()) {
@@ -75,12 +91,15 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
                     });
                 }
             }
-        });
+        });*/
 
 
         ImageView imgSmallHeart = (ImageView) mRootView.findViewById(R.id.imgSmallHeart);
+        ImageView shareBtn = (ImageButton) mRootView.findViewById(R.id.share);
+        shareBtn.setOnClickListener(this);
         //mSmallBang.likeAnimation();
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
         setLastSoulmate();
         return mRootView;
     }
@@ -116,18 +135,19 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG,dataSnapshot.getChildrenCount()+"");
-                if (dataSnapshot.getChildrenCount() == 1) {
+                //if (dataSnapshot.getChildrenCount() == 1) {
                     Screenshot screenshot = dataSnapshot.getChildren().iterator().next().getValue(Screenshot.class);
-                    Picasso.with(getView().getContext()).load(screenshot.getImageURL()).fit().into(mLastSoulMateImage);
+                    Picasso.with(getContext()).load(screenshot.getImageURL()).fit().into(mLastSoulMateImage);
                     Log.d(TAG,screenshot.getImageURL()+"");
                     Log.d(TAG,dataSnapshot.getChildrenCount()+"");
-
                     YoYo.with(Techniques.Landing)
                             .duration(800)
                             .playOn(mRootView.findViewById(R.id.lastSoulMatePreview));
                     final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
                    like_heart.likeAnimation();
-               }
+
+                   mViewModel.setLastSoulMate(StringToBitMap(screenshot.getImageURL()+""));
+             //}
             }
 
             @Override
@@ -137,6 +157,17 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         });
     }
 
+    public Bitmap StringToBitMap(String encodedString){
+        Bitmap bitmap = null;
+        try{
+            byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
+            bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+
+        }catch(Exception e){
+            e.getMessage();
+        }
+        return bitmap;
+    }
 
     public void animation(){
         RotateAnimation anim = new RotateAnimation(0f, 350f, 15f, 15f);
@@ -160,4 +191,56 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
 
 
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.like_heart:
+                if (mlike_heart.isSelected()) {
+                    mlike_heart.setSelected(false);
+                } else {
+                    mlike_heart.setSelected(true);
+                    mlike_heart.likeAnimation(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                        }
+                    });
+                }
+                break;
+
+            case R.id.share:
+                shareScreenshot(mViewModel.getLastSoulMate().getValue(),ScreenshotType.CUSTOM.FULL);
+                break;
+
+            case R.id.cerrarSesion:
+                cerrarSesion();
+                break;
+        }
+    }
+
+
+    private void cerrarSesion(){
+        FirebaseAuth.getInstance().signOut();
+        Intent loginIntent = new Intent(getView().getContext(), LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(loginIntent);
+        getActivity().finish();
+    }
+
+    private void shareScreenshot(Bitmap bitmap, ScreenshotType screenshotType) {
+        File saveFile = ScreenshotUtils.getMainDirectoryName(getView().getContext());
+        File screenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
+        Uri uri = Uri.fromFile(screenShotFile);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("image/*");
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.sharing_text));
+        intent.putExtra(Intent.EXTRA_STREAM, uri);//pass uri here
+        startActivity(Intent.createChooser(intent, getString(R.string.share_title)));
+    }
+
+
+
 }

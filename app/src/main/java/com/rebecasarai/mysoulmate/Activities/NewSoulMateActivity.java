@@ -47,8 +47,14 @@ public class NewSoulMateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_soul_mate);
         mImageNewSoulMate = (ImageView) findViewById(R.id.imageNewSoulMate);
-        //mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        setLastSoulmate();
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
+            @Override
+            public void onChanged(@Nullable Bitmap bitmap) {
+                mImageNewSoulMate.setImageBitmap(bitmap);
+            }
+        });
+        //setLastSoulmate();
         ImageButton shareButton =  (ImageButton) findViewById(R.id.shareBtn);
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,14 +79,14 @@ public class NewSoulMateActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG,dataSnapshot.getChildrenCount()+"");
-               // if (dataSnapshot.getChildrenCount() == 1) {
+               if (dataSnapshot.getChildrenCount() == 1) {
                     Screenshot screenshot = dataSnapshot.getChildren().iterator().next().getValue(Screenshot.class);
                     Picasso.with(getApplicationContext()).load(screenshot.getImageURL()).fit().into(mImageNewSoulMate);
                     Log.d(TAG,screenshot.getImageURL()+"");
                     Log.d(TAG,dataSnapshot.getChildrenCount()+"");
                     //final SmallBangView smallBangImage = mRootView.findViewById(R.id.smallBangImageNew);
                     //smallBangImage.likeAnimation();
-                //}
+                }
             }
 
             @Override
