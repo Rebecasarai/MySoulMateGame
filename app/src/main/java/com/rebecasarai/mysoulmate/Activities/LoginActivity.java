@@ -55,7 +55,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Check if the user is logged in
                 if (mCurrentFirebaseUser != null) {
-                    Toast.makeText(LoginActivity.this, "Iniciado Sesion!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 } else {
