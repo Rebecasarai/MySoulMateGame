@@ -250,7 +250,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 //bottom
                 hearts.add(new Heart(200, 1300, 10, 10));
                 //left
-                hearts.add(new Heart(20, 200, 10, 10));
+                hearts.add(new Heart(20, 400, 10, 10));
 
 
                 mFaceGraphic = new FaceGraphic(overlay, getContext(),hearts);
