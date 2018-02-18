@@ -75,17 +75,17 @@ public class NewSoulMateFragment extends Fragment {
             }
         });
         setLastSoulmate();
-        mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
+        /*mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
             @Override
             public void onChanged(@Nullable Bitmap bitmap) {
-                Log.v(TAG, "Bitmap de NewSoulMate: "+bitmap.toString());
                 if(bitmap!=null){
+                    Log.v(TAG, "Bitmap de NewSoulMate: "+bitmap.toString());
                      mImageNewSoulMate.setImageBitmap(bitmap);
                 }else{
                     setLastSoulmate();
                 }
             }
-        });
+        });*/
         return mRootView;
     }
 
