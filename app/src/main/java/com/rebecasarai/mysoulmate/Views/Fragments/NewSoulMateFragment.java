@@ -102,7 +102,7 @@ public class NewSoulMateFragment extends Fragment {
                     Log.d(TAG,screenshot.getImageURL()+"");
                     Log.d(TAG,dataSnapshot.getChildrenCount()+"");
 
-                    Uri selectedImage = Uri.parse(screenshot.getImageURL());
+                    /*Uri selectedImage = Uri.parse(screenshot.getImageURL());
                     Bitmap bitmap = null;
                     try {
                         bitmap = BitmapFactory.decodeStream(getContext().getContentResolver().openInputStream(selectedImage));
