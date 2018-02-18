@@ -63,6 +63,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private Paint mIdPaint;
     private Paint mBoxPaint;
     Paint p = new Paint();
+    Paint paintCameraEntera = new Paint();
 
     private volatile Face mFace;
     private int mFaceId;
@@ -144,7 +145,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         scaledBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
 
 
-        Paint paintCameraEntera = new Paint();
         paintCameraEntera.setColor(Color.RED);
         paintCameraEntera.setAntiAlias(true);
         paintCameraEntera.setFilterBitmap(true);

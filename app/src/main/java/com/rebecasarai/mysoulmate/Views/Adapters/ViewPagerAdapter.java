@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.rebecasarai.mysoulmate.Views.Fragments.CameraFragment;
 import com.rebecasarai.mysoulmate.Views.Fragments.DashboardFragment;
+import com.rebecasarai.mysoulmate.Views.Fragments.NewSoulMateFragment;
 import com.rebecasarai.mysoulmate.Views.Fragments.ProfileFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
@@ -31,6 +32,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 return new CameraFragment();
             case 2:
                 return new ProfileFragment();
+            case 3:
+                return new NewSoulMateFragment();
             default:
                 return new DashboardFragment();
 

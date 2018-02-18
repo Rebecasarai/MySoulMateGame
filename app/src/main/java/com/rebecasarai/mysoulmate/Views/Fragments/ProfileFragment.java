@@ -140,8 +140,10 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
                     YoYo.with(Techniques.Landing)
                             .duration(800)
                             .playOn(mRootView.findViewById(R.id.lastSoulMatePreview));
-                    final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
-                    like_heart.likeAnimation();
+                    //final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
+                    if(mlike_heart.getScaleX()>0){
+                    mlike_heart.likeAnimation();
+                    }
 
                    mViewModel.setLastSoulMate(StringToBitMap(screenshot.getImageURL()+""));
              }

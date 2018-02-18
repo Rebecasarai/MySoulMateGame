@@ -52,7 +52,7 @@ public class NewSoulMateActivity extends AppCompatActivity {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //shareScreenshot(ScreenshotType.FULL);
+                shareScreenshot(mViewModel.getLastSoulMate().getValue(),ScreenshotType.FULL);
             }
         });
         mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
@@ -61,6 +61,9 @@ public class NewSoulMateActivity extends AppCompatActivity {
 
             }
         });
+
+
+
 
     }
 

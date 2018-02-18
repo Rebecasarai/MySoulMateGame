@@ -1,8 +1,11 @@
 package com.rebecasarai.mysoulmate.Views.Activities;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -45,6 +48,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mPager.addOnPageChangeListener(this);
         mPager.setCurrentItem(1);
 
+        mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
+            @Override
+            public void onChanged(@Nullable Bitmap bitmap) {
+                mPager.setCurrentItem(3);
+            }
+        });
+
 
     }
 
@@ -67,14 +77,17 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        if (mPrevMenuItem != null) {
-            mPrevMenuItem.setChecked(false);
-        } else {
-            mNavigationView.getMenu().getItem(0).setChecked(false);
+
+        if(mPager.getCurrentItem() != 3){
+            if (mPrevMenuItem != null) {
+                mPrevMenuItem.setChecked(false);
+            } else {
+                mNavigationView.getMenu().getItem(0).setChecked(false);
+            }
+            Log.d(TAG, "onPageSelected: " + position);
+            mNavigationView.getMenu().getItem(position).setChecked(true);
+            mPrevMenuItem = mNavigationView.getMenu().getItem(position);
         }
-        Log.d(TAG, "onPageSelected: " + position);
-        mNavigationView.getMenu().getItem(position).setChecked(true);
-        mPrevMenuItem = mNavigationView.getMenu().getItem(position);
     }
 
     @Override
