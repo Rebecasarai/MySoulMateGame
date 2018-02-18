@@ -74,6 +74,12 @@ public class NewSoulMateFragment extends Fragment {
         mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
             @Override
             public void onChanged(@Nullable Bitmap bitmap) {
+                if(bitmap!=null){
+
+                    mImageNewSoulMate.setImageBitmap(bitmap);
+                }else{
+                    setLastSoulmate();
+                }
 
             }
         });
