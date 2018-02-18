@@ -62,14 +62,14 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private Paint mFacePositionPaint;
     private Paint mIdPaint;
     private Paint mBoxPaint;
+    Paint p = new Paint();
 
     private volatile Face mFace;
     private int mFaceId;
     private int heartTopX;
     private Rect recta;
-    Paint p = new Paint();
 
-
+    private int alpha = 5;
 
 
     public FaceGraphic(GraphicOverlay overlay, Context context, ArrayList<Heart> hearts) {
@@ -126,7 +126,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         //double imageWidth = mBitmap.getWidth();
         //double imageHeight = mBitmap.getHeight();
         double scale = Math.min(viewWidth / face.getPosition().x + face.getWidth(), viewHeight / face.getPosition().y + face.getHeight());
-        Log.v("scale", "" + scale);
+       // Log.v("scale", "" + scale);
 
         //Punto medio de la cara
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
@@ -150,17 +150,21 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         paintCameraEntera.setFilterBitmap(true);
         paintCameraEntera.setDither(true);
 
-        ColorFilter filter = new PorterDuffColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+        ColorFilter filter = new PorterDuffColorFilter(context.getResources().getColor(R.color.colorPrimaryRed), PorterDuff.Mode.SRC_IN);
         paintCameraEntera.setColorFilter(filter);
         //paintCameraEntera.setColorFilter(new PorterDuffColorFilter(context.getResources().getColor(R.color.colorPrimaryRed), PorterDuff.Mode.MULTIPLY));
         //paintCameraEntera.setColorFilter(Color.YELLOW, PorterDuff.Mode.DARKEN);
 
         //paintCameraEntera.setShader(new LinearGradient(0, 0, 0, canvas.getHeight(), Color.RED, Color.WHITE, Shader.TileMode.MIRROR));
 
-        recta = new Rect(canvas.getWidth(), canvas.getHeight()-canvas.getHeight(), canvas.getWidth(), canvas.getHeight());
+        recta = new Rect(canvas.getWidth()-canvas.getWidth(), canvas.getHeight()-canvas.getHeight(), canvas.getWidth(), canvas.getHeight());
 
         paintCameraEntera.setStyle(Paint.Style.FILL);
-        //paintCameraEntera.setAlpha(50);
+
+        if(alpha<=70){
+            alpha++;
+        }
+        paintCameraEntera.setAlpha(alpha);
         canvas.drawRect(recta, paintCameraEntera);
         //Heart mHearts.get(0) = mHearts.get(0);
         //Heart mHearts.get(1) = mHearts.get(1);
