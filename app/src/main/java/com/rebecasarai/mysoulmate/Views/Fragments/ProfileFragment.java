@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate.Fragments;
+package com.rebecasarai.mysoulmate.Views.Fragments;
 
 
 import android.animation.Animator;
@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,14 +33,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
-import com.rebecasarai.mysoulmate.Activities.LoginActivity;
+import com.rebecasarai.mysoulmate.Views.Activities.LoginActivity;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
 import com.rebecasarai.mysoulmate.Utils.ScreenshotType;
 import com.rebecasarai.mysoulmate.Utils.ScreenshotUtils;
 import com.rebecasarai.mysoulmate.ViewModels.MainViewModel;
-import com.rebecasarai.mysoulmate.Views.Adapters.PhotoAdapter;
 import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
 import com.squareup.picasso.Picasso;
 

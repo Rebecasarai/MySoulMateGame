@@ -1,21 +1,17 @@
-package com.rebecasarai.mysoulmate.Activities;
+package com.rebecasarai.mysoulmate.Views;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +19,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.rebecasarai.mysoulmate.Fragments.ProfileFragment;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
 import com.rebecasarai.mysoulmate.Utils.ScreenshotType;
@@ -32,8 +27,6 @@ import com.rebecasarai.mysoulmate.ViewModels.MainViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-
-import xyz.hanks.library.bang.SmallBangView;
 
 public class NewSoulMateActivity extends AppCompatActivity {
     private static final String TAG = NewSoulMateActivity.class.getSimpleName();

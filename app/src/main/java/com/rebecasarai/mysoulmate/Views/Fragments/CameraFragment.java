@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate.Fragments;
+package com.rebecasarai.mysoulmate.Views.Fragments;
 
 
 import android.app.AlertDialog;
@@ -43,7 +43,7 @@ import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.firebase.auth.FirebaseAuth;
-import com.rebecasarai.mysoulmate.Activities.NewSoulMateActivity;
+import com.rebecasarai.mysoulmate.Views.NewSoulMateActivity;
 import com.rebecasarai.mysoulmate.Camera.CameraPreview;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
 import com.rebecasarai.mysoulmate.Graphics.FaceGraphic;

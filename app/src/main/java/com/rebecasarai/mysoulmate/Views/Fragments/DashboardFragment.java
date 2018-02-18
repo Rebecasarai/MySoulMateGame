@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate.Fragments;
+package com.rebecasarai.mysoulmate.Views.Fragments;
 
 
 import android.content.Context;

@@ -34,7 +34,7 @@
 
         <!-- TODO: add the splashscreen theme -->
         <activity
-            android:name=".Activities.LoginActivity"
+            android:name=".Views.Activities.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,10 +44,10 @@
 
         </activity>
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".Views.Activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activities.NewSoulMateActivity"
-            android:parentActivityName=".Activities.MainActivity">
+        <activity android:name=".Views.Activities.NewSoulMateActivity"
+            android:parentActivityName=".Views.Activities.MainActivity">
         </activity>
     </application>
 

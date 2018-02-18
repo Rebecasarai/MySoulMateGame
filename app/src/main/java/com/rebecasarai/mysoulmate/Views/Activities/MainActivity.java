@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate.Activities;
+package com.rebecasarai.mysoulmate.Views.Activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

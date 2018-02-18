@@ -8,9 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.rebecasarai.mysoulmate.Fragments.CameraFragment;
-import com.rebecasarai.mysoulmate.Fragments.DashboardFragment;
-import com.rebecasarai.mysoulmate.Fragments.ProfileFragment;
+import com.rebecasarai.mysoulmate.Views.Fragments.CameraFragment;
+import com.rebecasarai.mysoulmate.Views.Fragments.DashboardFragment;
+import com.rebecasarai.mysoulmate.Views.Fragments.ProfileFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private int NUM_PAGES = 3;

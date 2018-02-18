@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate.Activities;
+package com.rebecasarai.mysoulmate.Views.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -69,8 +69,8 @@ public class LoginActivity extends AppCompatActivity {
                                                     new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()
                                             )
                                     )
-                                    //.setTheme(R.style.AppTheme)
-                                    //.setLogo(R.drawable.btn_heart)
+                                    .setTheme(R.style.AppTheme)
+                                    .setLogo(R.drawable.btn_heart)
                                     .build(),
                             RC_SIGN_IN);
                 }
