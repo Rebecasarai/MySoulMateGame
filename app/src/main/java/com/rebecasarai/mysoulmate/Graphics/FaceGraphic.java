@@ -23,10 +23,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -148,13 +150,17 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         paintCameraEntera.setFilterBitmap(true);
         paintCameraEntera.setDither(true);
 
-        paintCameraEntera.setColorFilter(new PorterDuffColorFilter(context.getResources().getColor(R.color.colorPrimaryDark), PorterDuff.Mode.MULTIPLY));
+        ColorFilter filter = new PorterDuffColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+        paintCameraEntera.setColorFilter(filter);
+        //paintCameraEntera.setColorFilter(new PorterDuffColorFilter(context.getResources().getColor(R.color.colorPrimaryRed), PorterDuff.Mode.MULTIPLY));
+        //paintCameraEntera.setColorFilter(Color.YELLOW, PorterDuff.Mode.DARKEN);
 
+        //paintCameraEntera.setShader(new LinearGradient(0, 0, 0, canvas.getHeight(), Color.RED, Color.WHITE, Shader.TileMode.MIRROR));
 
-       recta = new Rect(canvas.getWidth(), canvas.getHeight()-canvas.getHeight(), canvas.getWidth(), canvas.getHeight());
+        recta = new Rect(canvas.getWidth(), canvas.getHeight()-canvas.getHeight(), canvas.getWidth(), canvas.getHeight());
 
         paintCameraEntera.setStyle(Paint.Style.FILL);
-        paintCameraEntera.setAlpha(200);
+        //paintCameraEntera.setAlpha(50);
         canvas.drawRect(recta, paintCameraEntera);
         //Heart mHearts.get(0) = mHearts.get(0);
         //Heart mHearts.get(1) = mHearts.get(1);

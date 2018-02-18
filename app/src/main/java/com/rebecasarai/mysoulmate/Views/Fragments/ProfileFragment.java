@@ -95,7 +95,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         ImageView shareBtn = (ImageButton) mRootView.findViewById(R.id.share);
         shareBtn.setOnClickListener(this);
         //mSmallBang.likeAnimation();
-        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
         setLastSoulmate();
         return mRootView;

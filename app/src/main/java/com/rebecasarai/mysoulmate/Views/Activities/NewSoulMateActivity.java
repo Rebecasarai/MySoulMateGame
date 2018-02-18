@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate.Views;
+package com.rebecasarai.mysoulmate.Views.Activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -55,12 +55,12 @@ public class NewSoulMateActivity extends AppCompatActivity {
                 //shareScreenshot(ScreenshotType.FULL);
             }
         });
-/*        mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
+        mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
             @Override
             public void onChanged(@Nullable Bitmap bitmap) {
 
             }
-        });*/
+        });
 
     }
 

@@ -1,5 +1,6 @@
 package com.rebecasarai.mysoulmate.Views.Activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.rebecasarai.mysoulmate.R;
+import com.rebecasarai.mysoulmate.ViewModels.MainViewModel;
 import com.rebecasarai.mysoulmate.Views.Adapters.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private PagerAdapter mPagerAdapter;
     private MenuItem mPrevMenuItem;
     private BottomNavigationView mNavigationView;
+    private MainViewModel mViewModel;
 
 
 
@@ -29,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewModel.setActivarCameraFargment(true);
 
         mNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         mPager = (ViewPager) findViewById(R.id.framelayout);
@@ -38,12 +44,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mPager.setAdapter(mPagerAdapter);
         mPager.addOnPageChangeListener(this);
         mPager.setCurrentItem(1);
-
-        //To save
-       /* SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = mSharedPref.edit();
-        editor.putInt("NUM_DETECTADOS_ACTUAL", 1);
-        editor.apply();*/
 
 
     }
@@ -91,14 +91,17 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     mPager.setCurrentItem(0);
+                    mViewModel.setActivarCameraFargment(false);
                     return true;
 
                 case R.id.navigation_dashboard:
                     mPager.setCurrentItem(1);
+                    mViewModel.setActivarCameraFargment(true);
                     return true;
 
                 case R.id.navigation_notifications:
                     mPager.setCurrentItem(2);
+                    mViewModel.setActivarCameraFargment(false);
                     return true;
 
             }

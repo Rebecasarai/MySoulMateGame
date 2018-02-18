@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.support.v4.view.PagerAdapter;
 
 import com.rebecasarai.mysoulmate.R;
 import com.rebecasarai.mysoulmate.Repository.UserRepository;
@@ -21,13 +22,15 @@ public class MainViewModel extends AndroidViewModel {
     private UserRepository mRepository;
     private MutableLiveData<Bitmap> mLastSoulMate = new MutableLiveData<>();
     private MutableLiveData<Boolean> mHeartButtonVisibility = new MutableLiveData<>();
-    private LiveData<Bitmap> ultimo;
+    private MutableLiveData<Bitmap> ultimo = new MutableLiveData<>();
+    private MutableLiveData<Boolean> activarCameraFargment = new MutableLiveData<>();
 
     public MainViewModel(@NonNull Application application) {
         super(application);
         mRepository = new UserRepository();
- //       Bitmap icon = BitmapFactory.decodeResource(application.getApplicationContext().getResources(), R.drawable.ic_favorite_red_24dp);
-//        mLastSoulMate.postValue(icon);
+        Bitmap icon = BitmapFactory.decodeResource(application.getApplicationContext().getResources(), R.drawable.ic_favorite_red_24dp);
+        ultimo.postValue(icon);
+        activarCameraFargment.setValue(true);
     }
 
     public MutableLiveData<Boolean> getHeartButtonVisibility() {
@@ -46,11 +49,25 @@ public class MainViewModel extends AndroidViewModel {
         this.mLastSoulMate.postValue(mLastSoulMate);
     }
 
-    public LiveData<Bitmap> getUltimo() {
+    public MutableLiveData<Bitmap> getUltimo() {
         return ultimo;
     }
 
-    public void setUltimo(LiveData<Bitmap> ultimo) {
+    public void setUltimo(MutableLiveData<Bitmap> ultimo) {
         this.ultimo = ultimo;
     }
+
+
+    public Boolean getActivarCameraFargment() {
+        return activarCameraFargment.getValue();
+    }
+
+    public void setActivarCameraFargment(Boolean activarCameraFargment) {
+        this.activarCameraFargment.setValue(activarCameraFargment);
+    }
+
+    public MutableLiveData<Boolean> getActivarCameraFragmentLive() {
+        return activarCameraFargment;
+    }
+
 }

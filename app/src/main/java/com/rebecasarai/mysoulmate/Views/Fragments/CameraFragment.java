@@ -8,7 +8,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +17,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -43,7 +41,7 @@ import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.firebase.auth.FirebaseAuth;
-import com.rebecasarai.mysoulmate.Views.NewSoulMateActivity;
+import com.rebecasarai.mysoulmate.Views.Activities.NewSoulMateActivity;
 import com.rebecasarai.mysoulmate.Camera.CameraPreview;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
 import com.rebecasarai.mysoulmate.Graphics.FaceGraphic;
@@ -85,10 +83,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     private ImageButton mCatchSoulMateButton;
     private Bitmap mBitmapPicture;
     private File mScreenShotFile;
+    FaceDetector detector;
 
-    private int mProbability;
-    private SharedPreferences mSharedPref;
-    private SharedPreferences.Editor editor;
     private MainViewModel mViewmodel;
 
 
@@ -108,11 +104,13 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         mRootView = inflater.inflate(com.rebecasarai.mysoulmate.R.layout.fragment_camera, container, false);
         mPreview = (CameraPreview) mRootView.findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) mRootView.findViewById(R.id.faceOverlay);
+        mViewmodel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
         //TODO: Cambiar request de permisos, tratar con on permissionRerquest etc. Usa mi clase permissionUtils
         int rc = ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource();
+
         } else {
             requestCameraPermission();
         }
@@ -123,7 +121,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         mCatchSoulMateButton = (ImageButton) mRootView.findViewById(R.id.catchSoulMateButton);
         mCatchSoulMateButton.setVisibility(View.INVISIBLE);
 
-        mViewmodel = ViewModelProviders.of(this).get(MainViewModel.class);
+
         mViewmodel.getHeartButtonVisibility().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
@@ -149,6 +147,17 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             }
         });
 
+
+        mViewmodel.getActivarCameraFragmentLive().observe(this, new Observer<Boolean>() {
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if(!aBoolean){
+                    mPreview.stop();
+                }else{
+                    startCameraSource();
+                }
+            }
+        });
+
         return mRootView;
     }
 
@@ -167,7 +176,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         super.onStart();
         getActivity().setTheme(R.style.AppTheme_NoActionBar);
         mCatchSoulMateButton.setVisibility(View.INVISIBLE);
-        mSharedPref = PreferenceManager.getDefaultSharedPreferences(getView().getContext());
     }
 
     @Override
@@ -408,8 +416,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
      */
     private void createCameraSource() {
 
+
         Context context = getContext();
-        FaceDetector detector = new FaceDetector.Builder(context)
+        detector = new FaceDetector.Builder(context)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .build();
 
@@ -516,7 +525,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     /**
      * Inicia o reinicia la fuente de la cámara, si existe. Si la fuente de la cámara aún no existe
      * (Como Porque se invocó a OnResume antes de que se creara la fuente de la cámara), se volverá a
-     * llamar cuando se cree la fuente de la cámara.
+     * llamar cuando se cree la camerasource.
      */
     private void startCameraSource() {
 
