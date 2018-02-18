@@ -6,10 +6,12 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,7 @@ import com.rebecasarai.mysoulmate.Views.Activities.NewSoulMateActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 
 /**
@@ -63,7 +66,7 @@ public class NewSoulMateFragment extends Fragment {
                 mImageNewSoulMate.setImageBitmap(bitmap);
             }
         });
-        setLastSoulmate();
+        //setLastSoulmate();
         ImageButton shareButton =  (ImageButton) mRootView.findViewById(R.id.shareBtn);
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,16 +74,16 @@ public class NewSoulMateFragment extends Fragment {
                 shareScreenshot(mViewModel.getLastSoulMate().getValue(), ScreenshotType.FULL);
             }
         });
+        setLastSoulmate();
         mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
             @Override
             public void onChanged(@Nullable Bitmap bitmap) {
+                Log.v(TAG, "Bitmap de NewSoulMate: "+bitmap.toString());
                 if(bitmap!=null){
-
-                    mImageNewSoulMate.setImageBitmap(bitmap);
+                     mImageNewSoulMate.setImageBitmap(bitmap);
                 }else{
                     setLastSoulmate();
                 }
-
             }
         });
         return mRootView;
@@ -98,6 +101,20 @@ public class NewSoulMateFragment extends Fragment {
                     Picasso.with(getContext()).load(screenshot.getImageURL()).fit().into(mImageNewSoulMate);
                     Log.d(TAG,screenshot.getImageURL()+"");
                     Log.d(TAG,dataSnapshot.getChildrenCount()+"");
+
+                    Uri selectedImage = Uri.parse(screenshot.getImageURL());
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = BitmapFactory.decodeStream(getContext().getContentResolver().openInputStream(selectedImage));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    mViewModel.setLastSoulMate(bitmap);
+                    //mImageNewSoulMate.setImageBitmap(bitmap);
+                    /*pictureFlag = 1;
+
+                    mImageNewSoulMate.setImageBitmap(StringToBitMap(screenshot.getImageURL()+""));*/
+
                     //final SmallBangView smallBangImage = mRootView.findViewById(R.id.smallBangImageNew);
                     //smallBangImage.likeAnimation();
                 }
@@ -122,6 +139,18 @@ public class NewSoulMateFragment extends Fragment {
         intent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.sharing_text));
         intent.putExtra(Intent.EXTRA_STREAM, uri);//pass uri here
         startActivity(Intent.createChooser(intent, getString(R.string.share_title)));
+    }
+
+
+    public Bitmap StringToBitMap(String encodedString){
+        try{
+            byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            e.getMessage();
+            return null;
+        }
     }
 
 }
