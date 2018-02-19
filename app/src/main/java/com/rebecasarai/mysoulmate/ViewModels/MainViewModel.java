@@ -49,7 +49,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void setHeartButtonVisibility(Boolean mHeartButtonVisibility) {
-        this.mHeartButtonVisibility.postValue(mHeartButtonVisibility);
+        this.mHeartButtonVisibility.setValue(mHeartButtonVisibility);
     }
 
     public MutableLiveData<Bitmap> getLastSoulMate() {
