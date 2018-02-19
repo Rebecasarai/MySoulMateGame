@@ -2,12 +2,10 @@ package com.rebecasarai.mysoulmate.Views.Fragments;
 
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,14 +25,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
-import com.rebecasarai.mysoulmate.Utils.ScreenshotType;
-import com.rebecasarai.mysoulmate.Utils.ScreenshotUtils;
 import com.rebecasarai.mysoulmate.ViewModels.MainViewModel;
-import com.rebecasarai.mysoulmate.Views.Activities.NewSoulMateActivity;
 import com.squareup.picasso.Picasso;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 
 
 /**
@@ -59,23 +51,23 @@ public class NewSoulMateFragment extends Fragment {
 
         mRootView= inflater.inflate(R.layout.fragment_new_soul_mate, container, false);
         mImageNewSoulMate = (ImageView) mRootView.findViewById(R.id.imageNewSoulMate);
-        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
         mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
             @Override
             public void onChanged(@Nullable Bitmap bitmap) {
                 mImageNewSoulMate.setImageBitmap(bitmap);
             }
         });
-        //setLastSoulmate();
+
         ImageButton shareButton =  (ImageButton) mRootView.findViewById(R.id.shareBtn);
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareScreenshot(mViewModel.getLastSoulMate().getValue(), ScreenshotType.FULL);
+                //shareScreenshot(mViewModel.getLastSoulMate().getValue(), ScreenshotType.FULL);
+                shareScreenshot();
             }
         });
-        setLastSoulmate();
-        /*mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
+        mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
             @Override
             public void onChanged(@Nullable Bitmap bitmap) {
                 if(bitmap!=null){
@@ -85,7 +77,7 @@ public class NewSoulMateFragment extends Fragment {
                     setLastSoulmate();
                 }
             }
-        });*/
+        });
         return mRootView;
     }
 
@@ -101,22 +93,8 @@ public class NewSoulMateFragment extends Fragment {
                     Picasso.with(getContext()).load(screenshot.getImageURL()).fit().into(mImageNewSoulMate);
                     Log.d(TAG,screenshot.getImageURL()+"");
                     Log.d(TAG,dataSnapshot.getChildrenCount()+"");
-
-                    /*Uri selectedImage = Uri.parse(screenshot.getImageURL());
-                    Bitmap bitmap = null;
-                    try {
-                        bitmap = BitmapFactory.decodeStream(getContext().getContentResolver().openInputStream(selectedImage));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    mViewModel.setLastSoulMate(bitmap);
-                    //mImageNewSoulMate.setImageBitmap(bitmap);
-                    /*pictureFlag = 1;
-
-                    mImageNewSoulMate.setImageBitmap(StringToBitMap(screenshot.getImageURL()+""));*/
-
-                    //final SmallBangView smallBangImage = mRootView.findViewById(R.id.smallBangImageNew);
-                    //smallBangImage.likeAnimation();
+                    /*final SmallBangView smallBangImage = mRootView.findViewById(R.id.smallBangImageNew);
+                    smallBangImage.likeAnimation();*/
                 }
             }
 
@@ -128,29 +106,17 @@ public class NewSoulMateFragment extends Fragment {
     }
 
 
-    private void shareScreenshot(Bitmap bitmap, ScreenshotType screenshotType) {
-        File saveFile = ScreenshotUtils.getMainDirectoryName(getContext());
-        File screenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-        Uri uri = Uri.fromFile(screenShotFile);
+    private void shareScreenshot() {
+
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.setType("image/*");
         intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
         intent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.sharing_text));
-        intent.putExtra(Intent.EXTRA_STREAM, uri);//pass uri here
+        intent.putExtra(Intent.EXTRA_STREAM, mViewModel.getUrlDeUltimoBitmap());//uri here
         startActivity(Intent.createChooser(intent, getString(R.string.share_title)));
     }
 
 
-    public Bitmap StringToBitMap(String encodedString){
-        try{
-            byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
-            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        }catch(Exception e){
-            e.getMessage();
-            return null;
-        }
-    }
 
 }

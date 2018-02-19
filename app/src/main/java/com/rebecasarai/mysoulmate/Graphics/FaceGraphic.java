@@ -49,7 +49,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float ID_X_OFFSET = -50.0f;
     private static final float BOX_STROKE_WIDTH = 5.0f;
     private Context context;
-    private int TopX, TopY, LeftX, LeftY, RightX, RightY, BottomX, BottomY;
     private ArrayList<Heart> mHearts;
 
     Random random = new Random();
@@ -139,7 +138,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
-        //Lo reduzco por 5
+        //Lo reduzco por 4
         options.inSampleSize = 4;
         options.inJustDecodeBounds = false;
         scaledBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
@@ -152,12 +151,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
         ColorFilter filter = new PorterDuffColorFilter(context.getResources().getColor(R.color.colorPrimaryRed), PorterDuff.Mode.SRC_IN);
         paintCameraEntera.setColorFilter(filter);
-        //paintCameraEntera.setColorFilter(new PorterDuffColorFilter(context.getResources().getColor(R.color.colorPrimaryRed), PorterDuff.Mode.MULTIPLY));
-        //paintCameraEntera.setColorFilter(Color.YELLOW, PorterDuff.Mode.DARKEN);
 
-        //paintCameraEntera.setShader(new LinearGradient(0, 0, 0, canvas.getHeight(), Color.RED, Color.WHITE, Shader.TileMode.MIRROR));
-
-        recta = new Rect(canvas.getWidth()-canvas.getWidth(), canvas.getHeight()-canvas.getHeight(), canvas.getWidth(), canvas.getHeight());
+        recta = new Rect(0, 0, canvas.getWidth()+canvas.getWidth()/2, canvas.getHeight()+canvas.getHeight()/2);
 
         paintCameraEntera.setStyle(Paint.Style.FILL);
 
@@ -166,10 +161,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         }
         paintCameraEntera.setAlpha(alpha);
         canvas.drawRect(recta, paintCameraEntera);
-        //Heart mHearts.get(0) = mHearts.get(0);
-        //Heart mHearts.get(1) = mHearts.get(1);
-        //Heart mHearts.get(2) = mHearts.get(2);
-        //Heart mHearts.get(3) = mHearts.get(3);
 
         heartTopX= mHearts.get(0).getPositionX();
         //------------TOP--------//
@@ -291,10 +282,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     }
 
-
-    public void mayorQue(int punto,int pos ){
-
-    }
 
 
     public int randomRango(int min, int max) {

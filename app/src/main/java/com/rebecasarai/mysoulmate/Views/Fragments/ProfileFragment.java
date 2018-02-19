@@ -73,23 +73,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         TextView cerrarSesionText = mRootView.findViewById(R.id.cerrarSesion);
         cerrarSesionText.setOnClickListener(this);
         mLastSoulMateImage = mRootView.findViewById(R.id.lastSoulMatePreview);
-        like_heart.setOnClickListener(this);/*new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (like_heart.isSelected()) {
-                    like_heart.setSelected(false);
-                } else {
-                    like_heart.setSelected(true);
-                    like_heart.likeAnimation(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                        }
-                    });
-                }
-            }
-        });*/
-
+        like_heart.setOnClickListener(this);
 
         ImageView imgSmallHeart = (ImageView) mRootView.findViewById(R.id.imgSmallHeart);
         ImageView shareBtn = (ImageButton) mRootView.findViewById(R.id.share);

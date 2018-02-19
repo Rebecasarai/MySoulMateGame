@@ -41,7 +41,6 @@ import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.firebase.auth.FirebaseAuth;
-import com.rebecasarai.mysoulmate.Views.Activities.NewSoulMateActivity;
 import com.rebecasarai.mysoulmate.Camera.CameraPreview;
 import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
 import com.rebecasarai.mysoulmate.Graphics.FaceGraphic;
@@ -443,13 +442,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    public static Bitmap rotateImage(Bitmap source, float angle) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-    }
-
-
     /**
      * Metodo que captura la foto, llamado desde CameraSource.
      *
@@ -501,14 +493,17 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
 
     public void setBitmap() {
         mPhotoPeep.setImageBitmap(mBitmapPicture);
         takeScreenshot(ScreenshotType.FULL);
-        Intent newSoulMateIntent = new Intent(mRootView.getContext(), NewSoulMateActivity.class);
         mPhotoPeep.setVisibility(View.INVISIBLE);
-        //startActivity(newSoulMateIntent);
-        //shareScreenshot(mScreenShotFile);
     }
 
 
@@ -561,10 +556,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG,"Bitmap "+bitmap.toString());
                 break;
             case CUSTOM:
-                //Puedo hacer invisible o visible lo que me parezca
+
                 break;
         }
-        //guardarScreenshot(bitmap, screenshotType);
+
         if (bitmap != null) {
 
             FileManager.uploadScreenshot(FirebaseAuth.getInstance(), bitmap, new OnSuccessListener<Void>() {
@@ -580,17 +575,28 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(getActivity(), "Uploading failed.", Toast.LENGTH_SHORT).show();
                 }
             });
+
             File saveFile = ScreenshotUtils.getMainDirectoryName(mRootView.getContext());
             mScreenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
 
+            Uri uri = Uri.fromFile(mScreenShotFile);
+
             mViewmodel.setLastSoulMate(bitmap);
+            mViewmodel.setUrlDeUltimoBitmap(uri);
 
         } else {
-            //Si es nulo
             Toast.makeText(getContext(), R.string.screenshot_take_failed, Toast.LENGTH_SHORT).show();
         }
 
     }
+
+
+
+
+
+
+
+    /* por ahora no se usa*/
 
     public void guardarScreenshot(Bitmap bitmap, ScreenshotType screenshotType){
         //Si el bitmap no es nulo
@@ -611,7 +617,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
             File saveFile = ScreenshotUtils.getMainDirectoryName(mRootView.getContext());
             mScreenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-//          mViewmodel.setLastSoulMate(bitmap);
+        //mViewmodel.setLastSoulMate(bitmap);
 
         } else {
             //Si es nulo
@@ -645,6 +651,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             setBitmap();
         }
     }
+
+
+    /* por ahora no se usa*/
 
 }
 

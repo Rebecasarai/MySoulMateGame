@@ -46,9 +46,6 @@
         <activity
             android:name=".Views.Activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Views.Activities.NewSoulMateActivity"
-            android:parentActivityName=".Views.Activities.MainActivity">
-        </activity>
     </application>
 
 </manifest>

@@ -8,6 +8,7 @@ import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 
@@ -22,8 +23,18 @@ public class MainViewModel extends AndroidViewModel {
     private UserRepository mRepository;
     private MutableLiveData<Bitmap> mLastSoulMate = new MutableLiveData<>();
     private MutableLiveData<Boolean> mHeartButtonVisibility = new MutableLiveData<>();
+
     private MutableLiveData<Bitmap> ultimo = new MutableLiveData<>();
+
     private MutableLiveData<Boolean> activarCameraFargment = new MutableLiveData<>();
+
+
+    private MutableLiveData<Uri> urlDeUltimoBitmap = new MutableLiveData<>();
+
+
+
+
+
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -46,7 +57,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void setLastSoulMate(Bitmap mLastSoulMate) {
-        this.mLastSoulMate.postValue(mLastSoulMate);
+        this.mLastSoulMate.setValue(mLastSoulMate);
     }
 
     public MutableLiveData<Bitmap> getUltimo() {
@@ -70,4 +81,12 @@ public class MainViewModel extends AndroidViewModel {
         return activarCameraFargment;
     }
 
+
+    public Uri getUrlDeUltimoBitmap() {
+        return urlDeUltimoBitmap.getValue();
+    }
+
+    public void setUrlDeUltimoBitmap(Uri urlDeUltimoBitmap) {
+        this.urlDeUltimoBitmap.setValue(urlDeUltimoBitmap);
+    }
 }
