@@ -9,10 +9,10 @@ import android.view.View;
 import java.io.File;
 import java.io.FileOutputStream;
 
-/**
- * Created by sonu on 23/03/17.
- */
 
+/**
+ * Some screenshot utils.
+ */
 public class ScreenshotUtils {
 
     /*  Method which will return Bitmap after taking screenshot. We have to pass the view which we want to take screenshot.  */

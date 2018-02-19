@@ -15,6 +15,9 @@ import com.rebecasarai.mysoulmate.Models.Screenshot;
 
 import java.io.ByteArrayOutputStream;
 
+/**
+ * A class that deals with firebase storage.
+ */
 public class FileManager {
 
     private static FirebaseStorage mFirebaseStorage;

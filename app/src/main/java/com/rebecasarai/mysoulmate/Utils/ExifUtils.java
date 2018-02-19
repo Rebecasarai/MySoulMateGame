@@ -2,10 +2,10 @@ package com.rebecasarai.mysoulmate.Utils;
 
 import android.util.Log;
 
-/**
- * Created by rebecagonzalez on 10/2/18.
- */
 
+/**
+ * This class deals with Bitmaps
+ */
 public class ExifUtils {
     private static final String TAG = "CameraExif";
 

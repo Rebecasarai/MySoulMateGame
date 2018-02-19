@@ -13,10 +13,6 @@ import com.rebecasarai.mysoulmate.Views.PhotoHolder;
 import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by rebecagonzalez on 8/2/18.
- */
-
 public class PhotoAdapter extends FirebaseRecyclerAdapter<Screenshot, PhotoHolder> {
 
 

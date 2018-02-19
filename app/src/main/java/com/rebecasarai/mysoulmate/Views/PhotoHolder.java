@@ -3,14 +3,8 @@ package com.rebecasarai.mysoulmate.Views;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.support.v7.widget.RecyclerView;
 
 import com.rebecasarai.mysoulmate.R;
-
-/**
- * Created by rebecagonzalez on 8/2/18.
- */
 
 public class PhotoHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

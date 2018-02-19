@@ -16,25 +16,19 @@
 package com.rebecasarai.mysoulmate.Graphics;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
-import android.graphics.Shader;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.Landmark;
-import com.rebecasarai.mysoulmate.Camera.GraphicOverlay;
+import com.rebecasarai.mysoulmate.Views.GraphicOverlay;
 import com.rebecasarai.mysoulmate.Models.Heart;
 import com.rebecasarai.mysoulmate.R;
 

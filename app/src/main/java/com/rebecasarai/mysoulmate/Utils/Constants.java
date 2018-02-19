@@ -1,7 +1,7 @@
 package com.rebecasarai.mysoulmate.Utils;
 
 /**
- * Class that deals with the application constants.
+ * Class that stores the application constants.
  */
 
 public class Constants {

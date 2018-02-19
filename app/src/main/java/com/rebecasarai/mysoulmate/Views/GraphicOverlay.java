@@ -13,21 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.rebecasarai.mysoulmate.Camera;
+package com.rebecasarai.mysoulmate.Views;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.face.Face;
-import com.rebecasarai.mysoulmate.R;
 
 import java.util.HashSet;
 import java.util.Random;

@@ -1,9 +1,5 @@
 package com.rebecasarai.mysoulmate.Views.Adapters;
 
-/**
- * Created by rebecagonzalez on 10/2/18.
- */
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;

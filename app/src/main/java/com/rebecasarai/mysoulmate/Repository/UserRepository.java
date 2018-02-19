@@ -11,18 +11,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.rebecasarai.mysoulmate.Utils.FileManager;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
+import com.rebecasarai.mysoulmate.Utils.FileManager;
 
-/**
- * Created by macbookpro on 28/1/18.
- */
 
 public class UserRepository {
 
 
+    public UserRepository() {
 
-    public void getSoulMatesImages(){
+    }
+
+    public void getSoulMatesImages() {
         Query query = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("screenshots");
 
         final FirebaseRecyclerOptions<Screenshot> options = new FirebaseRecyclerOptions.Builder<Screenshot>()
@@ -30,12 +30,7 @@ public class UserRepository {
                 .build();
     }
 
-    public UserRepository() {
-
-    }
-
-
-    public static void uploadScreenShot(final Activity activity, Bitmap bitmap){
+    public static void uploadScreenShot(final Activity activity, Bitmap bitmap) {
 
         FileManager.uploadScreenshot(FirebaseAuth.getInstance(), bitmap, new OnSuccessListener<Void>() {
             @Override
