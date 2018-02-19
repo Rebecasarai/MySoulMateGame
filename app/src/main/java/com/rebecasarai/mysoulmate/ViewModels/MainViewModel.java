@@ -34,7 +34,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void setHeartButtonVisibility(Boolean mHeartButtonVisibility) {
-        this.mHeartButtonVisibility.setValue(mHeartButtonVisibility);
+        this.mHeartButtonVisibility.postValue(mHeartButtonVisibility);
     }
 
     public MutableLiveData<Bitmap> getLastSoulMate() {
@@ -45,18 +45,6 @@ public class MainViewModel extends AndroidViewModel {
         this.mLastSoulMate.setValue(mLastSoulMate);
     }
 
-    public MutableLiveData<Bitmap> getUltimo() {
-        return ultimo;
-    }
-
-    public void setUltimo(MutableLiveData<Bitmap> ultimo) {
-        this.ultimo = ultimo;
-    }
-
-
-    public Boolean getActivarCameraFargment() {
-        return activarCameraFargment.getValue();
-    }
 
     public void setActivarCameraFargment(Boolean activarCameraFargment) {
         this.activarCameraFargment.setValue(activarCameraFargment);

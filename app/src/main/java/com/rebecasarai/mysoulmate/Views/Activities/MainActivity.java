@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             @Override
             public void onChanged(@Nullable Bitmap bitmap) {
                 if(bitmap!=null){
-                    Log.d(TAG,"bitmap no nulo, fargment: "+mPager.getCurrentItem());
-                    mPager.setCurrentItem(3);
+                    Log.d(TAG,"bitmap no nulo, fragment: "+mPager.getCurrentItem());
+                    mPager.setCurrentItem(2);
                 }
             }
         });

@@ -10,7 +10,7 @@ import com.rebecasarai.mysoulmate.Views.Fragments.NewSoulMateFragment;
 import com.rebecasarai.mysoulmate.Views.Fragments.ProfileFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private int NUM_PAGES = 4;
+    private int NUM_PAGES = 3;
 
     private static DashboardFragment sDashboardInstance;
     private static CameraFragment sCameraInstance;
@@ -28,8 +28,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 return new CameraFragment();
             case 2:
                 return new ProfileFragment();
-            case 3:
-                return new NewSoulMateFragment();
             default:
                 return new DashboardFragment();
 

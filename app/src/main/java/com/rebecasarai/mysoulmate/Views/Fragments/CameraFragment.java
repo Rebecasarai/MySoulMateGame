@@ -592,10 +592,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
 
 
-
-
-
-
     /* por ahora no se usa*/
 
     public void guardarScreenshot(Bitmap bitmap, ScreenshotType screenshotType){

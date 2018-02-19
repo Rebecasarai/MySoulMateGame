@@ -52,18 +52,11 @@ public class NewSoulMateFragment extends Fragment {
         mRootView= inflater.inflate(R.layout.fragment_new_soul_mate, container, false);
         mImageNewSoulMate = (ImageView) mRootView.findViewById(R.id.imageNewSoulMate);
         mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
-        mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
-            @Override
-            public void onChanged(@Nullable Bitmap bitmap) {
-                mImageNewSoulMate.setImageBitmap(bitmap);
-            }
-        });
 
         ImageButton shareButton =  (ImageButton) mRootView.findViewById(R.id.shareBtn);
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //shareScreenshot(mViewModel.getLastSoulMate().getValue(), ScreenshotType.FULL);
                 shareScreenshot();
             }
         });
@@ -71,7 +64,7 @@ public class NewSoulMateFragment extends Fragment {
             @Override
             public void onChanged(@Nullable Bitmap bitmap) {
                 if(bitmap!=null){
-                    Log.v(TAG, "Bitmap de NewSoulMate: "+bitmap.toString());
+                    Log.d(TAG, "Bitmap de NewSoulMate: "+bitmap.toString());
                      mImageNewSoulMate.setImageBitmap(bitmap);
                 }else{
                     setLastSoulmate();

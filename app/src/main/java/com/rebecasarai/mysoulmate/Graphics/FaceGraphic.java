@@ -24,7 +24,9 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.graphics.RadialGradient;
 import android.graphics.Rect;
+import android.graphics.Shader;
 
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.Landmark;
@@ -43,7 +45,12 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float ID_X_OFFSET = -50.0f;
     private static final float BOX_STROKE_WIDTH = 5.0f;
     private Context context;
+
+
+
     private ArrayList<Heart> mHearts;
+
+
 
     Random random = new Random();
     SecureRandom r = new SecureRandom();
@@ -137,7 +144,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         options.inJustDecodeBounds = false;
         scaledBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
 
-
         paintCameraEntera.setColor(Color.RED);
         paintCameraEntera.setAntiAlias(true);
         paintCameraEntera.setFilterBitmap(true);
@@ -145,6 +151,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
         ColorFilter filter = new PorterDuffColorFilter(context.getResources().getColor(R.color.colorPrimaryRed), PorterDuff.Mode.SRC_IN);
         paintCameraEntera.setColorFilter(filter);
+        paintCameraEntera.setShader(new RadialGradient(canvas.getWidth() / 2, canvas.getHeight() / 2,
+                canvas.getHeight() / 3, Color.TRANSPARENT, Color.BLACK, Shader.TileMode.MIRROR));
 
         recta = new Rect(0, 0, canvas.getWidth()+canvas.getWidth()/2, canvas.getHeight()+canvas.getHeight()/2);
 
@@ -153,23 +161,29 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         if(alpha<=70){
             alpha++;
         }
+
         paintCameraEntera.setAlpha(alpha);
         canvas.drawRect(recta, paintCameraEntera);
 
         heartTopX= mHearts.get(0).getPositionX();
+
         //------------TOP--------//
 
             if(!mHearts.get(0).isDevueltaX()){
-                if(heartTopX>1100){
+                if(heartTopX>canvas.getWidth()){
                     mHearts.get(0).setDevueltaX(true);
                 }
                 mHearts.get(0).setPositionX(heartTopX + mHearts.get(0).getSpeedX());
+
+
             }else{
                 if(heartTopX<40){
                 mHearts.get(0).setDevueltaX(false);
                 }
                 mHearts.get(0).setPositionX(heartTopX - mHearts.get(0).getSpeedX());
             }
+
+
 
             if(!mHearts.get(0).isDevueltaY()){
                 if(mHearts.get(0).getPositionY()>200){
@@ -212,10 +226,12 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         //------------------- BOTTOM ---------------//
 
         if(!mHearts.get(2).isDevueltaX()){
-            if(mHearts.get(2).getPositionX()>1100){
+            if(mHearts.get(2).getPositionX()>canvas.getWidth()){
                 mHearts.get(2).setDevueltaX(true);
             }
             mHearts.get(2).setPositionX(mHearts.get(2).getPositionX() + mHearts.get(2).getSpeedX());
+
+
         }else{
             if(mHearts.get(2).getPositionX()<100){
                 mHearts.get(2).setDevueltaX(false);
@@ -223,8 +239,9 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             mHearts.get(2).setPositionX(mHearts.get(2).getPositionX() - mHearts.get(2).getSpeedX());
         }
 
+
         if(!mHearts.get(2).isDevueltaY()){
-            if(mHearts.get(2).getPositionY()>1300){
+            if(mHearts.get(2).getPositionY()>canvas.getHeight()){
                 mHearts.get(2).setDevueltaY(true);
             }
             mHearts.get(2).setPositionY(mHearts.get(2).getPositionY() + mHearts.get(2).getSpeedY());
@@ -234,6 +251,9 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             }
             mHearts.get(2).setPositionY(mHearts.get(2).getPositionY() - mHearts.get(2).getSpeedY());
         }
+
+
+
 
         //------------------- Left -----------------//
 
@@ -250,7 +270,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         }
 
         if(!mHearts.get(3).isDevueltaY()){
-            if(mHearts.get(3).getPositionY()>1300){
+            if(mHearts.get(3).getPositionY()>canvas.getHeight()){
                 mHearts.get(3).setDevueltaY(true);
             }
             mHearts.get(3).setPositionY(mHearts.get(3).getPositionY() + mHearts.get(3).getSpeedY());
@@ -269,9 +289,16 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         options.inSampleSize=6;
         scaledBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
 
+        //Herat TOP
         canvas.drawBitmap(scaledBitmap, random.nextInt(canvas.getWidth()-100), random.nextInt(200), p);
-        canvas.drawBitmap(scaledBitmap, randomRango(1200,1300), random.nextInt(canvas.getHeight()-200), p);
+
+        //Heart Right
+        canvas.drawBitmap(scaledBitmap, randomRango(canvas.getWidth()-300,canvas.getWidth()), random.nextInt(canvas.getHeight()-200), p);
+
+        //Heart Bottom
         canvas.drawBitmap(scaledBitmap, random.nextInt(canvas.getWidth()-100), randomRango(1300,1500), p);
+
+        //Heart left
         canvas.drawBitmap(scaledBitmap, randomRango(50, 100), random.nextInt(canvas.getHeight()), p);
 
     }

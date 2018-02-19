@@ -3,6 +3,7 @@ package com.rebecasarai.mysoulmate.Views.Fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -81,6 +82,19 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         //mSmallBang.likeAnimation();
         mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
+        mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
+            @Override
+            public void onChanged(@Nullable Bitmap bitmap) {
+                if(bitmap!=null){
+                    Log.d(TAG, "Bitmap de NewSoulMate: "+bitmap.toString());
+                    mLastSoulMateImage.setImageBitmap(bitmap);
+                    mlike_heart.likeAnimation();
+                }else{
+                    setLastSoulmate();
+                }
+            }
+        });
+
         setLastSoulmate();
         return mRootView;
     }
@@ -124,12 +138,9 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
                     YoYo.with(Techniques.Landing)
                             .duration(800)
                             .playOn(mRootView.findViewById(R.id.lastSoulMatePreview));
-                    //final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
                     if(mlike_heart.getScaleX()>0){
                     mlike_heart.likeAnimation();
                     }
-
-                   mViewModel.setLastSoulMate(StringToBitMap(screenshot.getImageURL()+""));
              }
             }
 
@@ -152,28 +163,6 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         return bitmap;
     }
 
-    public void animation(){
-        RotateAnimation anim = new RotateAnimation(0f, 350f, 15f, 15f);
-        anim.setInterpolator(new LinearInterpolator());
-        anim.setRepeatCount(Animation.INFINITE);
-        anim.setDuration(700);
-
-        // Start animating the image
-        final ImageView splash = mLastSoulMateImage;
-        splash.startAnimation(anim);
-
-        // Later.. stop the animation
-        splash.setAnimation(null);
-    }
-
-    public void anotheranim(){
-        TranslateAnimation animate = new TranslateAnimation(0, -mLastSoulMateImage.getWidth(), 0, 0);
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        mLastSoulMateImage.startAnimation(animate);
-
-
-    }
 
     @Override
     public void onClick(View v) {
