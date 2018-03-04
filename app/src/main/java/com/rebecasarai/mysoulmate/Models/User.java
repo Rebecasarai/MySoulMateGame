@@ -4,7 +4,7 @@ package com.rebecasarai.mysoulmate.Models;
 import java.util.List;
 
 /**
- * This class represents Users are they are stored in Firebase.
+ * Esta clase representa Usuarios son almacenados en Firebase.
  */
 public class User {
 
@@ -12,7 +12,7 @@ public class User {
     private String name;
     private String email;
     private List<String> screenshots;
-    
+
 
 
     public String getUid() {

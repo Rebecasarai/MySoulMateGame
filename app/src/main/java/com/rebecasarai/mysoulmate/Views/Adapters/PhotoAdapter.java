@@ -13,6 +13,9 @@ import com.rebecasarai.mysoulmate.Views.PhotoHolder;
 import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
 import com.squareup.picasso.Picasso;
 
+/**
+ * Clase Adaptador de las fotos, usando FirebaseRecyclerAdapater
+ */
 public class PhotoAdapter extends FirebaseRecyclerAdapter<Screenshot, PhotoHolder> {
 
 
@@ -26,13 +29,11 @@ public class PhotoAdapter extends FirebaseRecyclerAdapter<Screenshot, PhotoHolde
     @Override
     public void onDataChanged() {
         super.onDataChanged();
-        // Called when the necessary data has been retrieved (may be of use when using a loading spinner)
     }
 
     @Override
     public void onError(DatabaseError error) {
         super.onError(error);
-        // Couldn't retrieve the data, update UI accordingly
     }
 
     @Override
@@ -45,9 +46,7 @@ public class PhotoAdapter extends FirebaseRecyclerAdapter<Screenshot, PhotoHolde
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_item, parent, false);
 
         int height = parent.getMeasuredHeight() / 4;
-       // int width = parent.getMeasuredWidth() / 4;
         itemView.setMinimumHeight(height);
-       // itemView.setMinimumWidth(width);
         return new PhotoHolder(itemView, mRecyclerItemClickListener);
     }
 }

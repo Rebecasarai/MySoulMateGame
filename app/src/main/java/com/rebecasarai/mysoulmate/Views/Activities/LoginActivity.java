@@ -20,8 +20,8 @@ import com.rebecasarai.mysoulmate.R;
 import java.util.Arrays;
 
 /**
- * This is the entry class of the application.
- * It allows to log in with your Google account or email.
+ * Esta es la clase es la main activity de la aplicación.
+ * ermite iniciar sesión con cuenta de Google o correo electrónico.
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -42,23 +42,22 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * This method logs the user in with Firebase.
-     * It checks if a user is logged in or not.
+     * Este método registra al usuario con Firebase. Comprueba si un usuario está conectado o no.
      */
     private void firebaseLogin() {
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                // Get the current firebase user.
+                // Obtiene el usuario actual de firebase.
                 mCurrentFirebaseUser = firebaseAuth.getCurrentUser();
 
-                // Check if the user is logged in
+                // Verifica si el usuario está conectado
                 if (mCurrentFirebaseUser != null) {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 } else {
-                    // User is signed out
+                    // Si ek usuario cierra sesión
                     startActivityForResult(
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
@@ -80,17 +79,17 @@ public class LoginActivity extends AppCompatActivity {
 
 
     /**
-     * Creates a user in the firebase database. We store their name and email.
+     * Crea un usuario en la base de datos de firebase. Almacenamos su nombre y correo electrónico.
      *
-     * @param firebaseUser A {@link  com.google.firebase.auth.FirebaseUser} object representing a user
+     * @param firebaseUser A {@link  com.google.firebase.auth.FirebaseUser} objeto que representa usuario
      */
     public void createUser(@NonNull final FirebaseUser firebaseUser) {
 
-        // Set all the firebase variables
+        // Establecer todas las variables de firebase
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference userRef = firebaseDatabase.getReference("users").child(firebaseUser.getUid());
 
-        // Add a listener which adds the user to the database if he does not exist.
+        // Agrega un oyente que agrega el usuario a la base de datos si no existe.
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -111,11 +110,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * This method catches the creation of the user.
+     * Este método obtiene la creación del usuario.
      *
-     * @param requestCode is 1 for the creation of the user.
-     * @param resultCode  is to check if everything went the way it should go.
-     * @param data        the intent which was passed.
+     * @param requestCode es 1 para la creación del usuario.
+     * @param resultCode  es comprobar si salió como debería.
+     * @param data        el intent a iniciar.
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -25,6 +25,12 @@ public class Utils {
     }
 
 
+    /**
+     * Calcula la probabilidad de que la siguiente persona sea el alma gemela del usuario
+     * LA posibilidad es calculada con un numero al azar entre el rango de numero resultado de la resta de NumoMaximo(Difilcutad) y caras detectatdas hasta ahora
+     * @param context
+     * @return
+     */
     public static boolean isYourSoulMate(Context context) {
 
         int snapshotsTaken = getSnapshotsTaken(context);
@@ -45,6 +51,11 @@ public class Utils {
         return false;
     }
 
+    /**
+     *
+     * @param context
+     * @param snapshotsTaken
+     */
     private static void updateSnapshotsTaken(Context context, int snapshotsTaken) {
         SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = mSharedPref.edit();
@@ -52,7 +63,12 @@ public class Utils {
         editor.apply();
     }
 
-    private static int getSnapshotsTaken(Context pContext) {
+    /**
+     *
+     * @param pContext
+     * @return
+     */
+    public static int getSnapshotsTaken(Context pContext) {
         SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(pContext);
         int encontradosActual = mSharedPref.getInt(pContext.getString(R.string.pref_num_snapshots_taken), 49);
         Log.d(TAG, encontradosActual + "");

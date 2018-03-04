@@ -2,6 +2,8 @@ package com.rebecasarai.mysoulmate.Models;
 
 /**
  * Created by rsgonzalez on 13/02/18.
+ * Esta clase representa los corazones para los filtros.
+ * Cada corazón tiene posiciones XY y Velocidades
  */
 
 public class Heart {

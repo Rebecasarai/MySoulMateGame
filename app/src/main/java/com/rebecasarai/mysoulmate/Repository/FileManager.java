@@ -1,4 +1,4 @@
-package com.rebecasarai.mysoulmate.Utils;
+package com.rebecasarai.mysoulmate.Repository;
 
 
 import android.graphics.Bitmap;
@@ -16,7 +16,7 @@ import com.rebecasarai.mysoulmate.Models.Screenshot;
 import java.io.ByteArrayOutputStream;
 
 /**
- * A class that deals with firebase storage.
+ * Clase que maneja el almacenamiento con Firebase
  */
 public class FileManager {
 
@@ -30,6 +30,14 @@ public class FileManager {
         return mFirebaseStorage;
     }
 
+    /**
+     * Metodo con el que se  sube una captura de pantalla a Firebase Storage.
+     *
+     * @param auth Representa la autenticación de Firebase
+     * @param bitmap Representa la imagen a subir a Firebase
+     * @param onSuccessListener Lo que hace si se sube correctamente
+     * @param onFailureListener Lo que hace si no se sube correctamente
+     */
     public static void uploadScreenshot(@NonNull final FirebaseAuth auth, @NonNull Bitmap bitmap, final OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
         final String uid = auth.getCurrentUser().getUid();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -46,21 +54,30 @@ public class FileManager {
         uploadFile(path, data, onUploadListener, onFailureListener);
     }
 
+    /**
+     * Metodo con el que se sube un archivo a Firebase Storage
+     * @param path Direcciónn a subir el archivo
+     * @param data Que representa el dato a subir
+     * @param onSuccessListener Observa si se sube exitosamente
+     * @param onFailureListener Observa si la subida se realiaz de forma incorrecta
+     */
     private static void uploadFile(@NonNull String path, @NonNull byte[] data, OnSuccessListener<UploadTask.TaskSnapshot> onSuccessListener, OnFailureListener onFailureListener) {
         UploadTask uploadTask = mFirebaseStorage.getReference(path).putBytes(data);
         if (onSuccessListener != null) uploadTask.addOnSuccessListener(onSuccessListener);
         if (onFailureListener != null) uploadTask.addOnFailureListener(onFailureListener);
     }
 
+
+    /**
+     * Metodo con el ques e actualiza las capturas de pantalla de un usuario
+     * @param auth que representa el objeto autenticación de Firebase
+     * @param imageUrl La url de la imagen
+     */
     private static void updateUserScreenshots(FirebaseAuth auth, String imageUrl) {
         DatabaseReference screenshotRef = FirebaseDatabase.getInstance().getReference("users").child(auth.getUid()).child("screenshots").push();
         Screenshot screenshot = new Screenshot(imageUrl);
         screenshotRef.setValue(screenshot);
     }
 
-    public static DatabaseReference getFilesByUser(@NonNull final FirebaseAuth auth) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        return databaseReference;
-    }
 
 }

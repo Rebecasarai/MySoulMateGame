@@ -9,6 +9,11 @@ import com.rebecasarai.mysoulmate.Views.Fragments.DashboardFragment;
 import com.rebecasarai.mysoulmate.Views.Fragments.NewSoulMateFragment;
 import com.rebecasarai.mysoulmate.Views.Fragments.ProfileFragment;
 
+/**
+ * Clase en la que se establece el ViewPager y los fragmentos de la actividad.
+ * Establece 3 fragmentos con los que navegamos desplazandosnos con gestos en la pantalla izquierda y derecha.
+ * O través del menu navegación inferior
+ */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private int NUM_PAGES = 3;
 

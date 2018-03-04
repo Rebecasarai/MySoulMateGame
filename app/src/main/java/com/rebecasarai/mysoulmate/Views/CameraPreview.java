@@ -31,8 +31,13 @@ import com.google.android.gms.vision.CameraSource;
 
 import java.io.IOException;
 
+
+/**
+ * Clase en la que se crea un recurso Preview de la camera, para ver a través de esta. Invoca a la camara y la posiciona la vista y su tamaño al de la pantalla
+ * Se trata de no distorcionar la imagen y mantener la proporción.
+ */
 public class CameraPreview extends ViewGroup {
-    private static final String TAG = "CameraSourcePreview";
+    private static final String TAG = "CameraPreview";
 
     private Context mContext;
     private SurfaceView mSurfaceView;
@@ -87,13 +92,8 @@ public class CameraPreview extends ViewGroup {
     private void startIfReady() throws IOException {
         if (mStartRequested && mSurfaceAvailable) {
             if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+
+
                 return;
             }
             mCameraSource.start(mSurfaceView.getHolder());
@@ -102,8 +102,7 @@ public class CameraPreview extends ViewGroup {
                 int min = Math.min(size.getWidth(), size.getHeight());
                 int max = Math.max(size.getWidth(), size.getHeight());
                 if (isPortraitMode()) {
-                    // Swap width and height sizes when in portrait, since it will be rotated by
-                    // 90 degrees
+                    // Intercambia los tamaños de ancho y alto cuando está en vertical, ya que será rotado 90 grados
                     mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
                 } else {
                     mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
@@ -121,7 +120,7 @@ public class CameraPreview extends ViewGroup {
             try {
                 startIfReady();
             } catch (IOException e) {
-                Log.e(TAG, "Could not start camera source.", e);
+                Log.d(TAG, "No se pudo iniciar la camara", e);
             }
         }
 
@@ -197,6 +196,10 @@ public class CameraPreview extends ViewGroup {
         }
     }
 
+    /**
+     * Verifica si esta en vertical
+     * @return boolean que representa si lo esta o no
+     */
     private boolean isPortraitMode() {
         int orientation = mContext.getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {

@@ -1,15 +1,13 @@
 package com.rebecasarai.mysoulmate.Utils;
 
-import android.util.Log;
-
 
 /**
- * This class deals with Bitmaps
+ * Esta clase maneja los bitmaps, su tipo, estado y orientación
  */
 public class ExifUtils {
     private static final String TAG = "CameraExif";
 
-    // Returns the degrees in clockwise. Values are 0, 90, 180, or 270.
+    // Devuelve los grados en sentido horario. Los valores son 0, 90, 180 o 270
     public static int getOrientation(byte[] jpeg) {
         if (jpeg == null) {
             return 0;
@@ -22,29 +20,28 @@ public class ExifUtils {
         while (offset + 3 < jpeg.length && (jpeg[offset++] & 0xFF) == 0xFF) {
             int marker = jpeg[offset] & 0xFF;
 
-            // Check if the marker is a padding.
+            // Verifica si el marcador es un relleno.
             if (marker == 0xFF) {
                 continue;
             }
             offset++;
 
-            // Check if the marker is SOI or TEM.
+            // Verifica si el marcador es SOI or TEM.
             if (marker == 0xD8 || marker == 0x01) {
                 continue;
             }
-            // Check if the marker is EOI or SOS.
+            // O si es EOI or SOS.
             if (marker == 0xD9 || marker == 0xDA) {
                 break;
             }
 
-            // Get the length and check if it is reasonable.
+            // Obtiene la longitud y verifica si es proporcional.
             length = pack(jpeg, offset, 2, false);
             if (length < 2 || offset + length > jpeg.length) {
-                Log.e(TAG, "Invalid length");
                 return 0;
             }
 
-            // Break if the marker is EXIF in APP1.
+            // Recorta el marco si es EXIF in APP1.
             if (marker == 0xE1 && length >= 8 &&
                     pack(jpeg, offset + 2, 4, false) == 0x45786966 &&
                     pack(jpeg, offset + 6, 2, false) == 0) {
@@ -53,25 +50,23 @@ public class ExifUtils {
                 break;
             }
 
-            // Skip other markers.
+            // SAlta otros marcos.
             offset += length;
             length = 0;
         }
 
         // JEITA CP-3451 ExifUtils Version 2.2
         if (length > 8) {
-            // Identify the byte order.
+            // Identifica el orden de los bits
             int tag = pack(jpeg, offset, 4, false);
             if (tag != 0x49492A00 && tag != 0x4D4D002A) {
-                Log.e(TAG, "Invalid byte order");
                 return 0;
             }
             boolean littleEndian = (tag == 0x49492A00);
 
-            // Get the offset and check if it is reasonable.
+            // Obtiene la compensación y verifica si es proporcional.
             int count = pack(jpeg, offset + 4, 4, littleEndian) + 2;
             if (count < 10 || count > length) {
-                Log.e(TAG, "Invalid offset");
                 return 0;
             }
             offset += count;
@@ -95,7 +90,6 @@ public class ExifUtils {
                         case 8:
                             return 270;
                     }
-                    Log.i(TAG, "Unsupported orientation");
                     return 0;
                 }
                 offset += 12;
@@ -103,7 +97,6 @@ public class ExifUtils {
             }
         }
 
-        Log.i(TAG, "Orientation not found");
         return 0;
     }
 

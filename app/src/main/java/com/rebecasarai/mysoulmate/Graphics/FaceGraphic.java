@@ -46,31 +46,21 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float BOX_STROKE_WIDTH = 5.0f;
     private Context context;
 
-
-
     private ArrayList<Heart> mHearts;
 
-
-
-    Random random = new Random();
-    SecureRandom r = new SecureRandom();
-    Bitmap scaledBitmap;
-    BitmapFactory.Options options;
+    private Random random = new Random();
+    private SecureRandom r = new SecureRandom();
+    private Bitmap scaledBitmap;
+    private BitmapFactory.Options options;
 
     private static final int COLOR_CHOICES = Color.RED;
 
-    private Paint mFacePositionPaint;
-    private Paint mIdPaint;
-    private Paint mBoxPaint;
-    Paint p = new Paint();
-    Paint paintCameraEntera = new Paint();
+    private Paint mBitmapPaint = new Paint();
+    private Paint mFiltroPaint = new Paint();
 
     private volatile Face mFace;
-    private int mFaceId;
-    private int heartTopX;
-    private Rect recta;
 
-    private int alpha = 5;
+    private int alpha = 10;
 
 
     public FaceGraphic(GraphicOverlay overlay, Context context, ArrayList<Heart> hearts) {
@@ -78,32 +68,16 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
         final int selectedColor = COLOR_CHOICES;
 
-        mFacePositionPaint = new Paint();
-        mFacePositionPaint.setColor(selectedColor);
-
-        mIdPaint = new Paint();
-        mIdPaint.setColor(selectedColor);
-        mIdPaint.setTextSize(ID_TEXT_SIZE);
-
-        mBoxPaint = new Paint();
-        mBoxPaint.setColor(selectedColor);
-        mBoxPaint.setStyle(Paint.Style.STROKE);
-        mBoxPaint.setStrokeWidth(BOX_STROKE_WIDTH);
-
 
         this.mHearts = hearts;
 
         this.context = context;
     }
 
-    public void setId(int id) {
-        mFaceId = id;
-    }
 
 
     /**
-     * Actualiza la instancia de cara desde la detección del marco más reciente. Invalida el
-     *       * porciones relevantes de la superposición para activar un redibujado.
+     * Actualiza la instancia de cara desde la detección del marco más reciente.
      *      
      */
     public void updateFace(Face face) {
@@ -112,7 +86,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     }
 
     /**
-     * Dibuja las anotaciones de la cara para la posición en el lienzo suministrado.
+     * Dibuja las anotaciones de la cara para la posición en el canvas.
      *     
      */
     @Override
@@ -124,83 +98,128 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
         double viewWidth = canvas.getWidth();
         double viewHeight = canvas.getHeight();
-        //double imageWidth = mBitmap.getWidth();
-        //double imageHeight = mBitmap.getHeight();
         double scale = Math.min(viewWidth / face.getPosition().x + face.getWidth(), viewHeight / face.getPosition().y + face.getHeight());
-       // Log.v("scale", "" + scale);
 
         //Punto medio de la cara
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
-        //canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
-        //canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
-        //canvas.drawText("Es tu alma gemelaa", x - ID_X_OFFSET * 3, y - ID_Y_OFFSET * 3, mIdPaint);
 
+
+        setBitmap();
+
+        setTonoFiltro(canvas);
+
+        animacionSuperior(canvas);
+        animacionLateralDerecho();
+        animacionInferior(canvas);
+        animacionIzquierda(canvas);
+
+        drawCorazones(canvas);
+        corazonesPequeñosRelleno(canvas);
+    }
+
+
+    /**
+     * Establece la imagen a mostarr en el filtro. En este caso corazones
+     */
+    private void setBitmap(){
         options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
-        //Lo reduzco por 4
+
         options.inSampleSize = 4;
         options.inJustDecodeBounds = false;
         scaledBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
+    }
 
-        paintCameraEntera.setColor(Color.RED);
-        paintCameraEntera.setAntiAlias(true);
-        paintCameraEntera.setFilterBitmap(true);
-        paintCameraEntera.setDither(true);
+
+    /**
+     * Metodo con el que se da el tono al filtro de la camara.
+     * Se actualiza la opacidad Alpha, el color, el estilo, efecto y forma
+     * @param canvas
+     */
+    private void setTonoFiltro(Canvas canvas){
+        mFiltroPaint.setColor(Color.RED);
+        mFiltroPaint.setAntiAlias(true);
+        mFiltroPaint.setFilterBitmap(true);
+        mFiltroPaint.setDither(true);
 
         ColorFilter filter = new PorterDuffColorFilter(context.getResources().getColor(R.color.colorPrimaryRed), PorterDuff.Mode.SRC_IN);
-        paintCameraEntera.setColorFilter(filter);
-        paintCameraEntera.setShader(new RadialGradient(canvas.getWidth() / 2, canvas.getHeight() / 2,
+        mFiltroPaint.setColorFilter(filter);
+        mFiltroPaint.setShader(new RadialGradient(canvas.getWidth() / 2, canvas.getHeight() / 2,
                 canvas.getHeight() / 3, Color.TRANSPARENT, Color.BLACK, Shader.TileMode.MIRROR));
 
-        recta = new Rect(0, 0, canvas.getWidth()+canvas.getWidth()/2, canvas.getHeight()+canvas.getHeight()/2);
+        Rect recta = new Rect(0, 0, canvas.getWidth()+canvas.getWidth()/2, canvas.getHeight()+canvas.getHeight()/2);
 
-        paintCameraEntera.setStyle(Paint.Style.FILL);
+        mFiltroPaint.setStyle(Paint.Style.FILL);
 
-        if(alpha<=70){
+        if(alpha<=80){
             alpha++;
         }
 
-        paintCameraEntera.setAlpha(alpha);
-        canvas.drawRect(recta, paintCameraEntera);
+        mFiltroPaint.setAlpha(alpha);
+        canvas.drawRect(recta, mFiltroPaint);
+    }
 
-        heartTopX= mHearts.get(0).getPositionX();
+    /**
+     * Metodo que calcula un numero al azar con un rango de numeros pasados por parametros
+     * @param min Numero minimo
+     * @param max Numero maximo
+     * @return int que representa numero random
+     */
+    private int randomRango(int min, int max) {
+        return r.nextInt(max - min) + min;
+    }
 
-        //------------TOP--------//
 
-            if(!mHearts.get(0).isDevueltaX()){
-                if(heartTopX>canvas.getWidth()){
-                    mHearts.get(0).setDevueltaX(true);
-                }
-                mHearts.get(0).setPositionX(heartTopX + mHearts.get(0).getSpeedX());
+    /**
+     * Se establece la posicion del corazon de la parte inferior del canvas.
+     * Se actualiza la posición tomando la actual y sumando la velocidad.
+     * La velocidad es un valor entero que representa los pixeles a moverse.
+     * @param canvas en el que dibuja
+     */
+    private void animacionSuperior(Canvas canvas){
+
+        int heartTopX= mHearts.get(0).getPositionX();
+
+        if(!mHearts.get(0).isDevueltaX()){
+            if(heartTopX>canvas.getWidth()){
+                mHearts.get(0).setDevueltaX(true);
+            }
+            mHearts.get(0).setPositionX(heartTopX + mHearts.get(0).getSpeedX());
 
 
-            }else{
-                if(heartTopX<40){
+        }else{
+            if(heartTopX<40){
                 mHearts.get(0).setDevueltaX(false);
-                }
-                mHearts.get(0).setPositionX(heartTopX - mHearts.get(0).getSpeedX());
             }
+            mHearts.get(0).setPositionX(heartTopX - mHearts.get(0).getSpeedX());
+        }
 
 
 
-            if(!mHearts.get(0).isDevueltaY()){
-                if(mHearts.get(0).getPositionY()>200){
-                    mHearts.get(0).setDevueltaY(true);
-                }
-                mHearts.get(0).setPositionY(mHearts.get(0).getPositionY() + mHearts.get(0).getSpeedY());
-            }else{
-                if(mHearts.get(0).getPositionY()<100){
-                    mHearts.get(0).setDevueltaY(false);
-                }
-                mHearts.get(0).setPositionY(mHearts.get(0).getPositionY() - mHearts.get(0).getSpeedY());
+        if(!mHearts.get(0).isDevueltaY()){
+            if(mHearts.get(0).getPositionY()>200){
+                mHearts.get(0).setDevueltaY(true);
             }
+            mHearts.get(0).setPositionY(mHearts.get(0).getPositionY() + mHearts.get(0).getSpeedY());
+        }else{
+            if(mHearts.get(0).getPositionY()<100){
+                mHearts.get(0).setDevueltaY(false);
+            }
+            mHearts.get(0).setPositionY(mHearts.get(0).getPositionY() - mHearts.get(0).getSpeedY());
+        }
+    }
 
-        //------------------- RIGTH---------------//
 
+    /**
+     * Se establece la posicion del corazon de la parte lateral Derecha del canvas.
+     * Se actualiza la posición tomando la actual y sumando la velocidad.
+     * La velocidad es un valor entero que representa los pixeles a moverse.
+     */
+    private void animacionLateralDerecho(){
         if(!mHearts.get(1).isDevueltaX()){
-            if(mHearts.get(1).getPositionX()>1100){
+            if(mHearts.get(1).getPositionX()>1000){
                 mHearts.get(1).setDevueltaX(true);
             }
             mHearts.get(1).setPositionX(mHearts.get(1).getPositionX() + mHearts.get(1).getSpeedX());
@@ -212,7 +231,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         }
 
         if(!mHearts.get(1).isDevueltaY()){
-            if(mHearts.get(1).getPositionY()>1200){
+            if(mHearts.get(1).getPositionY()>1100){
                 mHearts.get(1).setDevueltaY(true);
             }
             mHearts.get(1).setPositionY(mHearts.get(1).getPositionY() + mHearts.get(1).getSpeedY());
@@ -222,9 +241,16 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             }
             mHearts.get(1).setPositionY(mHearts.get(1).getPositionY() - mHearts.get(1).getSpeedY());
         }
+    }
 
-        //------------------- BOTTOM ---------------//
-
+    /**
+     * Se establece la posicion del corazon de la parte inferior del canvas.
+     * Se actualiza la posición tomando la actual y sumando la velocidad.
+     * La velocidad es un valor entero que representa los pixeles a moverse.
+     *
+     * @param canvas en el que dibuja
+     */
+    private void animacionInferior(Canvas canvas){
         if(!mHearts.get(2).isDevueltaX()){
             if(mHearts.get(2).getPositionX()>canvas.getWidth()){
                 mHearts.get(2).setDevueltaX(true);
@@ -251,12 +277,16 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             }
             mHearts.get(2).setPositionY(mHearts.get(2).getPositionY() - mHearts.get(2).getSpeedY());
         }
+    }
 
-
-
-
-        //------------------- Left -----------------//
-
+    /**
+     * Se establece la posicion del corazon de la parte lateral izqierda del canvas.
+     * Se actualiza la posición tomando la actual y sumando la velocidad.
+     * La velocidad es un valor entero que representa los pixeles a moverse.
+     *
+     * @param canvas en el que dibuja
+     */
+    private void animacionIzquierda(Canvas canvas){
         if(!mHearts.get(3).isDevueltaX()){
             if(mHearts.get(3).getPositionX()>180){
                 mHearts.get(3).setDevueltaX(true);
@@ -280,76 +310,42 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             }
             mHearts.get(3).setPositionY(mHearts.get(3).getPositionY() - mHearts.get(3).getSpeedY());
         }
-        canvas.drawBitmap(scaledBitmap, mHearts.get(0).getPositionX(), mHearts.get(0).getPositionY(), p);
-        canvas.drawBitmap(scaledBitmap, mHearts.get(1).getPositionX(), mHearts.get(1).getPositionY(), p);
-        canvas.drawBitmap(scaledBitmap, mHearts.get(2).getPositionX(), mHearts.get(2).getPositionY(), p);
-        canvas.drawBitmap(scaledBitmap, mHearts.get(3).getPositionX(), mHearts.get(3).getPositionY(), p);
+    }
 
+
+    /**
+     * Diuja los corazones grandes en el canvas
+     * @param canvas
+     */
+    private void drawCorazones(Canvas canvas){
+        canvas.drawBitmap(scaledBitmap, mHearts.get(0).getPositionX(), mHearts.get(0).getPositionY(), mBitmapPaint);
+        canvas.drawBitmap(scaledBitmap, mHearts.get(1).getPositionX(), mHearts.get(1).getPositionY(), mBitmapPaint);
+        canvas.drawBitmap(scaledBitmap, mHearts.get(2).getPositionX(), mHearts.get(2).getPositionY(), mBitmapPaint);
+        canvas.drawBitmap(scaledBitmap, mHearts.get(3).getPositionX(), mHearts.get(3).getPositionY(), mBitmapPaint);
+    }
+
+
+    /**
+     * Dibuja los corazones pequeños con movimientos al azar en el canvas
+     * @param canvas
+     */
+    private void corazonesPequeñosRelleno(Canvas canvas){
 
         options.inSampleSize=6;
         scaledBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart, options);
-
         //Herat TOP
-        canvas.drawBitmap(scaledBitmap, random.nextInt(canvas.getWidth()-100), random.nextInt(200), p);
+        canvas.drawBitmap(scaledBitmap, random.nextInt(canvas.getWidth()-100), random.nextInt(200), mBitmapPaint);
 
         //Heart Right
-        canvas.drawBitmap(scaledBitmap, randomRango(canvas.getWidth()-300,canvas.getWidth()), random.nextInt(canvas.getHeight()-200), p);
+        canvas.drawBitmap(scaledBitmap, randomRango(canvas.getWidth()-300,canvas.getWidth()), random.nextInt(canvas.getHeight()-200), mBitmapPaint);
 
         //Heart Bottom
-        canvas.drawBitmap(scaledBitmap, random.nextInt(canvas.getWidth()-100), randomRango(1300,1500), p);
+        canvas.drawBitmap(scaledBitmap, random.nextInt(canvas.getWidth()-100), randomRango(1300,1500), mBitmapPaint);
 
         //Heart left
-        canvas.drawBitmap(scaledBitmap, randomRango(50, 100), random.nextInt(canvas.getHeight()), p);
-
+        canvas.drawBitmap(scaledBitmap, randomRango(50, 100), random.nextInt(canvas.getHeight()), mBitmapPaint);
     }
 
-
-
-    public int randomRango(int min, int max) {
-        return r.nextInt(max - min) + min;
-    }
-
-    /**
-     * Optimiza tamaño del bitmap
-     *
-     * @param realImage
-     * @param maxImageSize
-     * @param filter
-     * @return
-     */
-    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
-                                   boolean filter) {
-        float ratio = Math.min(
-                (float) maxImageSize / realImage.getWidth(),
-                (float) maxImageSize / realImage.getHeight());
-        int width = Math.round((float) ratio * realImage.getWidth());
-        int height = Math.round((float) ratio * realImage.getHeight());
-
-        return Bitmap.createScaledBitmap(realImage, width,
-                height, filter);
-    }
-
-    /**
-     * Dibuja los landmarks
-     *
-     * @param canvas
-     * @param scale
-     * @param face
-     * @param p
-     */
-    private void drawFaceLandmarks(Canvas canvas, double scale, Face face, Paint p) {
-        p.setColor(Color.GREEN);
-        p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(5);
-
-        for (Landmark landmark : face.getLandmarks()) {
-            int cx = (int) (landmark.getPosition().x * scale);
-            int cy = (int) (landmark.getPosition().y * scale);
-            canvas.drawCircle(cx, cy, 5, p);
-        }
-
-
-    }
 
 
 }

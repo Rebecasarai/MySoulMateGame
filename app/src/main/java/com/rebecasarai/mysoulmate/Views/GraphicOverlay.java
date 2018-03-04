@@ -37,10 +37,10 @@ public class GraphicOverlay extends View {
     private Set<Graphic> mGraphics = new HashSet<>();
 
     /**
-    * Clase para que un objeto gráfico para colocar encima, overlay grafico.
-    * Se tiene que hacer subclase e implementar el método {@link Graphic # draw (Canvas)} para definir el
-    * grafico. Se debe de agregar instancias al overlay con {@link GraphicOverlay # add (Graphic)}.
-    */
+     * Clase para que un objeto gráfico para colocar encima, overlay grafico.
+         * Se tiene que hacer subclase e implementar el método {@link Graphic # draw (Canvas)} para definir el
+         * grafico. Se debe de agregar instancias al overlay con {@link GraphicOverlay # add (Graphic)}.
+     */
     public static abstract class Graphic {
         private GraphicOverlay mOverlay;
 
@@ -109,7 +109,7 @@ public class GraphicOverlay extends View {
     }
 
     /**
-     * Adds el overlay
+     * Añade overlay
      */
     public void add(Graphic graphic) {
         synchronized (mLock) {
@@ -119,7 +119,7 @@ public class GraphicOverlay extends View {
     }
 
     /**
-     * Removes a graphic del overlay.
+     * Elimina un gráfico del overlay.
      */
     public void remove(Graphic graphic) {
         synchronized (mLock) {
@@ -129,8 +129,8 @@ public class GraphicOverlay extends View {
     }
 
     /**
-     * Sets the camera attributes for size and facing direction, which informs how to transform
-     * image coordinates later.
+     * Establece los atributos de la cámara para el tamaño y la dirección opuesta, que informa cómo transformar
+     * coordenadas de la imagen más tarde.
      */
     public void setCameraInfo(int previewWidth, int previewHeight, int facing) {
         synchronized (mLock) {
@@ -142,7 +142,7 @@ public class GraphicOverlay extends View {
     }
 
     /**
-     * Draws the overlay with its associated graphic objects.
+     * Dibuja la superposición con sus objetos gráficos asociados.
      */
     @Override
     protected void onDraw(Canvas canvas) {
@@ -153,7 +153,7 @@ public class GraphicOverlay extends View {
                 mWidthScaleFactor = (float) canvas.getWidth() / (float) mPreviewWidth;
                 mHeightScaleFactor = (float) canvas.getHeight() / (float) mPreviewHeight;
             }
-           Random random= new Random();
+            Random random= new Random();
 
             for (Graphic graphic : mGraphics) {
                 graphic.draw(canvas);

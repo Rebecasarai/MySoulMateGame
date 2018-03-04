@@ -19,6 +19,10 @@ import com.rebecasarai.mysoulmate.R;
 import com.rebecasarai.mysoulmate.ViewModels.MainViewModel;
 import com.rebecasarai.mysoulmate.Views.Adapters.ViewPagerAdapter;
 
+/**
+ * Actividad central y en la que se entra luego de iniciar sesión. Se crea un ViewPager para mostrar los fragmentso y un menu inferior.
+ * Se comienza en el fragmento de Camara.
+ */
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -65,11 +69,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public void onBackPressed() {
         if(mPager.getCurrentItem() != 3) {
             if (mPager.getCurrentItem() == 0) {
-                // If the user is currently looking at the first step, allow the system to handle the
-                // Back button. This calls finish() on this activity and pops the back stack.
+                // Si el usuario está mirando actualmente el primer fragmento, permite que exista el desplazamiento de retroceso.
+                // Este llama a finish () en esta actividad y muestra el back stack.
                 super.onBackPressed();
             } else {
-                // Otherwise, select the previous step.
+                // De lo contrario, selecciona el fragmento anterior.
                 mPager.setCurrentItem(mPager.getCurrentItem() - 1);
             }
         }
@@ -80,19 +84,22 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     }
 
+    /**
+     * AL seleccionar un item, actualiza el menu de navegación
+     * @param position
+     */
     @Override
     public void onPageSelected(int position) {
 
-        if(mPager.getCurrentItem() != 3){
-            if (mPrevMenuItem != null) {
-                mPrevMenuItem.setChecked(false);
-            } else {
-                mNavigationView.getMenu().getItem(0).setChecked(false);
-            }
-            Log.d(TAG, "onPageSelected: " + position);
-            mNavigationView.getMenu().getItem(position).setChecked(true);
-            mPrevMenuItem = mNavigationView.getMenu().getItem(position);
+        if (mPrevMenuItem != null) {
+            mPrevMenuItem.setChecked(false);
+        } else {
+            mNavigationView.getMenu().getItem(0).setChecked(false);
         }
+
+        mNavigationView.getMenu().getItem(position).setChecked(true);
+        mPrevMenuItem = mNavigationView.getMenu().getItem(position);
+
     }
 
     @Override
@@ -101,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
 
+    /**
+     * Metodo en el que dependiendo de que fragmento seleccione, actualiza el pager
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 

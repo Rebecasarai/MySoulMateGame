@@ -9,12 +9,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.rebecasarai.mysoulmate.R;
-import com.rebecasarai.mysoulmate.Repository.UserRepository;
 
 
 public class MainViewModel extends AndroidViewModel {
 
-    private UserRepository mRepository;
     private MutableLiveData<Bitmap> mLastSoulMate = new MutableLiveData<>();
     private MutableLiveData<Boolean> mHeartButtonVisibility = new MutableLiveData<>();
     private MutableLiveData<Bitmap> ultimo = new MutableLiveData<>();
@@ -23,7 +21,6 @@ public class MainViewModel extends AndroidViewModel {
 
     public MainViewModel(@NonNull Application application) {
         super(application);
-        mRepository = new UserRepository();
         Bitmap icon = BitmapFactory.decodeResource(application.getApplicationContext().getResources(), R.drawable.ic_favorite_red_24dp);
         ultimo.postValue(icon);
         activarCameraFargment.setValue(true);

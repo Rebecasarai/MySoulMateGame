@@ -2,6 +2,7 @@ package com.rebecasarai.mysoulmate.Models;
 
 /**
  * Created by rebecagonzalez on 8/2/18.
+ * Clase Captura de pantalla
  */
 
 public class Screenshot {

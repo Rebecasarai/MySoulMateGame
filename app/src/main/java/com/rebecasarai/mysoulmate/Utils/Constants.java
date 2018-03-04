@@ -1,10 +1,10 @@
 package com.rebecasarai.mysoulmate.Utils;
 
 /**
- * Class that stores the application constants.
+ * Clase que guarda las constantes de la aplicación.
  */
 
 public class Constants {
 
-    public static final int MAX_NUM_SCREENSHOTS_TO_SOULMATE = 10; // The max number of pictures to be taken before a soulmate appears.
+    public static final int MAX_NUM_SCREENSHOTS_TO_SOULMATE = 10; // El número máximo de detecciones faciales para que aparezca tu alma gemela
 }

@@ -15,9 +15,12 @@ import java.io.FileOutputStream;
  */
 public class ScreenshotUtils {
 
-    /*  Method which will return Bitmap after taking screenshot. We have to pass the view which we want to take screenshot.  */
+    /**
+     * Método que devolverá Bitmap después de tomar la captura de pantalla. Tenemos que pasar la vista que queremos tomar captura de pantalla.
+     * @param view
+     * @return
+     */
     public static Bitmap getScreenShot(View view) {
-        //View screenView = view.getRootView();
 
         View screenView = view;
         screenView.setDrawingCacheEnabled(true);
@@ -29,22 +32,31 @@ public class ScreenshotUtils {
     }
 
 
-    /*  Create Directory where screenshot will save for sharing screenshot  */
+    /**
+     * Crea un directorio donde se guardará la captura de pantalla para compartir.
+     * Aquí usaremos getExternalFilesDir y cada vez que la aplicación se desinstale, las imágenes se eliminarán automáticamente....
+     * @param context
+     * @return
+     */
     public static File getMainDirectoryName(Context context) {
-        //Here we will use getExternalFilesDir and inside that we will make our Demo folder
-        //benefit of getExternalFilesDir is that whenever the app uninstalls the images will get deleted automatically.
         File mainDir = new File(
                 context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "");
 
-        //If File is not present create directory
+        //Si no está presente se crea el directorio
         if (!mainDir.exists()) {
             if (mainDir.mkdir())
-                Log.e("Create Directory", "Main Directory Created : " + mainDir);
+                Log.d("Directorio creado", "Directorio creado en: " + mainDir);
         }
         return mainDir;
     }
 
-    /*  Store taken screenshot into above created path  */
+    /**
+     * Almacena capturas de pantalla en la dirección creada anteriormente
+     * @param bm
+     * @param fileName
+     * @param saveFilePath
+     * @return
+     */
     public static File store(Bitmap bm, String fileName, File saveFilePath) {
         File dir = new File(saveFilePath.getAbsolutePath());
         if (!dir.exists())

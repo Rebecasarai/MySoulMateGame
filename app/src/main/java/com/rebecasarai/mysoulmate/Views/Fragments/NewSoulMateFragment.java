@@ -29,8 +29,9 @@ import com.rebecasarai.mysoulmate.ViewModels.MainViewModel;
 import com.squareup.picasso.Picasso;
 
 
+
 /**
- * A simple {@link Fragment} subclass.
+ * Clase View Model en la que se maneja el ultimo bitmap del alma gemela tomada,i activar el CameraFragment dependiendo si se encuentra en dicho fragmento o no
  */
 public class NewSoulMateFragment extends Fragment {
     private ImageView mImageNewSoulMate;

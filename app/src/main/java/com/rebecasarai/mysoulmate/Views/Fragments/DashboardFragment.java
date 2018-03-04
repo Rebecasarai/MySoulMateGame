@@ -21,7 +21,7 @@ import com.rebecasarai.mysoulmate.Views.Adapters.PhotoAdapter;
 import com.rebecasarai.mysoulmate.Views.RecyclerItemClickListener;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragmento en el que se muestran todas las almas gemelas capturadas hasta el momento
  */
 public class DashboardFragment extends Fragment implements RecyclerItemClickListener {
 
@@ -70,8 +70,10 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
         }
     }
 
+    /**
+     * Crea el recycler View para mostrar las imagenes con vistas CardView
+     */
     private void setUpRecycler() {
-
         mRecyclerView = getView().findViewById(R.id.recycler);
         Query query = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("screenshots");
 

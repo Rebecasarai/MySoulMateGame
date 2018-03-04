@@ -139,9 +139,9 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
                             .duration(800)
                             .playOn(mRootView.findViewById(R.id.lastSoulMatePreview));
                     if(mlike_heart.getScaleX()>0){
-                    mlike_heart.likeAnimation();
+                        mlike_heart.likeAnimation();
                     }
-             }
+                }
             }
 
             @Override

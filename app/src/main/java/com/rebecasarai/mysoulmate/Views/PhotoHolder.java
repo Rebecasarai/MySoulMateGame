@@ -6,6 +6,10 @@ import android.widget.ImageView;
 
 import com.rebecasarai.mysoulmate.R;
 
+/**
+ * Clase del ViewHolder de la photo
+ */
+
 public class PhotoHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 

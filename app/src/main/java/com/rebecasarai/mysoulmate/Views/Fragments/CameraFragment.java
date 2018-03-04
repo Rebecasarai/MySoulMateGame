@@ -7,14 +7,13 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -23,6 +22,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +41,7 @@ import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.firebase.auth.FirebaseAuth;
+import com.rebecasarai.mysoulmate.Repository.FileManager;
 import com.rebecasarai.mysoulmate.Views.CameraPreview;
 import com.rebecasarai.mysoulmate.Views.GraphicOverlay;
 import com.rebecasarai.mysoulmate.Graphics.FaceGraphic;
@@ -49,7 +50,6 @@ import com.rebecasarai.mysoulmate.R;
 import com.rebecasarai.mysoulmate.Utils.ScreenshotType;
 import com.rebecasarai.mysoulmate.Utils.ScreenshotUtils;
 import com.rebecasarai.mysoulmate.Utils.ExifUtils;
-import com.rebecasarai.mysoulmate.Utils.FileManager;
 import com.rebecasarai.mysoulmate.Utils.Utils;
 import com.rebecasarai.mysoulmate.ViewModels.MainViewModel;
 
@@ -62,7 +62,11 @@ import java.util.Date;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragmento en el que se crea el recurso camara para detectar caras, mostrar filtros y reproducir musica al capturar almas gemelas.
+ * La camara se detine al navegar a otros fragmentos del ViewPager y se restaura al volver.
+ * Se utiliza tracking facial para identificar un rostro y mientras lo tenga en camara mostrar el filtro y poder capturarlo.
+ * Se piden y verifican permisos de camra y almacenamiento.
+ * Se toman capturas de pantallas para tomar foto de los efectos.
  */
 public class CameraFragment extends Fragment implements View.OnClickListener {
 
@@ -81,10 +85,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     private ImageView mPhotoPeep;
     private ImageButton mCatchSoulMateButton;
     private Bitmap mBitmapPicture;
-    private File mScreenShotFile;
-    FaceDetector detector;
-
+    private FaceDetector detector;
     private MainViewModel mViewmodel;
+
 
 
     public CameraFragment() {
@@ -105,7 +108,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         mGraphicOverlay = (GraphicOverlay) mRootView.findViewById(R.id.faceOverlay);
         mViewmodel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
-        //TODO: Cambiar request de permisos, tratar con on permissionRerquest etc. Usa mi clase permissionUtils
         int rc = ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource();
@@ -119,6 +121,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
         mCatchSoulMateButton = (ImageButton) mRootView.findViewById(R.id.catchSoulMateButton);
         mCatchSoulMateButton.setVisibility(View.INVISIBLE);
+        mCatchSoulMateButton.setOnClickListener(this);
 
 
         mViewmodel.getHeartButtonVisibility().observe(this, new Observer<Boolean>() {
@@ -131,21 +134,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 }
             }
         });
-
-        mCatchSoulMateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
-                    @Override
-                    public void onPictureTaken(final byte[] bytes) {
-                        Log.v(TAG, "Foto Tomada.");
-                        takeSnapshot(bytes);
-                        setBitmap();
-                    }
-                });
-            }
-        });
-
 
         mViewmodel.getActivarCameraFragmentLive().observe(this, new Observer<Boolean>() {
             public void onChanged(@Nullable Boolean aBoolean) {
@@ -191,7 +179,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * Libera recursos, la fuente de la cámara, el face detector
+     * Libera recursos, la cámara, el face detector
      */
     @Override
     public void onDestroy() {
@@ -211,9 +199,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             case R.id.catchSoulMateButton:
                 mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
                     @Override
-                    public void onPictureTaken(byte[] bytes) {
-                        Log.v(TAG, " Foto tomada.");
+                    public void onPictureTaken(final byte[] bytes) {
+                        Log.v(TAG, "Foto Tomada.");
                         takeSnapshot(bytes);
+                        setBitmap();
                     }
                 });
                 break;
@@ -223,7 +212,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
 
     /*--------------------------------
-          End of Override methods
+                Face Methods
      ---------------------------------*/
 
 
@@ -271,23 +260,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                     }
                     mediaPlayer.start();
                 } catch (Exception e) {
-                    //TODO: threat
+
+                    Log.d(TAG,"Error en el graphic: "+e);
                 }
             }
 
         }
 
 
-        /**
-         * Comienza a trackear dentro del overlay.
-         */
-        @Override
-        public void onNewItem(int faceId, Face item) {
-
-            if (mFaceGraphic != null) {
-                mFaceGraphic.setId(faceId);
-            }
-        }
 
         /**
          * Update the position/characteristics of the face within the overlay.
@@ -301,18 +281,18 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
 
         /**
-         * Oculta el gráfico cuando no se detectó la cara.
+         * Oculta el gráfico cuando no se detecta la cara por unos milisegundos.
          */
         @Override
         public void onMissing(FaceDetector.Detections<Face> detectionResults) {
             if (mFaceGraphic != null) {
                 mOverlay.remove(mFaceGraphic);
             }
-            Log.v("missing", "");
         }
 
         /**
-         * Llamado cuando se supone que la cara no se detecta definitvamente. Elimina el gráfica del overlay.
+         * Llamado cuando se supone que la cara no se detecta más después de unos segundos, la oculta de forma definitiva. Elimina el gráfica del overlay.
+         * Pone fin a esa detección facial.
          */
         @Override
         public void onDone() {
@@ -329,17 +309,22 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                 } catch (Exception e) {
 
+                    Log.d(TAG,"Error en el done: "+e);
                 }
             }
 
 
-            Log.d(TAG, "onDone() called !");
         }
     }
 
 
+    /*--------------------------------
+             Pemmission Methods
+     ---------------------------------*/
+
+
     /**
-     * Permisos
+     * Metodo calback de los permisos otorgados
      *
      * @param requestCode
      * @param permissions
@@ -360,7 +345,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
+        Log.d(TAG, "Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
 
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -408,6 +393,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     }
 
+
+
+
+    /*--------------------------------
+                Other Methods
+     ---------------------------------*/
+
+
     /**
      * Creates and starts the camera.  Note that this uses a higher resolution in comparison
      * to other detection examples to enable the barcode detector to detect small barcodes
@@ -429,7 +422,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
         if (!detector.isOperational()) {
 
-            Log.w(TAG, "Detector de caras no funciona");
+            Log.d(TAG, "Detector de caras no funciona");
         }
 
         mCameraSource = new CameraSource.Builder(context, detector)
@@ -442,15 +435,31 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     }
 
+
     /**
      * Metodo que captura la foto, llamado desde CameraSource.
      *
      * @param bytes Bytes de la imagen tomada.
      */
     private void takeSnapshot(byte[] bytes) {
+
+        setOrientacion(bytes);
+        saveImage(mBitmapPicture, getPhotoTime());
+
+    }
+
+    /**
+     * Establece la orientaciñon adecuada de una imagen capturada, para enderzarla si esta volteada.
+     * si el dispositivo tiene por default camara Land Horizontal y toma las fotos volteadas
+     * como es el caso de algunos Samsung
+     * @param bytes representan los bytes de la imagen
+     */
+    private void setOrientacion(byte[] bytes){
+
         int orientation = ExifUtils.getOrientation(bytes);
 
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
         switch (orientation) {
             case 90:
                 mBitmapPicture = rotateImage(bitmap, 90);
@@ -466,33 +475,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 mBitmapPicture = bitmap;
                 break;
         }
-
-
-        try {
-            File mainDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "");
-            Log.v("dir", mainDir.getAbsolutePath());
-            if (!mainDir.exists()) {
-                if (mainDir.mkdir())
-                    Log.e("Create Directory", "Main Directory Created: " + mainDir);
-            }
-            File captureFile = new File(mainDir, "prueba" + getPhotoTime() + ".png");
-            if (!captureFile.exists())
-                Log.d("CAPTURE_FILE_PATH", captureFile.createNewFile() ? "Success" : "Failed");
-
-            FileOutputStream stream = new FileOutputStream(captureFile);
-            //mBitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-
-            Log.v("dir", captureFile.getAbsolutePath());
-            stream.write(bytes);
-            stream.flush();
-            stream.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
+    /**
+     * Rota un bitmap
+     * @param source representa el bitmap
+     * @param angle el angulo a voltear
+     * @return
+     */
     public static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
@@ -500,6 +490,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     }
 
 
+    /**
+     * Plasma el bitmap y captura el conjunto de vistas para establecer la imagen de alma gemela
+     */
     public void setBitmap() {
         mPhotoPeep.setImageBitmap(mBitmapPicture);
         takeScreenshot(ScreenshotType.FULL);
@@ -510,7 +503,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     /**
      * Fecha actual
      *
-     * @return
+     * @return String con fecha actual
      */
     private String getPhotoTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy_hhmmss");
@@ -549,6 +542,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
      */
     private void takeScreenshot(ScreenshotType screenshotType) {
         Bitmap bitmap = null;
+        File mScreenShotFile;
 
         switch (screenshotType) {
             case FULL:
@@ -565,14 +559,12 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             FileManager.uploadScreenshot(FirebaseAuth.getInstance(), bitmap, new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    //TODO: maybe say something else
-                    Toast.makeText(getActivity(), "Image uploaded.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Image subida.", Toast.LENGTH_SHORT).show();
                 }
             }, new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    //TODO: treat
-                    Toast.makeText(getActivity(), "Uploading failed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Fallo al subir imagen.", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -590,66 +582,60 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    /**
+     * Guarda imagen en el almacenamiento externo del dispositivo
+     * @param finalBitmap
+     * @param image_name
+     */
+    private void saveImage(Bitmap finalBitmap, String image_name) {
+
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root);
+        myDir.mkdirs();
+        String fname = "Image-" + image_name+ ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
+        Log.d("LOAD", root + fname);
 
 
-    /* por ahora no se usa*/
+        if(isStoragePermissionGranted()){
+            try {
+                FileOutputStream out = new FileOutputStream(file);
+                finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                out.flush();
+                out.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-    public void guardarScreenshot(Bitmap bitmap, ScreenshotType screenshotType){
-        //Si el bitmap no es nulo
-        if (bitmap != null) {
-            FileManager.uploadScreenshot(FirebaseAuth.getInstance(), bitmap, new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    //TODO: maybe say something else
-                    Toast.makeText(getActivity(), "Image uploaded.", Toast.LENGTH_SHORT).show();
-                }
-            }, new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //TODO: treat
-                    Toast.makeText(getActivity(), "Uploading failed.", Toast.LENGTH_SHORT).show();
-                }
-            });
+        }
 
-            File saveFile = ScreenshotUtils.getMainDirectoryName(mRootView.getContext());
-            mScreenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-        //mViewmodel.setLastSoulMate(bitmap);
 
-        } else {
-            //Si es nulo
-            Toast.makeText(getContext(), R.string.screenshot_take_failed, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Verifica si han dado permisos
+     * @return Booleano que representa si se han dado permisos
+     */
+    public  boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ContextCompat.checkSelfPermission(getActivity(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG,"Permiso concedido");
+                return true;
+            } else {
+
+                Log.d(TAG,"Permiso revocado");
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else {
+            Log.v(TAG,"Permiso concedido");
+            return true;
         }
     }
 
-    private void shareScreenshot(Bitmap bitmap, ScreenshotType screenshotType) {
-        File saveFile = ScreenshotUtils.getMainDirectoryName(getContext());//el directoria para guardar
-        File screenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
-        Uri uri = Uri.fromFile(screenShotFile);
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.setType("image/*");
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.sharing_text));
-        intent.putExtra(Intent.EXTRA_STREAM, uri);//pass uri here
-        startActivity(Intent.createChooser(intent, getString(R.string.share_title)));
-    }
-
-    public class FasterScreenshotAsyncTask extends AsyncTask<byte[], Void, Void> {
-        @Override
-        protected Void doInBackground(byte[]... bytes) {
-            takeSnapshot(bytes[0]);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            setBitmap();
-        }
-    }
-
-
-    /* por ahora no se usa*/
 
 }
 
