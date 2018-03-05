@@ -240,7 +240,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                 ArrayList<Heart> hearts = new ArrayList<>();
                 //top
-                hearts.add(new Heart(10, 5, 10, 10));
+                hearts.add(new Heart(5, 5, 5, 10));
                 //right
                 hearts.add(new Heart(1100, 100, 10, 10));
                 //bottom

@@ -190,7 +190,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
 
         }else{
-            if(heartTopX<40){
+            if(heartTopX<10){
                 mHearts.get(0).setDevueltaX(false);
             }
             mHearts.get(0).setPositionX(heartTopX - mHearts.get(0).getSpeedX());

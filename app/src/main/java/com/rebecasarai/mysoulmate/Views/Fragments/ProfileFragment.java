@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.util.Log;
@@ -58,7 +59,6 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     private ImageView mLastSoulMateImage;
     private View mRootView;
     private MainViewModel mViewModel;
-    private SmallBangView mNotFinalsmallBangImage;
     private SmallBangView mlike_heart;
 
     public ProfileFragment() {
@@ -69,28 +69,14 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
-        mlike_heart = mRootView.findViewById(R.id.like_heart);
-        TextView cerrarSesionText = mRootView.findViewById(R.id.cerrarSesion);
-        cerrarSesionText.setOnClickListener(this);
-        mLastSoulMateImage = mRootView.findViewById(R.id.lastSoulMatePreview);
-        like_heart.setOnClickListener(this);
-
-        ImageView imgSmallHeart = (ImageView) mRootView.findViewById(R.id.imgSmallHeart);
-        ImageView shareBtn = (ImageButton) mRootView.findViewById(R.id.share);
-        shareBtn.setOnClickListener(this);
+        mlike_heart =mRootView.findViewById(R.id.like_heart);
+        setVistas();
         mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
-        int smtotales = Utils.getSnapshotsTaken(getActivity());
-        TextView txtTotales = mRootView.findViewById(R.id.txtshowTotalScreenshots);
-        txtTotales.setText(smtotales);
         mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
             @Override
             public void onChanged(@Nullable Bitmap bitmap) {
                 if(bitmap!=null){
                     mLastSoulMateImage.setImageBitmap(bitmap);
-
-                    //mlike_heart.likeAnimation();
                 }else{
                     setLastSoulmate();
                 }
@@ -126,6 +112,26 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.like_heart:
+                animacion();
+                break;
+
+            case R.id.share:
+                shareScreenshot(mViewModel.getLastSoulMate().getValue(),ScreenshotType.CUSTOM.FULL);
+                break;
+
+            case R.id.cerrarSesion:
+                cerrarSesion();
+                break;
+        }
+    }
+
+    /**
+     * Metodo que coloca la imagen de la ultima alma gemela
+     */
     public void setLastSoulmate() {
         Query query = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("screenshots").orderByKey().limitToLast(1);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -154,24 +160,36 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     }
 
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.like_heart:
-                animacion();
-                break;
+    /**
+     * Metodo que se encarga de las vistas
+     */
+    private void setVistas(){
 
-            case R.id.share:
-                shareScreenshot(mViewModel.getLastSoulMate().getValue(),ScreenshotType.CUSTOM.FULL);
-                break;
+        TextView cerrarSesionText = mRootView.findViewById(R.id.cerrarSesion);
 
-            case R.id.cerrarSesion:
-                cerrarSesion();
-                break;
-        }
+        cerrarSesionText.setOnClickListener(this);
+        mLastSoulMateImage = mRootView.findViewById(R.id.lastSoulMatePreview);
+
+        ImageView shareBtn = (ImageButton) mRootView.findViewById(R.id.share);
+        shareBtn.setOnClickListener(this);
+        YoYo.with(Techniques.FadeInUp)
+                .duration(800)
+                .playOn(shareBtn);
+
+        int smtotales = Utils.getSnapshotsTaken(getContext());
+        TextView txtTotales = mRootView.findViewById(R.id.txtshowTotalScreenshots);
+        txtTotales.setText(String.valueOf(smtotales));
+
+        final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
+        like_heart.setOnClickListener(this);
+
+
     }
 
 
+    /**
+     * Realiza animación de corazon
+     */
     private void animacion(){
         if (mlike_heart.isSelected()) {
             mlike_heart.setSelected(false);

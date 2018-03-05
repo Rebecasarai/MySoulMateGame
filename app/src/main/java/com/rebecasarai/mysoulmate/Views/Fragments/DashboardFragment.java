@@ -37,6 +37,7 @@ public class DashboardFragment extends Fragment implements RecyclerItemClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        //setUpRecycler();
         return mRootView;
     }
 
