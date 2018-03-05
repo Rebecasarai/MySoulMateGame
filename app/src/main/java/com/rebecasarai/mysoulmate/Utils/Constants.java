@@ -6,5 +6,5 @@ package com.rebecasarai.mysoulmate.Utils;
 
 public class Constants {
 
-    public static final int MAX_NUM_SCREENSHOTS_TO_SOULMATE = 10; // El número máximo de detecciones faciales para que aparezca tu alma gemela
+    public static final int MAX_NUM_SCREENSHOTS_TO_SOULMATE = 20; // El número máximo de detecciones faciales para que aparezca tu alma gemela
 }

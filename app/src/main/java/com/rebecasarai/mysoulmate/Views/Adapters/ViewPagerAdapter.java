@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.rebecasarai.mysoulmate.Views.Fragments.CameraFragment;
 import com.rebecasarai.mysoulmate.Views.Fragments.DashboardFragment;
-import com.rebecasarai.mysoulmate.Views.Fragments.NewSoulMateFragment;
 import com.rebecasarai.mysoulmate.Views.Fragments.ProfileFragment;
 
 /**

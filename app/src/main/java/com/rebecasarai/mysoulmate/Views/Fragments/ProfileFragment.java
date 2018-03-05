@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.rebecasarai.mysoulmate.Utils.Utils;
 import com.rebecasarai.mysoulmate.Views.Activities.LoginActivity;
 import com.rebecasarai.mysoulmate.Models.Screenshot;
 import com.rebecasarai.mysoulmate.R;
@@ -79,16 +80,17 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         ImageView imgSmallHeart = (ImageView) mRootView.findViewById(R.id.imgSmallHeart);
         ImageView shareBtn = (ImageButton) mRootView.findViewById(R.id.share);
         shareBtn.setOnClickListener(this);
-        //mSmallBang.likeAnimation();
         mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
-
+        int smtotales = Utils.getSnapshotsTaken(getActivity());
+        TextView txtTotales = mRootView.findViewById(R.id.txtshowTotalScreenshots);
+        txtTotales.setText(smtotales);
         mViewModel.getLastSoulMate().observe(this, new Observer<Bitmap>() {
             @Override
             public void onChanged(@Nullable Bitmap bitmap) {
                 if(bitmap!=null){
-                    Log.d(TAG, "Bitmap de NewSoulMate: "+bitmap.toString());
                     mLastSoulMateImage.setImageBitmap(bitmap);
-                    mlike_heart.likeAnimation();
+
+                    //mlike_heart.likeAnimation();
                 }else{
                     setLastSoulmate();
                 }
@@ -151,34 +153,12 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         });
     }
 
-    public Bitmap StringToBitMap(String encodedString){
-        Bitmap bitmap = null;
-        try{
-            byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
-            bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-
-        }catch(Exception e){
-            e.getMessage();
-        }
-        return bitmap;
-    }
-
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.like_heart:
-                if (mlike_heart.isSelected()) {
-                    mlike_heart.setSelected(false);
-                } else {
-                    mlike_heart.setSelected(true);
-                    mlike_heart.likeAnimation(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                        }
-                    });
-                }
+                animacion();
                 break;
 
             case R.id.share:
@@ -192,6 +172,24 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     }
 
 
+    private void animacion(){
+        if (mlike_heart.isSelected()) {
+            mlike_heart.setSelected(false);
+        } else {
+            mlike_heart.setSelected(true);
+            mlike_heart.likeAnimation(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                }
+            });
+        }
+    }
+
+
+    /**
+     * Cierra sesión de Firebase
+     */
     private void cerrarSesion(){
         FirebaseAuth.getInstance().signOut();
         Intent loginIntent = new Intent(getView().getContext(), LoginActivity.class);
@@ -200,6 +198,11 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
         getActivity().finish();
     }
 
+    /**
+     * Comparte captura de pantalla
+     * @param bitmap Bitmap de la captura
+     * @param screenshotType Tipo de captura de pantalla FULL o Personaliazda
+     */
     private void shareScreenshot(Bitmap bitmap, ScreenshotType screenshotType) {
         File saveFile = ScreenshotUtils.getMainDirectoryName(getView().getContext());
         File screenShotFile = ScreenshotUtils.store(bitmap, "screenshot" + screenshotType + ".jpg", saveFile);//save the screenshot to selected path
