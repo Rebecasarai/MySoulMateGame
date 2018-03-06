@@ -31,7 +31,7 @@ public class FileManager {
     }
 
     /**
-     * Metodo con el que se  sube una captura de pantalla a Firebase Storage.
+     * Método con el que se  sube una captura de pantalla a Firebase Storage.
      *
      * @param auth Representa la autenticación de Firebase
      * @param bitmap Representa la imagen a subir a Firebase
@@ -69,7 +69,7 @@ public class FileManager {
 
 
     /**
-     * Metodo con el ques e actualiza las capturas de pantalla de un usuario
+     * Metodo con el que se actualiza las capturas de pantalla de un usuario
      * @param auth que representa el objeto autenticación de Firebase
      * @param imageUrl La url de la imagen
      */

@@ -11,7 +11,7 @@ import com.rebecasarai.mysoulmate.R;
 import java.util.Random;
 
 /**
- * Some static utility methods.
+ * Metodos estaticos Utils
  */
 
 public class Utils {

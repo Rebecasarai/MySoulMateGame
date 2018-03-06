@@ -11,7 +11,7 @@ import java.io.FileOutputStream;
 
 
 /**
- * Some screenshot utils.
+ * Clase manjeadora de screenshot
  */
 public class ScreenshotUtils {
 

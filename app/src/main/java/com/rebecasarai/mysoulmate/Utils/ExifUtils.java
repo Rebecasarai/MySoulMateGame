@@ -75,10 +75,8 @@ public class ExifUtils {
             // Get the count and go through all the elements.
             count = pack(jpeg, offset - 2, 2, littleEndian);
             while (count-- > 0 && length >= 12) {
-                // Get the tag and check if it is orientation.
                 tag = pack(jpeg, offset, 2, littleEndian);
                 if (tag == 0x0112) {
-                    // We do not really care about type and count, do we?
                     int orientation = pack(jpeg, offset + 8, 2, littleEndian);
                     switch (orientation) {
                         case 1:

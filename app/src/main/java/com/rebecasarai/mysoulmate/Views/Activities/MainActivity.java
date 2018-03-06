@@ -67,16 +67,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onBackPressed() {
-        if(mPager.getCurrentItem() != 3) {
-            if (mPager.getCurrentItem() == 0) {
-                // Si el usuario está mirando actualmente el primer fragmento, permite que exista el desplazamiento de retroceso.
-                // Este llama a finish () en esta actividad y muestra el back stack.
-                super.onBackPressed();
-            } else {
+
+            // Si el usuario está mirando actualmente el primer fragmento, permite que exista el desplazamiento de retroceso.
+            // Este llama a finish () en esta actividad y muestra el back stack.
+
+            if (mPager.getCurrentItem() != 0) {
                 // De lo contrario, selecciona el fragmento anterior.
                 mPager.setCurrentItem(mPager.getCurrentItem() - 1);
             }
-        }
+        super.onBackPressed();
     }
 
     @Override

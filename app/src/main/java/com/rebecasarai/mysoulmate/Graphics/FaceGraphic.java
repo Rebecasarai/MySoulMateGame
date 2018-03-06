@@ -41,7 +41,7 @@ import java.util.Random;
 /**
  * Clase en la que se dibuja sobre la pantalla al reconocer el rostro de una alma gemela.
  * Se entra en el draw cada por cada frame capturado por la camara, es decir, dependiendo de los fotogramas por segundos establecidos en el builder del dectector.
- *
+ * dibuja sobre un canvas, con objetos Hearts.
  */
 public class FaceGraphic extends GraphicOverlay.Graphic {
     private Context context;
