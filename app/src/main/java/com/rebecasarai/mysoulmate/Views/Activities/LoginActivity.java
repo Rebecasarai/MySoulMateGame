@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Has iniciado sesión !", Toast.LENGTH_SHORT).show();
 
             } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Has cancelado tu sesión.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Has cerrado tu sesión.", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
