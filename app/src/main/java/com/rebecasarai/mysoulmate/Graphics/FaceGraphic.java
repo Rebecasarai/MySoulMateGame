@@ -38,12 +38,12 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Clase en la que se dibuja sobre la pantalla al reconocer el rostro de una alma gemela.
+ * Se entra en el draw cada por cada frame capturado por la camara, es decir, dependiendo de los fotogramas por segundos establecidos en el builder del dectector.
+ *
+ */
 public class FaceGraphic extends GraphicOverlay.Graphic {
-    private static final float FACE_POSITION_RADIUS = 10.0f;
-    private static final float ID_TEXT_SIZE = 40.0f;
-    private static final float ID_Y_OFFSET = 50.0f;
-    private static final float ID_X_OFFSET = -50.0f;
-    private static final float BOX_STROKE_WIDTH = 5.0f;
     private Context context;
 
     private ArrayList<Heart> mHearts;
@@ -65,12 +65,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     public FaceGraphic(GraphicOverlay overlay, Context context, ArrayList<Heart> hearts) {
         super(overlay);
-
-        final int selectedColor = COLOR_CHOICES;
-
-
         this.mHearts = hearts;
-
         this.context = context;
     }
 
@@ -95,15 +90,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         if (face == null) {
             return;
         }
-
-        double viewWidth = canvas.getWidth();
-        double viewHeight = canvas.getHeight();
-        double scale = Math.min(viewWidth / face.getPosition().x + face.getWidth(), viewHeight / face.getPosition().y + face.getHeight());
-
-        //Punto medio de la cara
-        float x = translateX(face.getPosition().x + face.getWidth() / 2);
-        float y = translateY(face.getPosition().y + face.getHeight() / 2);
-
 
         setBitmap();
 

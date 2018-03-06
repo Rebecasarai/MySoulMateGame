@@ -8,6 +8,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -120,7 +121,13 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
                 break;
 
             case R.id.share:
-                shareScreenshot(mViewModel.getLastSoulMate().getValue(),ScreenshotType.CUSTOM.FULL);
+                if(mViewModel.getLastSoulMate().getValue()!=null){
+                    shareScreenshot(mViewModel.getLastSoulMate().getValue(),ScreenshotType.CUSTOM.FULL);
+                }else{
+
+                    Bitmap imagenDesdeView = ((BitmapDrawable)mLastSoulMateImage.getDrawable()).getBitmap();
+                    shareScreenshot(imagenDesdeView,ScreenshotType.CUSTOM.FULL);
+                }
                 break;
 
             case R.id.cerrarSesion:
@@ -166,22 +173,18 @@ public class ProfileFragment extends Fragment implements RecyclerItemClickListen
     private void setVistas(){
 
         TextView cerrarSesionText = mRootView.findViewById(R.id.cerrarSesion);
-
-        cerrarSesionText.setOnClickListener(this);
+        TextView txtTotales = mRootView.findViewById(R.id.txtshowTotalScreenshots);
         mLastSoulMateImage = mRootView.findViewById(R.id.lastSoulMatePreview);
-
         ImageView shareBtn = (ImageButton) mRootView.findViewById(R.id.share);
+        final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
+        int smtotales = Utils.getSnapshotsTaken(getContext());
+        txtTotales.setText(String.valueOf(smtotales));
+        like_heart.setOnClickListener(this);
+        cerrarSesionText.setOnClickListener(this);
         shareBtn.setOnClickListener(this);
         YoYo.with(Techniques.FadeInUp)
                 .duration(800)
                 .playOn(shareBtn);
-
-        int smtotales = Utils.getSnapshotsTaken(getContext());
-        TextView txtTotales = mRootView.findViewById(R.id.txtshowTotalScreenshots);
-        txtTotales.setText(String.valueOf(smtotales));
-
-        final SmallBangView like_heart = mRootView.findViewById(R.id.like_heart);
-        like_heart.setOnClickListener(this);
 
 
     }

@@ -52,7 +52,7 @@
         <string name = "lbl_forgot_password"> ¿Olvidó su contraseña? </string>
         <string name = "forgot_password_msg"> Solo necesitamos que su Id. de correo electrónico registrada le envíe las instrucciones para restablecer la contraseña.</string>
 
-        <string name = "sharing_text"> ¡Acabo de encontrar mi alma Mate! </string>
+        <string name = "sharing_text"> ¡Acabo de encontrar mi alma gemela! </string>
         <string name = "share_title"> Compartir Soul Mate </string>
         <string name = "screenshot_take_failed"> Captura fallida. </string>
         <string name = "wait"> Espere </string>
@@ -67,7 +67,7 @@
         <string name="pref_num_snapshots_taken">NUM_SNAPSHOTS_TAKEN</string>
         <string name="content_no_connection">Ooops parece que no tienes conexión a internet!</string>
         <string name="content_share">Comparte!</string>
-        <string name="content_profile">Tu alma gemela!</string>
+        <string name="content_profile">¡Tu alma gemela!</string>
 
 
 
