@@ -28,7 +28,7 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel(@NonNull Application application) {
         super(application);
         Bitmap icon = BitmapFactory.decodeResource(application.getApplicationContext().getResources(), R.drawable.ic_favorite_red_24dp);
-       // mUltimo.postValue(icon);
+        mUltimo.postValue(icon);
         mActivarCameraFragment.setValue(true);
     }
 
